@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lebrone Mentally | Esports Team</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0c',
+                        darker: '#050506',
+                        'neon-gold': '#ffb800',
+                        'neon-purple': '#8b00ff',
+                        panel: '#15151a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Rajdhani', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0a0a0c;
+            color: #ffffff;
+        }
+        .neon-text-gold {
+            text-shadow: 0 0 10px rgba(255, 184, 0, 0.7), 0 0 20px rgba(255, 184, 0, 0.5);
+        }
+        .neon-text-purple {
+            text-shadow: 0 0 10px rgba(139, 0, 255, 0.7), 0 0 20px rgba(139, 0, 255, 0.5);
+        }
+        .neon-border-gold:hover {
+            box-shadow: 0 0 15px rgba(255, 184, 0, 0.5);
+            border-color: #ffb800;
+        }
+        .clip-path-slant {
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-darker/90 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <img src="image_3.png" alt="Lebrone Mentally Logo" class="h-12 w-12 object-contain drop-shadow-[0_0_8px_rgba(255,184,0,0.5)]">
+                    <div class="font-display font-bold text-2xl tracking-wider uppercase hidden sm:block">
+                        <span class="text-neon-gold neon-text-gold">Lebrone</span> 
+                        <span class="text-neon-purple neon-text-purple">Mentally</span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="hover:text-neon-gold transition-colors duration-300 px-3 py-2 text-sm font-semibold uppercase tracking-widest">Главная</a>
+                        <a href="#about" class="hover:text-neon-gold transition-colors duration-300 px-3 py-2 text-sm font-semibold uppercase tracking-widest">О нас</a>
+                        <a href="#roster" class="hover:text-neon-gold transition-colors duration-300 px-3 py-2 text-sm font-semibold uppercase tracking-widest">Команда</a>
+                        <a href="#achievements" class="hover:text-neon-gold transition-colors duration-300 px-3 py-2 text-sm font-semibold uppercase tracking-widest">Достижения</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <!-- Mobile menu button (visual only for this simple demo) -->
+                    <button class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex items-center justify-center">
+        <!-- Background effects -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-gold/20 rounded-full blur-[120px]"></div>
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+            <img src="image_3.png" alt="Lebrone Mentally Dota 2" class="w-64 md:w-96 drop-shadow-[0_0_40px_rgba(139,0,255,0.4)] mb-8 hover:scale-105 transition-transform duration-500">
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold uppercase tracking-tighter mb-4">
+                <span class="block text-white mb-2">We Are</span>
+                <span class="block text-transparent bg-clip-text bg-gradient-to-r from-neon-gold to-neon-purple pb-4">Lebrone Mentally</span>
+            </h1>
+            <p class="mt-4 text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-light">
+                Дисциплина. Скилл. Защита Древнего. Мы здесь, чтобы забрать свой Aegis.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <a href="#roster" class="clip-path-slant bg-neon-purple hover:bg-neon-gold hover:text-dark transition-all duration-300 text-white font-bold py-4 px-10 uppercase tracking-widest">
+                    Наш ростер
+                </a>
+                <a href="#about" class="clip-path-slant border border-neon-gold/50 hover:border-neon-gold hover:text-neon-gold transition-all duration-300 bg-transparent text-white font-bold py-4 px-10 uppercase tracking-widest">
+                    Узнать больше
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-darker relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-display font-bold uppercase tracking-wider mb-6">
+                        О <span class="text-neon-gold">команде</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg mb-6 leading-relaxed">
+                        Lebrone Mentally — это больше, чем просто тег в Dota 2. Это философия победителей. Мы объединяем игроков, готовых выкладываться на каждой линии и в каждом тимфайте.
+                    </p>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        Наш подход строится на жесткой дисциплине, глубоком анализе меты и стадии драфтов, а главное — несгибаемой менталке. Мегакрипы у трона? Для нас это лишь повод совершить легендарный камбэк.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-neon-purple/10 flex items-center justify-center border border-neon-purple/30">
+                                <span class="text-neon-purple font-bold text-xl">01</span>
+                            </div>
+                            <span class="text-xl font-display uppercase tracking-wide">Контроль карты и Рошана</span>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-neon-gold/10 flex items-center justify-center border border-neon-gold/30">
+                                <span class="text-neon-gold font-bold text-xl">02</span>
+                            </div>
+                            <span class="text-xl font-display uppercase tracking-wide">Слаженные драфты</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mt-12 lg:mt-0 relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-neon-gold to-neon-purple rounded-lg blur-lg opacity-30"></div>
+                    <img src="image.png" alt="Команда Lebrone Mentally" class="relative rounded-lg shadow-2xl border border-white/10 w-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roster Section -->
+    <section id="roster" class="py-24 bg-dark relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-display font-bold uppercase tracking-wider mb-4">
+                    Боевой <span class="text-neon-purple">Состав</span>
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Единый механизм Lebrone Mentally на полях сражений Dota 2.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Team Photo 1 -->
+                <div class="bg-panel border border-white/10 rounded-xl overflow-hidden transition-all duration-300 neon-border-gold group">
+                    <div class="h-96 bg-gray-800 relative overflow-hidden">
+                        <img src="image.png" alt="Основной состав" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-panel via-panel/60 to-transparent"></div>
+                    </div>
+                    <div class="p-8 relative -mt-24 z-10 text-center">
+                        <div class="inline-block bg-neon-purple text-white font-bold font-display px-4 py-1 rounded text-sm uppercase mb-3 shadow-[0_0_15px_rgba(139,0,255,0.5)]">Main Core</div>
+                        <h3 class="text-3xl font-display font-bold uppercase text-neon-gold mb-2">Основа команды</h3>
+                        <p class="text-gray-300">
+                            Хладнокровие на лайне и идеальное исполнение в макро. Те, кто задает темп игры.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Team Photo 2 -->
+                <div class="bg-panel border border-white/10 rounded-xl overflow-hidden transition-all duration-300 neon-border-gold group">
+                    <div class="h-96 bg-gray-800 relative overflow-hidden">
+                        <img src="image_2.png" alt="Игроки состава" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 object-top">
+                        <div class="absolute inset-0 bg-gradient-to-t from-panel via-panel/60 to-transparent"></div>
+                    </div>
+                    <div class="p-8 relative -mt-24 z-10 text-center">
+                        <div class="inline-block bg-neon-gold text-dark font-bold font-display px-4 py-1 rounded text-sm uppercase mb-3 shadow-[0_0_15px_rgba(255,184,0,0.5)]">Space Creators</div>
+                        <h3 class="text-3xl font-display font-bold uppercase text-white mb-2">Генераторы спейса</h3>
+                        <p class="text-gray-300">
+                            Неуступчивость и агрессия. Ментальное давление на оппонента с нулевой минуты.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="py-20 bg-darker border-t border-white/5 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-display font-bold uppercase tracking-wider mb-12 text-center">
+                Трофеи и <span class="text-neon-gold">Достижения</span>
+            </h2>
+
+            <div class="space-y-6 max-w-4xl mx-auto">
+                <!-- Achievement 1 -->
+                <div class="flex flex-col sm:flex-row items-center justify-between p-6 bg-panel border-l-4 border-neon-gold rounded-r-lg hover:bg-white/5 transition-colors duration-300">
+                    <div class="flex items-center gap-6 mb-4 sm:mb-0">
+                        <div class="text-4xl">🏆</div>
+                        <div>
+                            <h4 class="text-xl font-display font-bold text-white uppercase">DPC Open Qualifiers</h4>
+                            <p class="text-gray-400">Сезон 2023/2024</p>
+                        </div>
+                    </div>
+                    <div class="text-neon-gold font-display font-bold text-2xl uppercase">
+                        1 Место
+                    </div>
+                </div>
+
+                <!-- Achievement 2 -->
+                <div class="flex flex-col sm:flex-row items-center justify-between p-6 bg-panel border-l-4 border-neon-purple rounded-r-lg hover:bg-white/5 transition-colors duration-300">
+                    <div class="flex items-center gap-6 mb-4 sm:mb-0">
+                        <div class="text-4xl">🥈</div>
+                        <div>
+                            <h4 class="text-xl font-display font-bold text-white uppercase">Cyber Cup: Battle for Ancient</h4>
+                            <p class="text-gray-400">Осень 2023</p>
+                        </div>
+                    </div>
+                    <div class="text-neon-purple font-display font-bold text-2xl uppercase">
+                        2 Место
+                    </div>
+                </div>
+
+                <!-- Achievement 3 -->
+                <div class="flex flex-col sm:flex-row items-center justify-between p-6 bg-panel border-l-4 border-gray-500 rounded-r-lg hover:bg-white/5 transition-colors duration-300">
+                    <div class="flex items-center gap-6 mb-4 sm:mb-0">
+                        <div class="text-4xl">🏅</div>
+                        <div>
+                            <h4 class="text-xl font-display font-bold text-white uppercase">T3 Regional Tournament</h4>
+                            <p class="text-gray-400">Лето 2023</p>
+                        </div>
+                    </div>
+                    <div class="text-gray-300 font-display font-bold text-2xl uppercase">
+                        Топ-4
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact -->
+    <footer class="bg-black pt-16 pb-8 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                <div class="mb-8 md:mb-0 text-center md:text-left flex flex-col items-center md:items-start gap-4">
+                    <img src="image_3.png" alt="Lebrone Mentally Logo" class="h-20 w-20 object-contain drop-shadow-[0_0_5px_rgba(255,184,0,0.5)]">
+                    <div>
+                        <div class="font-display font-bold text-3xl tracking-wider uppercase mb-2">
+                            <span class="text-neon-gold">Lebrone</span> 
+                            <span class="text-neon-purple">Mentally</span>
+                        </div>
+                        <p class="text-gray-500">Официальный сайт киберспортивной Dota 2 команды.</p>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-center md:items-end">
+                    <h5 class="text-white font-display uppercase tracking-widest mb-4">Связь с нами</h5>
+                    <a href="mailto:contact@lebronementally.gg" class="text-gray-400 hover:text-neon-gold transition-colors text-lg mb-4">contact@lebronementally.gg</a>
+                    <div class="flex gap-4">
+                        <!-- Social placeholders -->
+                        <a href="#" class="w-10 h-10 rounded bg-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-neon-purple transition-all">
+                            <span class="sr-only">VK</span>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M15.068 20.354c-7.394 0-11.666-5.127-11.83-13.682h3.585c.108 6.07 2.923 8.653 5.143 9.186v-9.186h3.407v5.244c2.203-.24 4.542-2.735 5.344-5.244h3.408c-.684 3.176-3.13 5.568-4.839 6.815 1.708 1.054 4.417 3.095 5.516 6.867h-3.714c-.878-2.613-3.056-4.577-5.715-4.864v4.864h-1.305z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded bg-panel flex items-center justify-center text-gray-400 hover:text-dark hover:bg-neon-gold transition-all">
+                            <span class="sr-only">Twitter</span>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.224-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded bg-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-neon-purple transition-all">
+                            <span class="sr-only">YouTube</span>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center border-t border-white/10 pt-8">
+                <p class="text-sm text-gray-600">&copy; 2026 Lebrone Mentally Esports. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
