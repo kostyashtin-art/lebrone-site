@@ -57,7 +57,7 @@
         .card-content { transform: translateZ(30px); }
         .role-badge { background: rgba(255, 184, 0, 0.05); border: 1px solid rgba(255, 184, 0, 0.2); }
 
-        /* Анимация проявления при скролле (Scroll Reveal) */
+        /* Анимация проявления при скролле */
         .reveal {
             opacity: 0;
             transform: translateY(50px);
@@ -83,9 +83,10 @@
 
     <!-- ЛЕВОЕ БОКОВОЕ МЕНЮ -->
     <aside class="fixed left-0 top-0 h-screen w-14 md:w-16 bg-[#0a0a0c] border-r border-white/5 flex flex-col justify-between items-center py-6 z-50 shadow-2xl">
-        <div class="flex flex-col gap-10 mt-6">
+        <div class="flex flex-col gap-8 mt-6">
             <a href="#" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Главная</a>
             <a href="#roster" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Команда</a>
+            <a href="#trophies" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-white transition">Достижения</a>
             <a href="#store" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-purple transition">Мерч</a>
             <a href="#contacts" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Контакты</a>
         </div>
@@ -114,9 +115,12 @@
             
             <div class="relative z-10 text-center px-4 w-full max-w-6xl mt-10 reveal">
                 <img src="image_3.png" alt="Lebrone Mentally" class="w-32 md:w-48 mx-auto mb-8 drop-shadow-[0_0_30px_rgba(139,0,255,0.7)]" onerror="this.style.display='none'">
-                <h1 class="font-esports text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-white uppercase tracking-tight leading-[0.9] drop-shadow-2xl mb-8 scale-y-110 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">
+                
+                <!-- ПАСХАЛКА: Этот H1 реагирует на клики! -->
+                <h1 id="easter-egg-title" class="cursor-pointer font-esports text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-white uppercase tracking-tight leading-[0.9] drop-shadow-2xl mb-8 scale-y-110 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 hover:scale-105 transition-all duration-200 select-none">
                     Мы можем дефать<br><span class="text-lm-gold drop-shadow-[0_0_15px_rgba(255,184,0,0.4)]">мегакрипов</span> 60 минут
                 </h1>
+                
                 <a href="#roster" class="inline-block bg-white text-black font-bold text-[10px] md:text-xs px-10 py-3.5 uppercase tracking-widest hover:bg-lm-gold transition duration-300 rounded-sm mt-4">
                     ПОДРОБНЕЕ
                 </a>
@@ -392,6 +396,42 @@
                 </div>
             </section>
 
+            <!-- СЕКЦИЯ: ЗАЛ СЛАВЫ (ТРОФЕИ) -->
+            <section id="trophies" class="py-24 px-6 bg-[#070709] border-t border-white/5 relative overflow-hidden">
+                <div class="max-w-6xl mx-auto relative z-10">
+                    <div class="mb-16 text-center reveal">
+                        <span class="text-lm-gold text-xs font-extrabold tracking-widest uppercase block mb-2">Зал Славы</span>
+                        <h2 class="font-esports text-4xl md:text-5xl font-bold text-white uppercase tracking-wide">Достижения <span class="text-lm-purple">Команды</span></h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Достижение 1 -->
+                        <div class="pro-card rounded-xl p-8 flex flex-col items-center text-center group border border-lm-gold/20 hover:border-lm-gold reveal delay-100">
+                            <div class="text-5xl mb-4 group-hover:scale-110 transition duration-300 drop-shadow-[0_0_15px_rgba(255,184,0,0.8)]">🏆</div>
+                            <h3 class="font-esports text-2xl font-bold text-white mb-2 uppercase tracking-wider">Battle Cup</h3>
+                            <div class="text-lm-gold font-bold text-lg mb-4 bg-lm-gold/10 border border-lm-gold/30 px-5 py-1 rounded shadow-inner">5 Побед</div>
+                            <p class="text-sm text-gray-300 italic">«5 Батл Капов выйграл в доте, а?! Деньги просрал в доте, а!»</p>
+                        </div>
+
+                        <!-- Достижение 2 -->
+                        <div class="pro-card rounded-xl p-8 flex flex-col items-center text-center group border border-red-500/20 hover:border-red-500 reveal delay-200">
+                            <div class="text-5xl mb-4 group-hover:scale-110 transition duration-300 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]">💔</div>
+                            <h3 class="font-esports text-2xl font-bold text-white mb-2 uppercase tracking-wider">МТС CUP</h3>
+                            <div class="text-red-400 font-bold text-lg mb-4 bg-red-500/10 border border-red-500/30 px-5 py-1 rounded shadow-inner">1 Поражение</div>
+                            <p class="text-sm text-gray-400">Трагичная страница истории. Оступились, но стали только сильнее (и злее).</p>
+                        </div>
+
+                        <!-- Достижение 3 -->
+                        <div class="pro-card rounded-xl p-8 flex flex-col items-center text-center group border border-lm-purple/20 hover:border-lm-purple reveal delay-300">
+                            <div class="text-5xl mb-4 group-hover:scale-110 transition duration-300 drop-shadow-[0_0_15px_rgba(139,0,255,0.8)]">🏭</div>
+                            <h3 class="font-esports text-2xl font-bold text-white mb-2 uppercase tracking-wider">Турнир "Пермский Завод"</h3>
+                            <div class="text-lm-purple font-bold text-lg mb-4 bg-lm-purple/10 border border-lm-purple/30 px-5 py-1 rounded shadow-inner">3 Победы</div>
+                            <p class="text-sm text-gray-400">Лучшая команда цеха. Вынесли работяг вперед ногами без шансов.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- СЕКЦИЯ: МАГАЗИН МЕРЧА -->
             <section id="store" class="py-24 px-6 bg-surface border-t border-white/5">
                 <div class="max-w-5xl mx-auto">
@@ -496,7 +536,7 @@
                 </div>
                 <div>
                     <label class="block text-[10px] text-gray-400 uppercase tracking-widest mb-2">Город доставки</label>
-                    <input type="text" id="buyerCity" required class="w-full bg-black border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:border-lm-gold transition placeholder-gray-700" placeholder="Москва">
+                    <input type="text" id="buyerCity" required class="w-full bg-black border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:border-lm-gold transition placeholder-gray-700" placeholder="Пермь">
                 </div>
                 
                 <button type="submit" class="mt-4 w-full bg-lm-gold text-black font-bold uppercase tracking-widest text-xs py-4 rounded hover:bg-yellow-400 transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,184,0,0.3)]">
@@ -520,11 +560,7 @@
 
         // --- 2. 3D наклон карточек (Vanilla Tilt) ---
         VanillaTilt.init(document.querySelectorAll(".pro-card"), {
-            max: 5,
-            speed: 400,
-            glare: true,
-            "max-glare": 0.15,
-            scale: 1.02
+            max: 5, speed: 400, glare: true, "max-glare": 0.15, scale: 1.02
         });
 
         // --- 3. Искры на главном экране (Particles.js) ---
@@ -546,7 +582,35 @@
             retina_detect: true
         });
 
-        // --- 4. Управление модальным окном Фото ---
+        // --- 4. Звуковые пасхалки (Easter Eggs) ---
+        const titleEgg = document.getElementById('easter-egg-title');
+        
+        // Надежные ссылки на популярные звуки
+        const rampageSound = new Audio('https://www.myinstants.com/media/sounds/rampage_1.mp3');
+        const lakadSound = new Audio('https://www.myinstants.com/media/sounds/lakad-matataag-normalin-normalin.mp3');
+        
+        let clickCount = 0;
+        
+        titleEgg.addEventListener('click', () => {
+            clickCount++;
+            
+            // Визуальный эффект при клике (пульсация)
+            titleEgg.classList.add('text-lm-gold', 'scale-110');
+            setTimeout(() => {
+                titleEgg.classList.remove('text-lm-gold', 'scale-110');
+            }, 200);
+
+            // Каждый 3-й клик - Lakad Matataag, остальные - Rampage
+            if (clickCount % 3 === 0) {
+                lakadSound.currentTime = 0;
+                lakadSound.play();
+            } else {
+                rampageSound.currentTime = 0;
+                rampageSound.play();
+            }
+        });
+
+        // --- 5. Управление модальным окном Фото ---
         function openPhotoModal(imgSrc) {
             document.getElementById('modalImg').src = imgSrc;
             const modal = document.getElementById('photoModal');
@@ -561,17 +625,15 @@
             document.body.style.overflow = '';
         }
 
-        // --- 5. Логика Магазина (Оформление заказа в Telegram) ---
+        // --- 6. Логика Магазина (Оформление заказа в Telegram) ---
         let selectedItem = '';
         let selectedPrice = '';
 
         function openOrderModal(itemName, itemPrice) {
             selectedItem = itemName;
             selectedPrice = itemPrice;
-            
             document.getElementById('orderItemName').innerText = itemName;
             document.getElementById('orderItemPrice').innerText = itemPrice;
-            
             const modal = document.getElementById('orderModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -586,15 +648,11 @@
         }
 
         function submitOrder(event) {
-            event.preventDefault(); // Останавливаем стандартную отправку формы
-            
+            event.preventDefault();
             const name = document.getElementById('buyerName').value;
             const city = document.getElementById('buyerCity').value;
             
-            // Формируем красивый текст для сообщения в Telegram
             const message = `🔥 Новый заказ из магазина Lebrone Mentally!\n\n📦 Товар: ${selectedItem}\n💰 Цена: ${selectedPrice}\n\n👤 Имя: ${name}\n📍 Город: ${city}\n\nЗдравствуйте! Хочу оформить заказ. Подскажите детали оплаты и доставки.`;
-            
-            // Кодируем текст для URL и открываем ссылку на Telegram менеджера (@SHKV4)
             const tgUrl = `https://t.me/SHKV4?text=${encodeURIComponent(message)}`;
             window.open(tgUrl, '_blank');
             
@@ -603,7 +661,7 @@
             document.getElementById('buyerCity').value = '';
         }
 
-        // --- 6. Fetch данных из OpenDota API ---
+        // --- 7. Fetch данных из OpenDota API ---
         async function fetchDotaStats() {
             try {
                 const heroesRes = await fetch('https://api.opendota.com/api/constants/heroes');
