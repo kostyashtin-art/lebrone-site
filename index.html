@@ -301,7 +301,7 @@
                         </div>
 
                         <!-- ИГРОК 5: Инсаф -->
-                        <div class="pro-card rounded-xl p-6 flex flex-col justify-between group relative overflow-hidden reveal delay-200" data-account-id="237813481">
+                        <div class="pro-card rounded-xl p-6 flex flex-col justify-between group md:col-span-2 xl:col-span-1 relative overflow-hidden reveal delay-200" data-account-id="237813481">
                             <div class="hero-bg absolute inset-0 bg-cover bg-center bg-no-repeat opacity-0 group-hover:opacity-20 transition-opacity duration-700 z-0 mix-blend-screen grayscale group-hover:grayscale-0"></div>
                             <div class="card-content relative z-10 flex flex-col h-full justify-between">
                                 <div>
@@ -364,7 +364,7 @@
                                             <p class="text-[11px] text-emerald-400 font-bold tracking-widest uppercase bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm inline-block">Rank: <span class="player-rank text-white">...</span></p>
                                         </div>
                                     </div>
-                                    <p class="text-gray-300 text-sm mb-4 h-10 drop-shadow-md relative z-10">Парень на FPV дроне. Видит всю карту, залетает на вражеский хайграунд без байбека.</p>
+                                    <p class="text-gray-300 text-sm mb-4 h-10 drop-shadow-md relative z-10">Парень на FPV дроне. Видит всю карту, залетает на вражеский хайграунд.</p>
                                     
                                     <div class="bg-black/60 backdrop-blur-md rounded p-3 mb-4 border border-white/10 shadow-lg">
                                         <div class="flex justify-between items-center mb-2">
@@ -492,20 +492,22 @@
         </footer>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: ДОСЬЕ (СТАТИСТИКА) 📊 -->
+    <!-- МОДАЛЬНОЕ ОКНО: АНАЛИТИЧЕСКОЕ ДОСЬЕ 📊 -->
     <div id="statsModal" class="fixed inset-0 z-[120] bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#0a0a0c] border border-white/10 rounded-xl max-w-4xl w-full p-6 animate-modal relative shadow-[0_0_40px_rgba(0,0,0,1)] flex flex-col md:flex-row gap-8 max-h-[90vh] overflow-y-auto">
             <button onclick="closeStatsModal()" class="absolute top-4 right-5 text-gray-500 hover:text-white text-3xl font-light transition z-10">&times;</button>
             <div class="w-full md:w-1/2 flex flex-col items-center border-b md:border-b-0 md:border-r border-white/5 pb-6 md:pb-0 pr-0 md:pr-6">
-                <span class="text-gray-500 text-[10px] font-bold tracking-widest uppercase mb-1">Секретное Досье</span>
+                <span class="text-gray-500 text-[10px] font-bold tracking-widest uppercase mb-1">Аналитика OpenDota API</span>
                 <h3 id="statsPlayerName" class="font-esports text-4xl text-white uppercase tracking-wide mb-6">...</h3>
                 <div class="w-full max-w-[300px] aspect-square relative">
                     <canvas id="radarChart"></canvas>
                 </div>
             </div>
             <div class="w-full md:w-1/2 flex flex-col justify-center">
-                <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-4 border-b border-white/10 pb-2">Логи Аналитики</h4>
-                <div id="statsFunContainer" class="flex flex-col gap-4"></div>
+                <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-4 border-b border-white/10 pb-2">Статистика за 20 матчей</h4>
+                <div id="statsMetricsContainer" class="grid grid-cols-2 gap-3">
+                    <!-- Заполняется через JS точными цифрами -->
+                </div>
             </div>
         </div>
     </div>
@@ -579,16 +581,8 @@
         function submitOrder(e) { e.preventDefault(); const n = document.getElementById('buyerName').value; const c = document.getElementById('buyerCity').value; window.open(`https://t.me/SHKV4?text=${encodeURIComponent(`🔥 Заказ!\nТовар: ${sItem}\nЦена: ${sPrice}\nИмя: ${n}\nГород: ${c}`)}`, '_blank'); closeOrderModal(); }
 
         const playerStats = {};
-        const funStatsDB = {
-            '127394881': [{ icon: '🌪️', title: 'Сделано Rampage', value: '24' }, { icon: '💬', title: 'Топ фраза в чат', value: '"Mid or feed"' }, { icon: '👑', title: 'Своровано Аегисов', value: '7' }],
-            '1585608718': [{ icon: '🔫', title: 'Убито Снайперов', value: '999+' }, { icon: '💬', title: 'Топ фраза в чат', value: '"?"' }, { icon: '💧', title: 'Выпито Боттлов', value: '1337' }],
-            '129692343': [{ icon: '🛡️', title: 'Выиграно у АМ на Dark Seer', value: '100%' }, { icon: '💬', title: 'Топ фраза в чат', value: '"Space created"' }, { icon: '🎯', title: 'Идеальных стяжек', value: '42' }],
-            '421012634': [{ icon: '🗡️', title: 'Куплено Рапир на саппе', value: '18' }, { icon: '💬', title: 'Топ фраза в чат', value: '"Report team"' }, { icon: '👁️', title: 'Сломано Обсов', value: '0 (не барское дело)' }],
-            '237813481': [{ icon: '🩸', title: 'Собрано Армлетов', value: '120' }, { icon: '🔨', title: 'Разбито шмоток от злости', value: '3' }, { icon: '💬', title: 'Топ фраза в чат', value: '"GG End"' }],
-            '198826325': [{ icon: '🛸', title: 'Разбито FPV дронов', value: '404' }, { icon: '💬', title: 'Топ фраза в чат', value: '"Разведка боем"' }, { icon: '⚡', title: 'Успешных залетов', value: '88%' }]
-        };
-
         let radarChartInstance = null;
+
         function openStatsModal(accountId, name, color) {
             const stats = playerStats[accountId];
             if(!stats) return;
@@ -596,21 +590,30 @@
             document.getElementById('statsPlayerName').innerText = name;
             document.getElementById('statsPlayerName').style.color = color;
 
-            const funData = funStatsDB[accountId];
-            let funHtml = '';
-            funData.forEach(item => {
-                funHtml += `
-                    <div class="bg-white/5 border border-white/10 rounded p-3 flex items-center gap-4">
-                        <div class="text-2xl">${item.icon}</div>
-                        <div>
-                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">${item.title}</p>
-                            <p class="text-white font-bold text-lg">${item.value}</p>
-                        </div>
+            // Информативные метрики OpenDota
+            const metrics = [
+                { title: 'Винрейт', val: `${stats.winrate}%` },
+                { title: 'Средний KDA', val: stats.kda },
+                { title: 'GPM / XPM', val: `${stats.gpm} / ${stats.xpm}` },
+                { title: 'Урон по героям', val: stats.heroDmg },
+                { title: 'Урон по зданиям', val: stats.towerDmg },
+                { title: 'Ластхиты (LH)', val: stats.lh },
+                { title: 'Побед / Поражений', val: `${stats.wins}W - ${stats.losses}L` },
+                { title: 'Всего матчей', val: stats.totalMatches }
+            ];
+
+            let metricsHtml = '';
+            metrics.forEach(m => {
+                metricsHtml += `
+                    <div class="bg-white/5 border border-white/10 rounded p-3 flex flex-col justify-between">
+                        <span class="text-[9px] text-gray-400 uppercase tracking-widest">${m.title}</span>
+                        <span class="text-white font-bold text-base mt-1">${m.val}</span>
                     </div>
                 `;
             });
-            document.getElementById('statsFunContainer').innerHTML = funHtml;
+            document.getElementById('statsMetricsContainer').innerHTML = metricsHtml;
 
+            // Рисуем Пентаграмму скиллов
             const ctx = document.getElementById('radarChart').getContext('2d');
             if(radarChartInstance) radarChartInstance.destroy();
 
@@ -619,7 +622,7 @@
                 data: {
                     labels: ['Фарм', 'Драки', 'Пуш', 'Саппорт', 'Пул Героев'],
                     datasets: [{
-                        label: 'Скилл',
+                        label: 'Параметры',
                         data: stats.radar,
                         backgroundColor: `${color}40`,
                         borderColor: color,
@@ -648,7 +651,7 @@
 
             document.getElementById('statsModal').classList.remove('hidden');
             document.getElementById('statsModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = '';
         }
 
         function closeStatsModal() {
@@ -726,7 +729,18 @@
                             uiKda.textContent = `${avgK} / ${avgD} / ${avgA}`;
                             uiGpm.textContent = `${avgGpm} / ${avgXpm}`;
 
+                            // Сохраняем реальную статистику для досье
                             playerStats[accountId] = {
+                                winrate: winrate,
+                                kda: `${avgK} / ${avgD} / ${avgA}`,
+                                gpm: avgGpm,
+                                xpm: avgXpm,
+                                heroDmg: Math.round(hd/count).toLocaleString(),
+                                towerDmg: Math.round(td/count).toLocaleString(),
+                                lh: Math.round(lh/count),
+                                wins: wins,
+                                losses: count - wins,
+                                totalMatches: count,
                                 radar: [
                                     Math.min(100, (lh/count)/3.5),
                                     Math.min(100, (hd/count)/400),
