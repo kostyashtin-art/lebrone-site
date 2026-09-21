@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <!-- Библиотека для частиц (искр) -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Библиотека Chart.js для Пентаграммы -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
         tailwind.config = {
@@ -32,62 +34,28 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
         
-        body { 
-            background-color: #030303; 
-            color: #f3f4f6; 
-            overflow-x: hidden;
-        }
-        
-        .vertical-text {
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-        }
-
-        .pro-card { 
-            background: linear-gradient(180deg, #121215 0%, #0a0a0c 100%); 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
-            transform-style: preserve-3d;
-        }
-        .pro-card:hover { 
-            border-color: rgba(255, 184, 0, 0.4); 
-            box-shadow: 0 20px 40px -10px rgba(255, 184, 0, 0.15); 
-        }
-        
+        body { background-color: #030303; color: #f3f4f6; overflow-x: hidden; }
+        .vertical-text { writing-mode: vertical-rl; transform: rotate(180deg); }
+        .pro-card { background: linear-gradient(180deg, #121215 0%, #0a0a0c 100%); border: 1px solid rgba(255, 255, 255, 0.05); transform-style: preserve-3d; }
+        .pro-card:hover { border-color: rgba(255, 184, 0, 0.4); box-shadow: 0 20px 40px -10px rgba(255, 184, 0, 0.15); }
         .card-content { transform: translateZ(30px); }
         .role-badge { background: rgba(255, 184, 0, 0.05); border: 1px solid rgba(255, 184, 0, 0.2); }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
         .animate-modal { animation: fadeIn 0.25s ease-out forwards; }
-        
-        @keyframes loading-bar {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
+        @keyframes loading-bar { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         .animate-loading { animation: loading-bar 1.5s ease-in-out infinite; }
-
         .match-w { @apply bg-green-500/15 text-green-400 border border-green-500/40; }
         .match-l { @apply bg-red-500/15 text-red-400 border border-red-500/40; }
     </style>
 </head>
 <body class="antialiased selection:bg-lm-gold selection:text-black min-h-screen">
 
-   <!-- ⏳ ЭКРАН ЗАГРУЗКИ (PRELOADER) -->
+    <!-- ⏳ ЭКРАН ЗАГРУЗКИ -->
     <div id="preloader" class="fixed inset-0 z-[9999] bg-[#030303] flex flex-col items-center justify-center transition-opacity duration-700">
         <img src="image_3.png" alt="Lebrone Mentally" class="w-32 h-32 mb-8 animate-pulse drop-shadow-[0_0_25px_rgba(255,184,0,0.4)]" onerror="this.src='https://placehold.co/128/1a1a1a/ffb800?text=LM'">
-        <h2 class="font-esports text-lm-gold text-xl md:text-4xl font-bold tracking-widest uppercase mb-4 animate-pulse">Алена извини</h2>
+        <h2 class="font-esports text-lm-gold text-2xl md:text-4xl font-bold tracking-widest uppercase mb-4 animate-pulse">Алена извини</h2>
         <div class="w-64 h-1.5 bg-white/10 rounded overflow-hidden relative">
             <div class="absolute inset-0 bg-lm-purple w-full animate-loading"></div>
         </div>
@@ -98,49 +66,37 @@
         <h1 class="font-esports text-7xl md:text-[150px] text-red-500 uppercase font-bold tracking-widest drop-shadow-[0_0_50px_rgba(239,68,68,1)] animate-pulse">GG WP</h1>
     </div>
 
-    <!-- ЛЕВОЕ БОКОВОЕ МЕНЮ -->
+    <!-- БОКОВОЕ МЕНЮ -->
     <aside class="fixed left-0 top-0 h-screen w-14 md:w-16 bg-[#0a0a0c] border-r border-white/5 flex flex-col justify-between items-center py-6 z-50 shadow-2xl">
         <div class="flex flex-col gap-8 mt-6">
             <a href="#" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Главная</a>
             <a href="#roster" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Команда</a>
             <a href="#trophies" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-white transition">Достижения</a>
             <a href="#store" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-purple transition">Мерч</a>
-            <a href="#contacts" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Контакты</a>
         </div>
-        
         <img src="image_3.png" alt="LM" class="w-10 h-10 object-contain cursor-pointer drop-shadow-[0_0_10px_rgba(255,184,0,0.3)] hover:scale-110 transition duration-300" onclick="window.scrollTo(0,0)" onerror="this.src='https://placehold.co/40/1a1a1a/ffb800?text=LM'">
     </aside>
 
-    <!-- ВЕРХНИЕ ПРАВЫЕ КНОПКИ -->
     <div class="fixed top-6 right-6 z-50 flex gap-4">
         <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">МЕРЧ ↗</a>
-        <a href="https://t.me/SHKV4" target="_blank" class="hidden md:flex bg-lm-gold text-black text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-yellow-400 transition shadow-[0_0_15px_rgba(255,184,0,0.4)] items-center gap-2 rounded-sm">ТЕЛЕГРАМ ↗</a>
     </div>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="ml-14 md:ml-16">
 
-        <!-- ГЛАВНЫЙ ЭКРАН С ВИДЕО ФОНОМ -->
+        <!-- ГЛАВНЫЙ ЭКРАН -->
         <header class="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
-            <!-- Золотые искры -->
             <div id="particles-js" class="absolute inset-0 z-10 pointer-events-none"></div>
-            
-            <!-- ЖИВОЙ ВИДЕО ФОН ИЗ ДОТЫ -->
             <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-40 z-0 pointer-events-none">
                 <source src="fight.mp4" type="video/mp4">
             </video>
-            
-            <!-- Градиентное затемнение, чтобы текст читался -->
             <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/50 to-dark/30 z-0 pointer-events-none"></div>
             
             <div class="relative z-20 text-center px-4 w-full max-w-6xl mt-10 reveal">
                 <img src="image_3.png" alt="Lebrone Mentally" class="w-32 md:w-48 mx-auto mb-8 drop-shadow-[0_0_30px_rgba(139,0,255,0.7)]" onerror="this.style.display='none'">
-                
-                <!-- ПАСХАЛКА С КЛИКАМИ -->
                 <h1 id="easter-egg-title" class="cursor-pointer font-esports text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-white uppercase tracking-tight leading-[0.9] drop-shadow-2xl mb-8 scale-y-110 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 hover:scale-105 transition-all duration-200 select-none">
                     Мы можем дефать<br><span class="text-lm-gold drop-shadow-[0_0_15px_rgba(255,184,0,0.4)]">мегакрипов</span> 60 минут
                 </h1>
-                
                 <a href="#roster" class="inline-block bg-white text-black font-bold text-[10px] md:text-xs px-10 py-3.5 uppercase tracking-widest hover:bg-lm-gold transition duration-300 rounded-sm mt-4">ПОДРОБНЕЕ</a>
             </div>
         </header>
@@ -159,6 +115,7 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8" id="players-container">
+                        
                         <!-- ИГРОК 1: Артем -->
                         <div class="pro-card rounded-xl p-6 flex flex-col justify-between group relative overflow-hidden reveal delay-100" data-account-id="127394881">
                             <div class="hero-bg absolute inset-0 bg-cover bg-center bg-no-repeat opacity-0 group-hover:opacity-20 transition-opacity duration-700 z-0 mix-blend-screen grayscale group-hover:grayscale-0"></div>
@@ -169,34 +126,39 @@
                                         <span class="text-[10px] text-gray-500 font-mono tracking-widest uppercase player-status bg-black/50 px-2 py-1 rounded backdrop-blur-sm">Загрузка...</span>
                                     </div>
                                     <div class="flex items-center gap-5 mb-5">
-                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10 cursor-pointer hover:border-lm-gold transition shadow-[0_0_15px_rgba(255,184,0,0.1)]" onclick="openPhotoModal('player_artem.png')">
+                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(255,184,0,0.1)]">
                                             <img src="https://placehold.co/100/1a1a1a/333" class="w-full h-full object-cover player-avatar" alt="Avatar">
-                                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="text-white text-xs">📸</span></div>
                                         </div>
                                         <div>
                                             <h3 class="font-esports text-3xl font-bold text-white mb-1 tracking-wide drop-shadow-md">Артем</h3>
                                             <p class="text-[11px] text-lm-gold font-bold tracking-widest uppercase bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm inline-block">Rank: <span class="player-rank text-white">...</span></p>
                                         </div>
                                     </div>
-                                    <p class="text-gray-300 text-sm mb-6 h-10 drop-shadow-md relative z-10">Самый лучший СФ снг, любит играть против Dawnbreaker и Zeus.</p>
+                                    <p class="text-gray-300 text-sm mb-4 h-10 drop-shadow-md relative z-10">Самый лучший СФ снг, любит играть против Dawnbreaker и Zeus.</p>
                                     
-                                    <div class="bg-black/60 backdrop-blur-md rounded p-4 mb-4 border border-white/10 flex justify-between items-center shadow-lg">
-                                        <p class="text-[10px] text-lm-gold font-bold uppercase tracking-wider">Последние 5 игр</p>
-                                        <div class="player-matches flex gap-1.5 h-6 items-center"><div class="w-16 h-2 bg-gray-800 rounded animate-pulse"></div></div>
-                                    </div>
-
-                                    <div class="border-t border-white/10 pt-4 mb-6">
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3 text-center drop-shadow-md">Сигнатурные герои</p>
-                                        <div class="player-heroes flex justify-between gap-2">
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
+                                    <!-- БЛОК СТАТИСТИКИ НА КАРТОЧКЕ -->
+                                    <div class="bg-black/60 backdrop-blur-md rounded p-3 mb-4 border border-white/10 shadow-lg">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <p class="text-[10px] text-lm-gold font-bold uppercase tracking-wider">Последние игры (Winrate: <span class="player-wr text-white">...</span>)</p>
+                                            <div class="player-matches flex gap-1 h-5 items-center"><div class="w-10 h-2 bg-gray-800 rounded animate-pulse"></div></div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 mt-2 border-t border-white/5 pt-2">
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg K/D/A</p>
+                                                <p class="player-kda text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg GPM / XPM</p>
+                                                <p class="player-gpm text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
-                                    <button onclick="openPhotoModal('player_artem.png')" class="w-1/2 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Фото</button>
-                                    <a href="https://www.opendota.com/players/127394881" target="_blank" class="w-1/2 bg-lm-gold/10 hover:bg-lm-gold text-lm-gold hover:text-black border border-lm-gold/20 hover:border-lm-gold text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Профиль ↗</a>
+                                    <button onclick="openPhotoModal('player_artem.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
+                                    <button onclick="openStatsModal('127394881', 'Артем', '#ffb800')" class="w-1/3 bg-lm-gold/10 hover:bg-lm-gold text-lm-gold hover:text-black border border-lm-gold/20 hover:border-lm-gold text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm shadow-[0_0_10px_rgba(255,184,0,0.1)]">Досье 📊</button>
+                                    <a href="https://www.opendota.com/players/127394881" target="_blank" class="w-1/3 bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">ДБ ↗</a>
                                 </div>
                             </div>
                         </div>
@@ -211,34 +173,39 @@
                                         <span class="text-[10px] text-gray-500 font-mono tracking-widest uppercase player-status bg-black/50 px-2 py-1 rounded backdrop-blur-sm">Загрузка...</span>
                                     </div>
                                     <div class="flex items-center gap-5 mb-5">
-                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10 cursor-pointer hover:border-lm-gold transition shadow-[0_0_15px_rgba(255,184,0,0.1)]" onclick="openPhotoModal('player_ilshat.png')">
+                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(255,184,0,0.1)]">
                                             <img src="https://placehold.co/100/1a1a1a/333" class="w-full h-full object-cover player-avatar" alt="Avatar">
-                                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="text-white text-xs">📸</span></div>
                                         </div>
                                         <div>
                                             <h3 class="font-esports text-3xl font-bold text-white mb-1 tracking-wide drop-shadow-md">Ильшат</h3>
                                             <p class="text-[11px] text-lm-gold font-bold tracking-widest uppercase bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm inline-block">Rank: <span class="player-rank text-white">...</span></p>
                                         </div>
                                     </div>
-                                    <p class="text-gray-300 text-sm mb-6 h-10 drop-shadow-md relative z-10">Любит играть против снайпера.</p>
+                                    <p class="text-gray-300 text-sm mb-4 h-10 drop-shadow-md relative z-10">Любит играть против снайпера.</p>
                                     
-                                    <div class="bg-black/60 backdrop-blur-md rounded p-4 mb-4 border border-white/10 flex justify-between items-center shadow-lg">
-                                        <p class="text-[10px] text-lm-gold font-bold uppercase tracking-wider">Последние 5 игр</p>
-                                        <div class="player-matches flex gap-1.5 h-6 items-center"><div class="w-16 h-2 bg-gray-800 rounded animate-pulse"></div></div>
-                                    </div>
-
-                                    <div class="border-t border-white/10 pt-4 mb-6">
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3 text-center drop-shadow-md">Сигнатурные герои</p>
-                                        <div class="player-heroes flex justify-between gap-2">
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
+                                    <!-- БЛОК СТАТИСТИКИ НА КАРТОЧКЕ -->
+                                    <div class="bg-black/60 backdrop-blur-md rounded p-3 mb-4 border border-white/10 shadow-lg">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <p class="text-[10px] text-lm-gold font-bold uppercase tracking-wider">Последние игры (Winrate: <span class="player-wr text-white">...</span>)</p>
+                                            <div class="player-matches flex gap-1 h-5 items-center"><div class="w-10 h-2 bg-gray-800 rounded animate-pulse"></div></div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 mt-2 border-t border-white/5 pt-2">
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg K/D/A</p>
+                                                <p class="player-kda text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg GPM / XPM</p>
+                                                <p class="player-gpm text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
-                                    <button onclick="openPhotoModal('player_ilshat.png')" class="w-1/2 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Фото</button>
-                                    <a href="https://www.opendota.com/players/1585608718" target="_blank" class="w-1/2 bg-lm-gold/10 hover:bg-lm-gold text-lm-gold hover:text-black border border-lm-gold/20 hover:border-lm-gold text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Профиль ↗</a>
+                                    <button onclick="openPhotoModal('player_ilshat.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
+                                    <button onclick="openStatsModal('1585608718', 'Ильшат', '#ffb800')" class="w-1/3 bg-lm-gold/10 hover:bg-lm-gold text-lm-gold hover:text-black border border-lm-gold/20 hover:border-lm-gold text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm shadow-[0_0_10px_rgba(255,184,0,0.1)]">Досье 📊</button>
+                                    <a href="https://www.opendota.com/players/1585608718" target="_blank" class="w-1/3 bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">ДБ ↗</a>
                                 </div>
                             </div>
                         </div>
@@ -253,34 +220,38 @@
                                         <span class="text-[10px] text-gray-500 font-mono tracking-widest uppercase player-status bg-black/50 px-2 py-1 rounded backdrop-blur-sm">Загрузка...</span>
                                     </div>
                                     <div class="flex items-center gap-5 mb-5">
-                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10 cursor-pointer hover:border-lm-purple transition shadow-[0_0_15px_rgba(139,0,255,0.1)]" onclick="openPhotoModal('player_kostya.png')">
+                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10 shadow-[0_0_15px_rgba(139,0,255,0.1)]">
                                             <img src="https://placehold.co/100/1a1a1a/333" class="w-full h-full object-cover player-avatar" alt="Avatar">
-                                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="text-white text-xs">📸</span></div>
                                         </div>
                                         <div>
                                             <h3 class="font-esports text-3xl font-bold text-white mb-1 tracking-wide drop-shadow-md">Костя</h3>
                                             <p class="text-[11px] text-lm-purple font-bold tracking-widest uppercase bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm inline-block">Rank: <span class="player-rank text-white">...</span></p>
                                         </div>
                                     </div>
-                                    <p class="text-gray-300 text-sm mb-6 h-10 drop-shadow-md relative z-10">Знает, что он выиграет АМа на Dark Seer'e.</p>
+                                    <p class="text-gray-300 text-sm mb-4 h-10 drop-shadow-md relative z-10">Знает, что он выиграет АМа на Dark Seer'e.</p>
                                     
-                                    <div class="bg-black/60 backdrop-blur-md rounded p-4 mb-4 border border-white/10 flex justify-between items-center shadow-lg">
-                                        <p class="text-[10px] text-lm-purple font-bold uppercase tracking-wider">Последние 5 игр</p>
-                                        <div class="player-matches flex gap-1.5 h-6 items-center"><div class="w-16 h-2 bg-gray-800 rounded animate-pulse"></div></div>
-                                    </div>
-
-                                    <div class="border-t border-white/10 pt-4 mb-6">
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3 text-center drop-shadow-md">Сигнатурные герои</p>
-                                        <div class="player-heroes flex justify-between gap-2">
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
+                                    <div class="bg-black/60 backdrop-blur-md rounded p-3 mb-4 border border-white/10 shadow-lg">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <p class="text-[10px] text-lm-purple font-bold uppercase tracking-wider">Последние игры (Winrate: <span class="player-wr text-white">...</span>)</p>
+                                            <div class="player-matches flex gap-1 h-5 items-center"><div class="w-10 h-2 bg-gray-800 rounded animate-pulse"></div></div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 mt-2 border-t border-white/5 pt-2">
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg K/D/A</p>
+                                                <p class="player-kda text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg GPM / XPM</p>
+                                                <p class="player-gpm text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
-                                    <button onclick="openPhotoModal('player_kostya.png')" class="w-1/2 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Фото</button>
-                                    <a href="https://www.opendota.com/players/129692343" target="_blank" class="w-1/2 bg-lm-purple/10 hover:bg-lm-purple text-lm-purple hover:text-white border border-lm-purple/20 hover:border-lm-purple text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Профиль ↗</a>
+                                    <button onclick="openPhotoModal('player_kostya.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
+                                    <button onclick="openStatsModal('129692343', 'Костя', '#8b00ff')" class="w-1/3 bg-lm-purple/10 hover:bg-lm-purple text-lm-purple hover:text-white border border-lm-purple/20 hover:border-lm-purple text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm shadow-[0_0_10px_rgba(139,0,255,0.1)]">Досье 📊</button>
+                                    <a href="https://www.opendota.com/players/129692343" target="_blank" class="w-1/3 bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">ДБ ↗</a>
                                 </div>
                             </div>
                         </div>
@@ -295,34 +266,38 @@
                                         <span class="text-[10px] text-gray-500 font-mono tracking-widest uppercase player-status bg-black/50 px-2 py-1 rounded backdrop-blur-sm">Загрузка...</span>
                                     </div>
                                     <div class="flex items-center gap-5 mb-5">
-                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10 cursor-pointer hover:border-blue-400 transition" onclick="openPhotoModal('player_kirill.png')">
+                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10">
                                             <img src="https://placehold.co/100/1a1a1a/333" class="w-full h-full object-cover player-avatar" alt="Avatar">
-                                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="text-white text-xs">📸</span></div>
                                         </div>
                                         <div>
                                             <h3 class="font-esports text-3xl font-bold text-white mb-1 tracking-wide drop-shadow-md">Кирилл</h3>
                                             <p class="text-[11px] text-blue-400 font-bold tracking-widest uppercase bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm inline-block">Rank: <span class="player-rank text-white">...</span></p>
                                         </div>
                                     </div>
-                                    <p class="text-gray-300 text-sm mb-6 h-10 drop-shadow-md relative z-10">Мечтает покупать рапиры.</p>
+                                    <p class="text-gray-300 text-sm mb-4 h-10 drop-shadow-md relative z-10">Мечтает покупать рапиры.</p>
                                     
-                                    <div class="bg-black/60 backdrop-blur-md rounded p-4 mb-4 border border-white/10 flex justify-between items-center shadow-lg">
-                                        <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Последние 5 игр</p>
-                                        <div class="player-matches flex gap-1.5 h-6 items-center"><div class="w-16 h-2 bg-gray-800 rounded animate-pulse"></div></div>
-                                    </div>
-
-                                    <div class="border-t border-white/10 pt-4 mb-6">
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3 text-center drop-shadow-md">Сигнатурные герои</p>
-                                        <div class="player-heroes flex justify-between gap-2">
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
+                                    <div class="bg-black/60 backdrop-blur-md rounded p-3 mb-4 border border-white/10 shadow-lg">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Последние игры (Winrate: <span class="player-wr text-white">...</span>)</p>
+                                            <div class="player-matches flex gap-1 h-5 items-center"><div class="w-10 h-2 bg-gray-800 rounded animate-pulse"></div></div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 mt-2 border-t border-white/5 pt-2">
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg K/D/A</p>
+                                                <p class="player-kda text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg GPM / XPM</p>
+                                                <p class="player-gpm text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
-                                    <button onclick="openPhotoModal('player_kirill.png')" class="w-1/2 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Фото</button>
-                                    <a href="https://www.opendota.com/players/421012634" target="_blank" class="w-1/2 bg-blue-500/10 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/20 hover:border-blue-500 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Профиль ↗</a>
+                                    <button onclick="openPhotoModal('player_kirill.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
+                                    <button onclick="openStatsModal('421012634', 'Кирилл', '#60a5fa')" class="w-1/3 bg-blue-500/10 hover:bg-blue-500 text-blue-400 hover:text-white border border-blue-500/20 hover:border-blue-500 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm shadow-[0_0_10px_rgba(59,130,246,0.1)]">Досье 📊</button>
+                                    <a href="https://www.opendota.com/players/421012634" target="_blank" class="w-1/3 bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">ДБ ↗</a>
                                 </div>
                             </div>
                         </div>
@@ -337,34 +312,38 @@
                                         <span class="text-[10px] text-gray-500 font-mono tracking-widest uppercase player-status bg-black/50 px-2 py-1 rounded backdrop-blur-sm">Загрузка...</span>
                                     </div>
                                     <div class="flex items-center gap-5 mb-5">
-                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10 cursor-pointer hover:border-blue-400 transition" onclick="openPhotoModal('player_insaf.png')">
+                                        <div class="relative w-16 h-16 rounded overflow-hidden border border-white/10">
                                             <img src="https://placehold.co/100/1a1a1a/333" class="w-full h-full object-cover player-avatar" alt="Avatar">
-                                            <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><span class="text-white text-xs">📸</span></div>
                                         </div>
                                         <div>
                                             <h3 class="font-esports text-3xl font-bold text-white mb-1 tracking-wide drop-shadow-md">Инсаф</h3>
                                             <p class="text-[11px] text-blue-400 font-bold tracking-widest uppercase bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm inline-block">Rank: <span class="player-rank text-white">...</span></p>
                                         </div>
                                     </div>
-                                    <p class="text-gray-300 text-sm mb-6 h-10 drop-shadow-md relative z-10">Армлет на любом герое.</p>
+                                    <p class="text-gray-300 text-sm mb-4 h-10 drop-shadow-md relative z-10">Армлет на любом герое.</p>
                                     
-                                    <div class="bg-black/60 backdrop-blur-md rounded p-4 mb-4 border border-white/10 flex justify-between items-center shadow-lg">
-                                        <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Последние 5 игр</p>
-                                        <div class="player-matches flex gap-1.5 h-6 items-center"><div class="w-16 h-2 bg-gray-800 rounded animate-pulse"></div></div>
-                                    </div>
-
-                                    <div class="border-t border-white/10 pt-4 mb-6">
-                                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-3 text-center drop-shadow-md">Сигнатурные герои</p>
-                                        <div class="player-heroes flex justify-between gap-2">
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
-                                            <div class="w-full h-16 bg-white/5 rounded animate-pulse"></div>
+                                    <div class="bg-black/60 backdrop-blur-md rounded p-3 mb-4 border border-white/10 shadow-lg">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Последние игры (Winrate: <span class="player-wr text-white">...</span>)</p>
+                                            <div class="player-matches flex gap-1 h-5 items-center"><div class="w-10 h-2 bg-gray-800 rounded animate-pulse"></div></div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 mt-2 border-t border-white/5 pt-2">
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg K/D/A</p>
+                                                <p class="player-kda text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[9px] text-gray-500 uppercase">Avg GPM / XPM</p>
+                                                <p class="player-gpm text-xs font-bold text-white tracking-wide">...</p>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
-                                    <button onclick="openPhotoModal('player_insaf.png')" class="w-1/2 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Фото</button>
-                                    <a href="https://www.opendota.com/players/237813481" target="_blank" class="w-1/2 bg-blue-500/10 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/20 hover:border-blue-500 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition duration-300 backdrop-blur-sm">Профиль ↗</a>
+                                    <button onclick="openPhotoModal('player_insaf.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
+                                    <button onclick="openStatsModal('237813481', 'Инсаф', '#60a5fa')" class="w-1/3 bg-blue-500/10 hover:bg-blue-500 text-blue-400 hover:text-white border border-blue-500/20 hover:border-blue-500 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm shadow-[0_0_10px_rgba(59,130,246,0.1)]">Досье 📊</button>
+                                    <a href="https://www.opendota.com/players/237813481" target="_blank" class="w-1/3 bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">ДБ ↗</a>
                                 </div>
                             </div>
                         </div>
@@ -380,7 +359,6 @@
                         <span class="text-lm-gold text-xs font-extrabold tracking-widest uppercase block mb-2">Зал Славы</span>
                         <h2 class="font-esports text-4xl md:text-5xl font-bold text-white uppercase tracking-wide">Достижения <span class="text-lm-purple">Команды</span></h2>
                     </div>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="pro-card rounded-xl p-8 flex flex-col items-center text-center group border border-lm-gold/20 hover:border-lm-gold reveal delay-100">
                             <div class="text-5xl mb-4 group-hover:scale-110 transition duration-300 drop-shadow-[0_0_15px_rgba(255,184,0,0.8)]">🏆</div>
@@ -388,14 +366,12 @@
                             <div class="text-lm-gold font-bold text-lg mb-4 bg-lm-gold/10 border border-lm-gold/30 px-5 py-1 rounded shadow-inner">5 Побед</div>
                             <p class="text-sm text-gray-300 italic">«5 Батл Капов выйграл в доте, а?! Деньги просрал в доте, а!»</p>
                         </div>
-
                         <div class="pro-card rounded-xl p-8 flex flex-col items-center text-center group border border-red-500/20 hover:border-red-500 reveal delay-200">
                             <div class="text-5xl mb-4 group-hover:scale-110 transition duration-300 drop-shadow-[0_0_15px_rgba(239,68,68,0.8)]">💔</div>
                             <h3 class="font-esports text-2xl font-bold text-white mb-2 uppercase tracking-wider">МТС CUP</h3>
                             <div class="text-red-400 font-bold text-lg mb-4 bg-red-500/10 border border-red-500/30 px-5 py-1 rounded shadow-inner">1 Поражение</div>
                             <p class="text-sm text-gray-400">Трагичная страница истории. Оступились, но стали только сильнее (и злее).</p>
                         </div>
-
                         <div class="pro-card rounded-xl p-8 flex flex-col items-center text-center group border border-lm-purple/20 hover:border-lm-purple reveal delay-300">
                             <div class="text-5xl mb-4 group-hover:scale-110 transition duration-300 drop-shadow-[0_0_15px_rgba(139,0,255,0.8)]">🏭</div>
                             <h3 class="font-esports text-2xl font-bold text-white mb-2 uppercase tracking-wider">Турнир "Пермский Завод"</h3>
@@ -413,7 +389,6 @@
                         <span class="text-lm-purple text-xs font-extrabold tracking-widest uppercase block mb-2">Официальный Магазин</span>
                         <h2 class="font-esports text-5xl font-bold text-white uppercase tracking-wide">Мерч <span class="text-lm-gold">Команды</span></h2>
                     </div>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="merch-container">
                         <div class="pro-card rounded-xl overflow-hidden group border border-white/10 hover:border-lm-gold reveal delay-100">
                             <div class="card-content h-full flex flex-col">
@@ -432,7 +407,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="pro-card rounded-xl overflow-hidden group border border-white/10 hover:border-lm-purple reveal delay-200">
                             <div class="card-content h-full flex flex-col">
                                 <div class="h-80 bg-black relative flex items-center justify-center p-0 overflow-hidden">
@@ -461,7 +435,6 @@
             <div class="relative z-10">
                 <img src="image_3.png" alt="Logo" class="h-16 w-16 object-contain mx-auto mb-6 opacity-90 drop-shadow-[0_0_15px_rgba(255,184,0,0.4)]" onerror="this.style.display='none'">
                 <p class="font-esports text-white font-bold tracking-widest text-3xl uppercase mb-8">Lebrone Mentally</p>
-                
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
                     <a href="https://t.me/SHKV4" target="_blank" class="flex items-center justify-center gap-3 w-64 bg-white/5 hover:bg-[#0088cc] border border-white/10 hover:border-[#0088cc] px-6 py-4 rounded-sm transition group">
                         <span class="font-bold text-xs tracking-widest text-gray-300 group-hover:text-white transition uppercase">Telegram @SHKV4</span>
@@ -473,10 +446,33 @@
                 <p class="text-[10px] text-gray-500 font-mono tracking-widest">© 2026. DATA POWERED BY OPENDOTA API.</p>
             </div>
         </footer>
-
     </div>
 
-    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <!-- МОДАЛЬНОЕ ОКНО: ДОСЬЕ (СТАТИСТИКА) 📊 -->
+    <div id="statsModal" class="fixed inset-0 z-[120] bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-[#0a0a0c] border border-white/10 rounded-xl max-w-4xl w-full p-6 animate-modal relative shadow-[0_0_40px_rgba(0,0,0,1)] flex flex-col md:flex-row gap-8 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeStatsModal()" class="absolute top-4 right-5 text-gray-500 hover:text-white text-3xl font-light transition z-10">&times;</button>
+            
+            <!-- Левая колонка: График -->
+            <div class="w-full md:w-1/2 flex flex-col items-center border-b md:border-b-0 md:border-r border-white/5 pb-6 md:pb-0 pr-0 md:pr-6">
+                <span class="text-gray-500 text-[10px] font-bold tracking-widest uppercase mb-1">Секретное Досье</span>
+                <h3 id="statsPlayerName" class="font-esports text-4xl text-white uppercase tracking-wide mb-6">...</h3>
+                <div class="w-full max-w-[300px] aspect-square relative">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Правая колонка: Мемная Стата -->
+            <div class="w-full md:w-1/2 flex flex-col justify-center">
+                <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-4 border-b border-white/10 pb-2">Логи Аналитики</h4>
+                <div id="statsFunContainer" class="flex flex-col gap-4">
+                    <!-- Заполняется через JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО: ФОТО 📸 -->
     <div id="photoModal" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4 backdrop-blur-md cursor-pointer" onclick="closePhotoModal()">
         <div class="relative max-w-4xl animate-modal flex items-center justify-center">
             <button class="absolute -top-12 right-0 text-lm-gold hover:text-white text-4xl font-light transition drop-shadow-[0_0_10px_rgba(255,184,0,0.5)]">&times;</button>
@@ -484,156 +480,178 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО: МАГАЗИН 🛒 -->
     <div id="orderModal" class="fixed inset-0 z-[110] bg-black/80 hidden items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#121215] border border-white/10 rounded-xl max-w-md w-full p-8 animate-modal relative shadow-2xl">
             <button onclick="closeOrderModal()" class="absolute top-4 right-5 text-gray-500 hover:text-white text-3xl font-light transition">&times;</button>
             <h3 class="font-esports text-3xl text-white uppercase tracking-wide mb-2">Оформление <span class="text-lm-gold">заказа</span></h3>
-            <p class="text-gray-400 text-sm mb-6">Ваш заказ будет отправлен нашему менеджеру в Telegram для уточнения деталей доставки и оплаты.</p>
-            
             <div class="bg-black/50 p-4 rounded mb-6 border border-white/5">
                 <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Выбранный товар:</p>
                 <p id="orderItemName" class="text-white font-bold text-lg drop-shadow-md">...</p>
                 <p id="orderItemPrice" class="text-lm-gold font-esports text-xl mt-1">...</p>
             </div>
-
             <form onsubmit="submitOrder(event)" class="flex flex-col gap-4">
-                <div>
-                    <label class="block text-[10px] text-gray-400 uppercase tracking-widest mb-2">Ваше Имя</label>
-                    <input type="text" id="buyerName" required class="w-full bg-black border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:border-lm-gold transition placeholder-gray-700" placeholder="Аегис Снач">
-                </div>
-                <div>
-                    <label class="block text-[10px] text-gray-400 uppercase tracking-widest mb-2">Город доставки</label>
-                    <input type="text" id="buyerCity" required class="w-full bg-black border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:border-lm-gold transition placeholder-gray-700" placeholder="Пермь">
-                </div>
-                
-                <button type="submit" class="mt-4 w-full bg-lm-gold text-black font-bold uppercase tracking-widest text-xs py-4 rounded hover:bg-yellow-400 transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,184,0,0.3)]">
-                    Перейти в Telegram <span class="text-lg leading-none">↗</span>
-                </button>
+                <div><input type="text" id="buyerName" required class="w-full bg-black border border-white/10 rounded px-4 py-3 text-white placeholder-gray-700" placeholder="Имя"></div>
+                <div><input type="text" id="buyerCity" required class="w-full bg-black border border-white/10 rounded px-4 py-3 text-white placeholder-gray-700" placeholder="Город доставки"></div>
+                <button type="submit" class="mt-4 w-full bg-lm-gold text-black font-bold uppercase tracking-widest text-xs py-4 rounded hover:bg-yellow-400 transition shadow-[0_0_15px_rgba(255,184,0,0.3)]">Перейти в Telegram ↗</button>
             </form>
         </div>
     </div>
 
     <!-- JS СКРИПТЫ -->
     <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); } });
-        }, { threshold: 0.1 });
+        // --- Базовые эффекты ---
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); }); }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
         VanillaTilt.init(document.querySelectorAll(".pro-card"), { max: 5, speed: 400, glare: true, "max-glare": 0.15, scale: 1.02 });
-
         particlesJS('particles-js', {
-            particles: {
-                number: { value: 60, density: { enable: true, value_area: 800 } },
-                color: { value: ["#ffb800", "#8b00ff", "#ffffff"] },
-                shape: { type: "circle" },
-                opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
-                size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.1, sync: false } },
-                line_linked: { enable: false },
-                move: { enable: true, speed: 1, direction: "top", random: true, straight: false, out_mode: "out", bounce: false }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: { onhover: { enable: true, mode: "bubble" }, onclick: { enable: true, mode: "repulse" }, resize: true },
-                modes: { bubble: { distance: 200, size: 6, duration: 2, opacity: 1, speed: 3 }, repulse: { distance: 200, duration: 0.4 } }
-            },
-            retina_detect: true
+            particles: { number: { value: 60 }, color: { value: ["#ffb800", "#8b00ff", "#ffffff"] }, shape: { type: "circle" }, opacity: { value: 0.5, random: true }, size: { value: 3, random: true }, move: { enable: true, speed: 1, direction: "top", out_mode: "out" } },
+            interactivity: { detect_on: "canvas", events: { onhover: { enable: true, mode: "bubble" }, onclick: { enable: true, mode: "repulse" } }, modes: { bubble: { distance: 200, size: 6, duration: 2 }, repulse: { distance: 200, duration: 0.4 } } }
         });
 
-        function hidePreloader() {
-            const preloader = document.getElementById('preloader');
-            if (preloader) {
-                preloader.style.opacity = '0';
-                setTimeout(() => { preloader.style.display = 'none'; }, 700);
-            }
-        }
+        // --- Preloader & Easter Eggs ---
+        function hidePreloader() { const p = document.getElementById('preloader'); if (p) { p.style.opacity = '0'; setTimeout(() => { p.style.display = 'none'; }, 700); } }
         window.addEventListener('load', () => { setTimeout(hidePreloader, 2500); });
 
         const titleEgg = document.getElementById('easter-egg-title');
         const rampageSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/4/4b/Announcer_kill_rampage_01.mp3');
         const lakadSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/6/67/Chat_wheel_2018_lakad_matataag.mp3');
-        rampageSound.volume = 0.5; lakadSound.volume = 0.7;
         let clickCount = 0; let clickTimer;
-        
         titleEgg.addEventListener('click', () => {
-            clickCount++;
-            titleEgg.classList.add('text-lm-gold', 'scale-110');
-            setTimeout(() => { titleEgg.classList.remove('text-lm-gold', 'scale-110'); }, 200);
+            clickCount++; titleEgg.classList.add('text-lm-gold', 'scale-110'); setTimeout(() => { titleEgg.classList.remove('text-lm-gold', 'scale-110'); }, 200);
             clearTimeout(clickTimer);
-
-            if (clickCount >= 3) {
-                rampageSound.pause(); lakadSound.currentTime = 0;
-                lakadSound.play().catch(e => console.log(e)); 
-                clickCount = 0;
-            } else {
-                rampageSound.currentTime = 0;
-                rampageSound.play().catch(e => console.log(e));
-                clickTimer = setTimeout(() => { clickCount = 0; }, 600);
-            }
+            if (clickCount >= 3) { rampageSound.pause(); lakadSound.currentTime = 0; lakadSound.play().catch(e=>{}); clickCount = 0; } 
+            else { rampageSound.currentTime = 0; rampageSound.play().catch(e=>{}); clickTimer = setTimeout(() => { clickCount = 0; }, 600); }
         });
 
-        let keyBuffer = '';
-        const epicSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/6/64/Dire_Ancient_Destroyed.mp3');
-        epicSound.volume = 0.6;
-
+        let keyBuffer = ''; const epicSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/6/64/Dire_Ancient_Destroyed.mp3');
         document.addEventListener('keydown', (e) => {
-            if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            
-            keyBuffer += e.key.toLowerCase();
-            if (keyBuffer.length > 2) keyBuffer = keyBuffer.slice(-2);
-            
+            if(e.target.tagName === 'INPUT') return;
+            keyBuffer += e.key.toLowerCase(); if (keyBuffer.length > 2) keyBuffer = keyBuffer.slice(-2);
             if (keyBuffer === 'gg') {
-                keyBuffer = '';
-                const ggScreen = document.getElementById('gg-screen');
-                ggScreen.classList.remove('hidden');
-                setTimeout(() => { ggScreen.classList.remove('opacity-0'); }, 10);
-                
-                epicSound.currentTime = 0;
-                epicSound.play().catch(err => console.log(err));
-
-                setTimeout(() => {
-                    ggScreen.classList.add('opacity-0');
-                    setTimeout(() => { ggScreen.classList.add('hidden'); }, 500);
-                }, 3000);
+                keyBuffer = ''; const ggScreen = document.getElementById('gg-screen'); ggScreen.classList.remove('hidden');
+                setTimeout(() => { ggScreen.classList.remove('opacity-0'); }, 10); epicSound.currentTime = 0; epicSound.play().catch(e=>{});
+                setTimeout(() => { ggScreen.classList.add('opacity-0'); setTimeout(() => { ggScreen.classList.add('hidden'); }, 500); }, 3000);
             }
         });
 
-        function openPhotoModal(imgSrc) {
-            document.getElementById('modalImg').src = imgSrc;
-            const modal = document.getElementById('photoModal');
-            modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.style.overflow = 'hidden';
-        }
-        function closePhotoModal() {
-            document.getElementById('photoModal').classList.add('hidden'); document.getElementById('photoModal').classList.remove('flex'); document.body.style.overflow = '';
+        // --- Модальные окна: Фото и Магазин ---
+        function openPhotoModal(src) { document.getElementById('modalImg').src = src; document.getElementById('photoModal').classList.remove('hidden'); document.getElementById('photoModal').classList.add('flex'); document.body.style.overflow = 'hidden'; }
+        function closePhotoModal() { document.getElementById('photoModal').classList.add('hidden'); document.getElementById('photoModal').classList.remove('flex'); document.body.style.overflow = ''; }
+        let sItem = ''; let sPrice = '';
+        function openOrderModal(name, price) { sItem = name; sPrice = price; document.getElementById('orderItemName').innerText = name; document.getElementById('orderItemPrice').innerText = price; document.getElementById('orderModal').classList.remove('hidden'); document.getElementById('orderModal').classList.add('flex'); document.body.style.overflow = 'hidden'; }
+        function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); document.getElementById('orderModal').classList.remove('flex'); document.body.style.overflow = ''; }
+        function submitOrder(e) { e.preventDefault(); const n = document.getElementById('buyerName').value; const c = document.getElementById('buyerCity').value; window.open(`https://t.me/SHKV4?text=${encodeURIComponent(`🔥 Заказ!\nТовар: ${sItem}\nЦена: ${sPrice}\nИмя: ${n}\nГород: ${c}`)}`, '_blank'); closeOrderModal(); }
+
+        // --- ГЛОБАЛЬНОЕ ХРАНИЛИЩЕ ДАННЫХ ДЛЯ ДОСЬЕ ---
+        const playerStats = {};
+        
+        // Мемная стата для каждого игрока
+        const funStatsDB = {
+            '127394881': [ // Артем
+                { icon: '🌪️', title: 'Сделано Rampage', value: '24' },
+                { icon: '💬', title: 'Топ фраза в чат', value: '"Mid or feed"' },
+                { icon: '👑', title: 'Своровано Аегисов', value: '7' }
+            ],
+            '1585608718': [ // Ильшат
+                { icon: '🔫', title: 'Убито Снайперов', value: '999+' },
+                { icon: '💬', title: 'Топ фраза в чат', value: '"?"' },
+                { icon: '💧', title: 'Выпито Боттлов', value: '1337' }
+            ],
+            '129692343': [ // Костя
+                { icon: '🛡️', title: 'Выиграно у АМ на Dark Seer', value: '100%' },
+                { icon: '💬', title: 'Топ фраза в чат', value: '"Space created"' },
+                { icon: '🎯', title: 'Идеальных стяжек', value: '42' }
+            ],
+            '421012634': [ // Кирилл
+                { icon: '🗡️', title: 'Куплено Рапир на саппе', value: '18' },
+                { icon: '💬', title: 'Топ фраза в чат', value: '"Report team"' },
+                { icon: '👁️', title: 'Сломано Обсов', value: '0 (не барское дело)' }
+            ],
+            '237813481': [ // Инсаф
+                { icon: '🩸', title: 'Собрано Армлетов', value: '120' },
+                { icon: '🔨', title: 'Разбито шмоток от злости', value: '3' },
+                { icon: '💬', title: 'Топ фраза в чат', value: '"GG End"' }
+            ]
+        };
+
+        let radarChartInstance = null;
+
+        // Открытие ДОСЬЕ
+        function openStatsModal(accountId, name, color) {
+            const stats = playerStats[accountId];
+            if(!stats) return; // Если API еще не загрузило
+
+            document.getElementById('statsPlayerName').innerText = name;
+            document.getElementById('statsPlayerName').style.color = color;
+
+            // Заполняем мемную стату
+            const funData = funStatsDB[accountId];
+            let funHtml = '';
+            funData.forEach(item => {
+                funHtml += `
+                    <div class="bg-white/5 border border-white/10 rounded p-3 flex items-center gap-4 hover:border-[${color}] transition">
+                        <div class="text-2xl">${item.icon}</div>
+                        <div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-widest">${item.title}</p>
+                            <p class="text-white font-bold text-lg">${item.value}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('statsFunContainer').innerHTML = funHtml;
+
+            // Рисуем Пентаграмму
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            if(radarChartInstance) radarChartInstance.destroy();
+
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Фарм', 'Драки', 'Пуш', 'Саппорт', 'Пул Героев'],
+                    datasets: [{
+                        label: 'Скилл',
+                        data: stats.radar,
+                        backgroundColor: `${color}40`,
+                        borderColor: color,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#000',
+                        pointBorderColor: color,
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: color,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            pointLabels: { color: '#ccc', font: { family: 'Oswald', size: 12, weight: 'bold' } },
+                            ticks: { display: false, min: 0, max: 100 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            document.getElementById('statsModal').classList.remove('hidden');
+            document.getElementById('statsModal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
 
-        let selectedItem = ''; let selectedPrice = '';
-        function openOrderModal(itemName, itemPrice) {
-            selectedItem = itemName; selectedPrice = itemPrice;
-            document.getElementById('orderItemName').innerText = itemName; document.getElementById('orderItemPrice').innerText = itemPrice;
-            const modal = document.getElementById('orderModal');
-            modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.style.overflow = 'hidden';
-        }
-        function closeOrderModal() {
-            document.getElementById('orderModal').classList.add('hidden'); document.getElementById('orderModal').classList.remove('flex'); document.body.style.overflow = '';
+        function closeStatsModal() {
+            document.getElementById('statsModal').classList.add('hidden');
+            document.getElementById('statsModal').classList.remove('flex');
+            document.body.style.overflow = '';
         }
 
-        function submitOrder(event) {
-            event.preventDefault();
-            const name = document.getElementById('buyerName').value;
-            const city = document.getElementById('buyerCity').value;
-            const message = `🔥 Новый заказ из магазина Lebrone Mentally!\n\n📦 Товар: ${selectedItem}\n💰 Цена: ${selectedPrice}\n\n👤 Имя: ${name}\n📍 Город: ${city}\n\nЗдравствуйте! Хочу оформить заказ. Подскажите детали оплаты и доставки.`;
-            window.open(`https://t.me/SHKV4?text=${encodeURIComponent(message)}`, '_blank');
-            closeOrderModal();
-            document.getElementById('buyerName').value = ''; document.getElementById('buyerCity').value = '';
-        }
-
+        // --- FETCH DOTA API ---
         async function fetchDotaStats() {
             try {
-                const heroesRes = await fetch('https://api.opendota.com/api/constants/heroes');
-                const heroesMap = await heroesRes.json();
                 const players = document.querySelectorAll('#players-container > div');
-                
                 const fetchPromises = Array.from(players).map(async (playerCard) => {
                     const accountId = playerCard.getAttribute('data-account-id');
                     if (!accountId) return;
@@ -642,104 +660,88 @@
                     const uiRank = playerCard.querySelector('.player-rank');
                     const uiStatus = playerCard.querySelector('.player-status');
                     const uiMatches = playerCard.querySelector('.player-matches');
-                    const uiHeroes = playerCard.querySelector('.player-heroes');
-                    const uiBg = playerCard.querySelector('.hero-bg');
+                    const uiWr = playerCard.querySelector('.player-wr');
+                    const uiKda = playerCard.querySelector('.player-kda');
+                    const uiGpm = playerCard.querySelector('.player-gpm');
 
                     try {
-                        const [resProfile, resMatches, resHeroes] = await Promise.all([
+                        const [resProfile, resMatches] = await Promise.all([
                             fetch(`https://api.opendota.com/api/players/${accountId}`),
-                            fetch(`https://api.opendota.com/api/players/${accountId}/recentMatches`),
-                            fetch(`https://api.opendota.com/api/players/${accountId}/heroes`)
+                            fetch(`https://api.opendota.com/api/players/${accountId}/recentMatches`)
                         ]);
 
-                        if (!resProfile.ok || !resMatches.ok || !resHeroes.ok) throw new Error('API Error');
+                        if (!resProfile.ok || !resMatches.ok) throw new Error('API Error');
 
                         const dataProfile = await resProfile.json();
                         const dataMatches = await resMatches.json();
-                        const dataHeroes = await resHeroes.json();
 
-                        if (dataProfile.profile && dataProfile.profile.avatarfull) { uiAvatar.src = dataProfile.profile.avatarfull; }
+                        if (dataProfile.profile && dataProfile.profile.avatarfull) uiAvatar.src = dataProfile.profile.avatarfull;
                         if (dataProfile.rank_tier) {
                             const tier = dataProfile.rank_tier;
-                            const badge = Math.floor(tier / 10);
-                            const star = tier % 10;
-                            const rankNames = ['Unranked', 'Herald', 'Guardian', 'Crusader', 'Archon', 'Legend', 'Ancient', 'Divine', 'Immortal'];
-                            uiRank.textContent = `${rankNames[badge] || 'Rank'} ${star > 0 ? star : ''}`;
-                        } else { uiRank.textContent = 'Hidden'; }
+                            uiRank.textContent = `${['Unranked', 'Herald', 'Guardian', 'Crusader', 'Archon', 'Legend', 'Ancient', 'Divine', 'Immortal'][Math.floor(tier/10)] || 'Rank'} ${tier%10>0?tier%10:''}`;
+                        } else uiRank.textContent = 'Hidden';
 
-                        uiMatches.innerHTML = '';
+                        // Аналитика из 20 матчей
+                        let kills = 0, deaths = 0, assists = 0, gpm = 0, xpm = 0, lh = 0, hd = 0, td = 0, hh = 0, wins = 0;
+                        let heroesSet = new Set();
+
                         if (dataMatches && dataMatches.length > 0) {
+                            // Статус онлайна
                             const lastMatch = dataMatches[0];
-                            const lastMatchEndTime = lastMatch.start_time + lastMatch.duration;
-                            const now = Math.floor(Date.now() / 1000);
-                            const timeDiffSeconds = now - lastMatchEndTime;
+                            const timeDiff = Math.floor(Date.now()/1000) - (lastMatch.start_time + lastMatch.duration);
+                            if (timeDiff < 7200) uiStatus.innerHTML = `<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-green-400 font-bold">В ИГРЕ</span></span>`;
+                            else if (timeDiff < 86400) uiStatus.innerHTML = `<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-500"></span><span class="text-yellow-400">СЕГОДНЯ</span></span>`;
+                            else uiStatus.innerHTML = `<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-500"></span><span class="text-gray-400">ОФФЛАЙН (${Math.floor(timeDiff/86400)} дн.)</span></span>`;
 
-                            if (timeDiffSeconds < 7200) {
-                                uiStatus.innerHTML = `<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]"></span><span class="text-green-400 font-bold">В ИГРЕ</span></span>`;
-                            } else if (timeDiffSeconds < 86400) {
-                                uiStatus.innerHTML = `<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_5px_#eab308]"></span><span class="text-yellow-400">СЕГОДНЯ</span></span>`;
-                            } else {
-                                const daysAgo = Math.floor(timeDiffSeconds / 86400);
-                                uiStatus.innerHTML = `<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-500"></span><span class="text-gray-400">ОФФЛАЙН (${daysAgo} дн.)</span></span>`;
-                            }
-
-                            const recent = dataMatches.slice(0, 5);
-                            recent.forEach(match => {
-                                const isRadiant = match.player_slot < 128;
-                                const isWin = (isRadiant && match.radiant_win) || (!isRadiant && !match.radiant_win);
+                            uiMatches.innerHTML = '';
+                            dataMatches.slice(0, 5).forEach(m => {
+                                const isWin = (m.player_slot < 128 && m.radiant_win) || (m.player_slot >= 128 && !m.radiant_win);
                                 const el = document.createElement('div');
-                                el.className = `w-6 h-6 rounded flex items-center justify-center text-[9px] font-bold ${isWin ? 'match-w' : 'match-l'} shadow-sm`;
+                                el.className = `w-4 h-4 rounded text-[7px] flex items-center justify-center font-bold ${isWin ? 'match-w' : 'match-l'}`;
                                 el.textContent = isWin ? 'W' : 'L';
-                                el.title = `ID: ${match.match_id} | ${isWin ? 'Победа' : 'Поражение'}`;
                                 uiMatches.appendChild(el);
                             });
-                        } else { 
-                            uiStatus.innerHTML = `<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-600"></span><span class="text-gray-500">НЕТ ИГР</span></span>`;
-                            uiMatches.innerHTML = '<span class="text-xs text-gray-500">Нет матчей</span>'; 
-                        }
 
-                        uiHeroes.innerHTML = '';
-                        if (dataHeroes && dataHeroes.length > 0) {
-                            const top3 = dataHeroes.filter(h => h.games > 0).sort((a, b) => b.games - a.games).slice(0, 3);
-                            const topHeroInfo = heroesMap[top3[0].hero_id];
-                            if (topHeroInfo) {
-                                const imgName = topHeroInfo.name.replace('npc_dota_hero_', '');
-                                uiBg.style.backgroundImage = `url('https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png')`;
-                            }
-
-                            top3.forEach(h => {
-                                const heroInfo = heroesMap[h.hero_id];
-                                if(!heroInfo) return;
-                                const winrate = Math.round((h.win / h.games) * 100);
-                                const wrColor = winrate >= 50 ? 'text-green-400' : 'text-red-400';
-                                const imgName = heroInfo.name.replace('npc_dota_hero_', '');
-                                const imgSrc = `https://cdn.cloudflaresteamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png`;
-
-                                uiHeroes.innerHTML += `
-                                    <div class="flex flex-col items-center bg-black/60 backdrop-blur-md rounded p-2 flex-1 border border-white/10 hover:border-white/30 transition cursor-default shadow-lg" title="${h.games} игр, ${h.win} побед">
-                                        <img src="${imgSrc}" class="w-10 h-10 rounded shadow-md object-cover border border-white/10 mb-1.5 bg-black" alt="${heroInfo.localized_name}">
-                                        <p class="text-[9px] font-bold text-white text-center w-full truncate leading-tight">${heroInfo.localized_name}</p>
-                                        <p class="text-[10px] ${wrColor} font-bold leading-tight drop-shadow-md">${winrate}%</p>
-                                    </div>
-                                `;
+                            // Суммируем стату
+                            dataMatches.forEach(m => {
+                                kills += m.kills; deaths += m.deaths; assists += m.assists;
+                                gpm += m.gold_per_min; xpm += m.xp_per_min; lh += m.last_hits;
+                                hd += m.hero_damage; td += m.tower_damage; hh += m.hero_healing;
+                                heroesSet.add(m.hero_id);
+                                if ((m.player_slot < 128 && m.radiant_win) || (m.player_slot >= 128 && !m.radiant_win)) wins++;
                             });
-                        } else { uiHeroes.innerHTML = '<span class="text-[10px] text-gray-500 w-full text-center py-4">Нет данных</span>'; }
 
+                            const count = dataMatches.length;
+                            const avgK = (kills/count).toFixed(1); const avgD = (deaths/count).toFixed(1); const avgA = (assists/count).toFixed(1);
+                            const winrate = Math.round((wins/count)*100);
+                            const avgGpm = Math.round(gpm/count); const avgXpm = Math.round(xpm/count);
+
+                            uiWr.textContent = `${winrate}%`;
+                            uiWr.className = `player-wr font-bold ${winrate >= 50 ? 'text-green-400' : 'text-red-400'}`;
+                            uiKda.textContent = `${avgK} / ${avgD} / ${avgA}`;
+                            uiGpm.textContent = `${avgGpm} / ${avgXpm}`;
+
+                            // Сохраняем данные для Пентаграммы (Нормализация до 100)
+                            playerStats[accountId] = {
+                                radar: [
+                                    Math.min(100, (lh/count)/3.5),         // Фарм
+                                    Math.min(100, (hd/count)/400),       // Драки
+                                    Math.min(100, (td/count)/60),        // Пуш
+                                    Math.min(100, ((assists/count)*4 + (hh/count)/80)), // Саппорт
+                                    Math.min(100, (heroesSet.size / 15) * 100) // Пул героев
+                                ]
+                            };
+                        } else {
+                            uiStatus.innerHTML = 'НЕТ ИГР'; uiMatches.innerHTML = '-'; uiWr.textContent = 'N/A'; uiKda.textContent = 'N/A'; uiGpm.textContent = 'N/A';
+                        }
                     } catch (error) {
-                        uiStatus.innerHTML = `<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-600"></span><span class="text-red-500">ОШИБКА АПИ</span></span>`;
-                        uiRank.textContent = 'N/A';
-                        uiMatches.innerHTML = '<span class="text-[10px] text-red-500">Скрытый профиль</span>';
-                        uiHeroes.innerHTML = '<span class="text-[10px] text-red-500 w-full text-center py-4">Недоступно</span>';
+                        uiStatus.innerHTML = `<span class="text-red-500">ОШИБКА АПИ</span>`;
                     }
                 });
 
                 await Promise.allSettled(fetchPromises);
                 hidePreloader();
-                
-            } catch (err) {
-                console.error('Критическая ошибка:', err);
-                hidePreloader();
-            }
+            } catch (err) { console.error(err); hidePreloader(); }
         }
         document.addEventListener('DOMContentLoaded', fetchDotaStats);
     </script>
