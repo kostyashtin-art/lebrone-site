@@ -585,11 +585,16 @@
         // --- 4. Звуковые пасхалки (Easter Eggs) ---
         const titleEgg = document.getElementById('easter-egg-title');
         
-        // Надежные ссылки на популярные звуки
-        const rampageSound = new Audio('https://www.myinstants.com/media/sounds/rampage_1.mp3');
-        const lakadSound = new Audio('https://www.myinstants.com/media/sounds/lakad-matataag-normalin-normalin.mp3');
+        // Используем прямые ссылки с Dota 2 Wiki (они работают стабильнее)
+        const rampageSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/4/4b/Announcer_kill_rampage_01.mp3');
+        const lakadSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/6/67/Chat_wheel_2018_lakad_matataag.mp3');
+        
+        // Настройка громкости, чтобы не оглушить
+        rampageSound.volume = 0.5;
+        lakadSound.volume = 0.7;
         
         let clickCount = 0;
+        let clickTimer;
         
         titleEgg.addEventListener('click', () => {
             clickCount++;
@@ -600,13 +605,25 @@
                 titleEgg.classList.remove('text-lm-gold', 'scale-110');
             }, 200);
 
-            // Каждый 3-й клик - Lakad Matataag, остальные - Rampage
-            if (clickCount % 3 === 0) {
+            // Очищаем таймер при каждом новом клике
+            clearTimeout(clickTimer);
+
+            if (clickCount >= 3) {
+                // Если это 3-й клик: останавливаем Rampage и запускаем Lakad!
+                rampageSound.pause();
                 lakadSound.currentTime = 0;
-                lakadSound.play();
+                // catch нужен, чтобы браузер не ругался в консоли
+                lakadSound.play().catch(e => console.log("Браузер заблокировал звук", e)); 
+                clickCount = 0; // Сбрасываем счетчик
             } else {
+                // Если это 1-й или 2-й клик: запускаем Rampage
                 rampageSound.currentTime = 0;
-                rampageSound.play();
+                rampageSound.play().catch(e => console.log("Браузер заблокировал звук", e));
+                
+                // Если за 0.6 секунды не было новых кликов, сбрасываем серию
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 600);
             }
         });
 
