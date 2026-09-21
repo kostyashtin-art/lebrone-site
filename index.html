@@ -43,7 +43,6 @@
             transform: rotate(180deg);
         }
 
-        /* Карточки (база для 3D) */
         .pro-card { 
             background: linear-gradient(180deg, #121215 0%, #0a0a0c 100%); 
             border: 1px solid rgba(255, 255, 255, 0.05); 
@@ -57,7 +56,6 @@
         .card-content { transform: translateZ(30px); }
         .role-badge { background: rgba(255, 184, 0, 0.05); border: 1px solid rgba(255, 184, 0, 0.2); }
 
-        /* Анимация проявления при скролле (Scroll Reveal) */
         .reveal {
             opacity: 0;
             transform: translateY(50px);
@@ -68,31 +66,28 @@
             transform: translateY(0);
         }
 
-        /* Модальные окна */
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.98); }
             to { opacity: 1; transform: scale(1); }
         }
         .animate-modal { animation: fadeIn 0.25s ease-out forwards; }
         
-        /* Полоса загрузки (Preloader) */
         @keyframes loading-bar {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
         .animate-loading { animation: loading-bar 1.5s ease-in-out infinite; }
 
-        /* Статусы матчей */
         .match-w { @apply bg-green-500/15 text-green-400 border border-green-500/40; }
         .match-l { @apply bg-red-500/15 text-red-400 border border-red-500/40; }
     </style>
 </head>
 <body class="antialiased selection:bg-lm-gold selection:text-black min-h-screen">
 
-    <!-- ⏳ ЭКРАН ЗАГРУЗКИ (PRELOADER) -->
+   <!-- ⏳ ЭКРАН ЗАГРУЗКИ (PRELOADER) -->
     <div id="preloader" class="fixed inset-0 z-[9999] bg-[#030303] flex flex-col items-center justify-center transition-opacity duration-700">
         <img src="image_3.png" alt="Lebrone Mentally" class="w-32 h-32 mb-8 animate-pulse drop-shadow-[0_0_25px_rgba(255,184,0,0.4)]" onerror="this.src='https://placehold.co/128/1a1a1a/ffb800?text=LM'">
-        <h2 class="font-esports text-lm-gold text-xl md:text-3xl font-bold tracking-widest uppercase mb-4 animate-pulse">Connecting to Dota 2 Coordinator...</h2>
+        <h2 class="font-esports text-lm-gold text-xl md:text-4xl font-bold tracking-widest uppercase mb-4 animate-pulse">Алена извини</h2>
         <div class="w-64 h-1.5 bg-white/10 rounded overflow-hidden relative">
             <div class="absolute inset-0 bg-lm-purple w-full animate-loading"></div>
         </div>
@@ -118,24 +113,27 @@
 
     <!-- ВЕРХНИЕ ПРАВЫЕ КНОПКИ -->
     <div class="fixed top-6 right-6 z-50 flex gap-4">
-        <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">
-            МЕРЧ ↗
-        </a>
-        <a href="https://t.me/SHKV4" target="_blank" class="hidden md:flex bg-lm-gold text-black text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-yellow-400 transition shadow-[0_0_15px_rgba(255,184,0,0.4)] items-center gap-2 rounded-sm">
-            ТЕЛЕГРАМ ↗
-        </a>
+        <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">МЕРЧ ↗</a>
+        <a href="https://t.me/SHKV4" target="_blank" class="hidden md:flex bg-lm-gold text-black text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-yellow-400 transition shadow-[0_0_15px_rgba(255,184,0,0.4)] items-center gap-2 rounded-sm">ТЕЛЕГРАМ ↗</a>
     </div>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
     <div class="ml-14 md:ml-16">
 
-        <!-- ГЛАВНЫЙ ЭКРАН -->
+        <!-- ГЛАВНЫЙ ЭКРАН С ВИДЕО ФОНОМ -->
         <header class="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
-            <div id="particles-js" class="absolute inset-0 z-0"></div>
-            <div class="absolute inset-0 bg-[url('image.png')] bg-cover bg-center bg-no-repeat opacity-50 z-0"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/60 to-transparent z-0"></div>
+            <!-- Золотые искры -->
+            <div id="particles-js" class="absolute inset-0 z-10 pointer-events-none"></div>
             
-            <div class="relative z-10 text-center px-4 w-full max-w-6xl mt-10 reveal">
+            <!-- ЖИВОЙ ВИДЕО ФОН ИЗ ДОТЫ -->
+            <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-40 z-0 pointer-events-none">
+                <source src="fight.mp4" type="video/mp4">
+            </video>
+            
+            <!-- Градиентное затемнение, чтобы текст читался -->
+            <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/50 to-dark/30 z-0 pointer-events-none"></div>
+            
+            <div class="relative z-20 text-center px-4 w-full max-w-6xl mt-10 reveal">
                 <img src="image_3.png" alt="Lebrone Mentally" class="w-32 md:w-48 mx-auto mb-8 drop-shadow-[0_0_30px_rgba(139,0,255,0.7)]" onerror="this.style.display='none'">
                 
                 <!-- ПАСХАЛКА С КЛИКАМИ -->
@@ -143,9 +141,7 @@
                     Мы можем дефать<br><span class="text-lm-gold drop-shadow-[0_0_15px_rgba(255,184,0,0.4)]">мегакрипов</span> 60 минут
                 </h1>
                 
-                <a href="#roster" class="inline-block bg-white text-black font-bold text-[10px] md:text-xs px-10 py-3.5 uppercase tracking-widest hover:bg-lm-gold transition duration-300 rounded-sm mt-4">
-                    ПОДРОБНЕЕ
-                </a>
+                <a href="#roster" class="inline-block bg-white text-black font-bold text-[10px] md:text-xs px-10 py-3.5 uppercase tracking-widest hover:bg-lm-gold transition duration-300 rounded-sm mt-4">ПОДРОБНЕЕ</a>
             </div>
         </header>
 
@@ -163,7 +159,6 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8" id="players-container">
-                        
                         <!-- ИГРОК 1: Артем -->
                         <div class="pro-card rounded-xl p-6 flex flex-col justify-between group relative overflow-hidden reveal delay-100" data-account-id="127394881">
                             <div class="hero-bg absolute inset-0 bg-cover bg-center bg-no-repeat opacity-0 group-hover:opacity-20 transition-opacity duration-700 z-0 mix-blend-screen grayscale group-hover:grayscale-0"></div>
@@ -482,7 +477,6 @@
     </div>
 
     <!-- МОДАЛЬНЫЕ ОКНА -->
-    <!-- Фото -->
     <div id="photoModal" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4 backdrop-blur-md cursor-pointer" onclick="closePhotoModal()">
         <div class="relative max-w-4xl animate-modal flex items-center justify-center">
             <button class="absolute -top-12 right-0 text-lm-gold hover:text-white text-4xl font-light transition drop-shadow-[0_0_10px_rgba(255,184,0,0.5)]">&times;</button>
@@ -490,7 +484,6 @@
         </div>
     </div>
 
-    <!-- Заказ (Магазин) -->
     <div id="orderModal" class="fixed inset-0 z-[110] bg-black/80 hidden items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-[#121215] border border-white/10 rounded-xl max-w-md w-full p-8 animate-modal relative shadow-2xl">
             <button onclick="closeOrderModal()" class="absolute top-4 right-5 text-gray-500 hover:text-white text-3xl font-light transition">&times;</button>
@@ -522,16 +515,13 @@
 
     <!-- JS СКРИПТЫ -->
     <script>
-        // --- 1. Анимация появления при скролле ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); } });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // --- 2. 3D наклон карточек ---
         VanillaTilt.init(document.querySelectorAll(".pro-card"), { max: 5, speed: 400, glare: true, "max-glare": 0.15, scale: 1.02 });
 
-        // --- 3. Искры на главном экране ---
         particlesJS('particles-js', {
             particles: {
                 number: { value: 60, density: { enable: true, value_area: 800 } },
@@ -550,7 +540,6 @@
             retina_detect: true
         });
 
-        // --- 4. Управление экраном загрузки (Preloader) ---
         function hidePreloader() {
             const preloader = document.getElementById('preloader');
             if (preloader) {
@@ -558,10 +547,8 @@
                 setTimeout(() => { preloader.style.display = 'none'; }, 700);
             }
         }
-        // Запасной таймер на случай, если API не ответит
         window.addEventListener('load', () => { setTimeout(hidePreloader, 2500); });
 
-        // --- 5. Звуковая пасхалка (Lakad Matataag по клику на текст) ---
         const titleEgg = document.getElementById('easter-egg-title');
         const rampageSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/4/4b/Announcer_kill_rampage_01.mp3');
         const lakadSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/6/67/Chat_wheel_2018_lakad_matataag.mp3');
@@ -585,7 +572,6 @@
             }
         });
 
-        // --- 6. СЕКРЕТНЫЙ КОД "GG WP" (Нажатие G + G) ---
         let keyBuffer = '';
         const epicSound = new Audio('https://static.wikia.nocookie.net/dota2_gamepedia/images/6/64/Dire_Ancient_Destroyed.mp3');
         epicSound.volume = 0.6;
@@ -600,7 +586,6 @@
                 keyBuffer = '';
                 const ggScreen = document.getElementById('gg-screen');
                 ggScreen.classList.remove('hidden');
-                
                 setTimeout(() => { ggScreen.classList.remove('opacity-0'); }, 10);
                 
                 epicSound.currentTime = 0;
@@ -613,7 +598,6 @@
             }
         });
 
-        // --- 7. Магазин и Модальные окна ---
         function openPhotoModal(imgSrc) {
             document.getElementById('modalImg').src = imgSrc;
             const modal = document.getElementById('photoModal');
@@ -644,14 +628,12 @@
             document.getElementById('buyerName').value = ''; document.getElementById('buyerCity').value = '';
         }
 
-        // --- 8. Fetch данных из OpenDota API + СТАТУС ОНЛАЙНА ---
         async function fetchDotaStats() {
             try {
                 const heroesRes = await fetch('https://api.opendota.com/api/constants/heroes');
                 const heroesMap = await heroesRes.json();
                 const players = document.querySelectorAll('#players-container > div');
                 
-                // Используем Promise.allSettled чтобы отрендерить даже тех, кто выдаст ошибку, и в конце убрать прелоадер
                 const fetchPromises = Array.from(players).map(async (playerCard) => {
                     const accountId = playerCard.getAttribute('data-account-id');
                     if (!accountId) return;
@@ -685,7 +667,6 @@
                             uiRank.textContent = `${rankNames[badge] || 'Rank'} ${star > 0 ? star : ''}`;
                         } else { uiRank.textContent = 'Hidden'; }
 
-                        // Логика Онлайна
                         uiMatches.innerHTML = '';
                         if (dataMatches && dataMatches.length > 0) {
                             const lastMatch = dataMatches[0];
@@ -717,7 +698,6 @@
                             uiMatches.innerHTML = '<span class="text-xs text-gray-500">Нет матчей</span>'; 
                         }
 
-                        // Герои и Фон
                         uiHeroes.innerHTML = '';
                         if (dataHeroes && dataHeroes.length > 0) {
                             const top3 = dataHeroes.filter(h => h.games > 0).sort((a, b) => b.games - a.games).slice(0, 3);
@@ -733,7 +713,7 @@
                                 const winrate = Math.round((h.win / h.games) * 100);
                                 const wrColor = winrate >= 50 ? 'text-green-400' : 'text-red-400';
                                 const imgName = heroInfo.name.replace('npc_dota_hero_', '');
-                                const imgSrc = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png`;
+                                const imgSrc = `https://cdn.cloudflaresteamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png`;
 
                                 uiHeroes.innerHTML += `
                                     <div class="flex flex-col items-center bg-black/60 backdrop-blur-md rounded p-2 flex-1 border border-white/10 hover:border-white/30 transition cursor-default shadow-lg" title="${h.games} игр, ${h.win} побед">
@@ -753,13 +733,12 @@
                     }
                 });
 
-                // Когда все профили загружены (успешно или с ошибкой) - прячем экран загрузки
                 await Promise.allSettled(fetchPromises);
                 hidePreloader();
                 
             } catch (err) {
-                console.error('Критическая ошибка загрузки API:', err);
-                hidePreloader(); // прячем экран даже если сломалось всё
+                console.error('Критическая ошибка:', err);
+                hidePreloader();
             }
         }
         document.addEventListener('DOMContentLoaded', fetchDotaStats);
