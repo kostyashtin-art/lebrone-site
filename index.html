@@ -49,7 +49,6 @@
         .match-w { @apply bg-green-500/15 text-green-400 border border-green-500/40; }
         .match-l { @apply bg-red-500/15 text-red-400 border border-red-500/40; }
         
-        /* Стили для скроллбара в сборках */
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,184,0,0.5); border-radius: 4px; }
@@ -442,7 +441,7 @@
                             </span>
                             <h2 class="font-esports text-4xl md:text-5xl font-bold text-white uppercase tracking-wide">Лучшие герои <span class="text-gray-400">Патча</span></h2>
                         </div>
-                        <p class="text-xs text-gray-500 max-w-sm md:text-right">Live статистика винрейта самых сильных героев текущего патча по позициям. Нажмите на героя, чтобы посмотреть актуальную сборку.</p>
+                        <p class="text-xs text-gray-500 max-w-sm md:text-right">Live статистика винрейта самых сильных героев текущего патча по позициям. Нажмите на героя, чтобы посмотреть популярную сборку.</p>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6" id="meta-container">
@@ -526,31 +525,31 @@
 
     <!-- МОДАЛЬНОЕ ОКНО: СБОРКА И ТАЛАНТЫ ГЕРОЯ ⚔️ -->
     <div id="heroBuildModal" class="fixed inset-0 z-[130] bg-black/95 hidden items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#121215] border border-white/10 rounded-xl max-w-3xl w-full p-6 animate-modal relative shadow-2xl flex flex-col">
+        <div class="bg-[#121215] border border-white/10 rounded-xl max-w-3xl w-full p-6 animate-modal relative shadow-[0_0_40px_rgba(0,0,0,1)] flex flex-col max-h-[90vh] overflow-y-auto custom-scrollbar">
             <button onclick="closeHeroBuildModal()" class="absolute top-4 right-5 text-gray-500 hover:text-white text-3xl font-light transition z-10">&times;</button>
             
             <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
                 <img id="hbHeroImg" src="" class="w-16 h-16 rounded shadow-[0_0_15px_rgba(255,184,0,0.2)] object-cover grayscale-[20%] border border-lm-gold/50">
                 <div>
                     <h3 id="hbHeroName" class="font-esports text-3xl font-bold text-white tracking-wide uppercase">Hero</h3>
-                    <p class="text-lm-gold text-[10px] uppercase tracking-widest font-bold">Pro Tracker Build & Timings</p>
+                    <p class="text-lm-gold text-[10px] uppercase tracking-widest font-bold">OpenDota Live Build & Timings</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Сборка -->
+                <!-- Сборка из OpenDota API -->
                 <div>
-                    <h4 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-4">Сборка (Тайминги)</h4>
+                    <h4 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-4">Самые популярные предметы</h4>
                     <div id="hbItems" class="flex flex-col gap-3">
-                        <!-- Динамически -->
+                        <div class="text-xs text-gray-500 animate-pulse">Загрузка данных OpenDota...</div>
                     </div>
                 </div>
 
-                <!-- Таланты -->
+                <!-- Таланты (Визуализация) -->
                 <div>
                     <h4 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-4">Дерево Талантов</h4>
                     <div class="bg-black/40 border border-white/5 rounded-lg p-6 flex flex-col gap-5 justify-center items-center h-auto min-h-[220px]" id="hbTalents">
-                        <!-- Динамически -->
+                        <!-- Динамически заполняется -->
                     </div>
                 </div>
             </div>
@@ -612,18 +611,13 @@
         function openStatsModal(accountId, name, color) {
             const stats = playerStats[accountId];
             if(!stats) return;
-
             document.getElementById('statsPlayerName').innerText = name;
             document.getElementById('statsPlayerName').style.color = color;
-
             const metrics = [
                 { title: 'Винрейт', val: `${stats.winrate}%` }, { title: 'Средний KDA', val: stats.kda }, { title: 'GPM / XPM', val: `${stats.gpm} / ${stats.xpm}` }, { title: 'Урон по героям', val: stats.heroDmg }, { title: 'Урон по зданиям', val: stats.towerDmg }, { title: 'Ластхиты (LH)', val: stats.lh }, { title: 'Побед / Поражений', val: `${stats.wins}W - ${stats.losses}L` }, { title: 'Всего матчей', val: stats.totalMatches }
             ];
-
             let metricsHtml = '';
-            metrics.forEach(m => {
-                metricsHtml += `<div class="bg-white/5 border border-white/10 rounded p-3 flex flex-col justify-between hover:border-[${color}] transition"><span class="text-[9px] text-gray-400 uppercase tracking-widest">${m.title}</span><span class="text-white font-bold text-base mt-1">${m.val}</span></div>`;
-            });
+            metrics.forEach(m => { metricsHtml += `<div class="bg-white/5 border border-white/10 rounded p-3 flex flex-col justify-between hover:border-[${color}] transition"><span class="text-[9px] text-gray-400 uppercase tracking-widest">${m.title}</span><span class="text-white font-bold text-base mt-1">${m.val}</span></div>`; });
             document.getElementById('statsMetricsContainer').innerHTML = metricsHtml;
 
             const ctx = document.getElementById('radarChart').getContext('2d');
@@ -632,70 +626,90 @@
                 type: 'radar',
                 data: {
                     labels: ['Фарм', 'Драки', 'Пуш', 'Саппорт', 'Пул Героев'],
-                    datasets: [{
-                        label: 'Параметры', data: stats.radar, backgroundColor: `${color}40`, borderColor: color, borderWidth: 2, pointBackgroundColor: '#000', pointBorderColor: color, pointHoverBackgroundColor: '#fff', pointHoverBorderColor: color, pointRadius: 4
-                    }]
+                    datasets: [{ label: 'Параметры', data: stats.radar, backgroundColor: `${color}40`, borderColor: color, borderWidth: 2, pointBackgroundColor: '#000', pointBorderColor: color, pointHoverBackgroundColor: '#fff', pointHoverBorderColor: color, pointRadius: 4 }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, scales: { r: { angleLines: { color: 'rgba(255, 255, 255, 0.1)' }, grid: { color: 'rgba(255, 255, 255, 0.1)' }, pointLabels: { color: '#ccc', font: { family: 'Oswald', size: 12, weight: 'bold' } }, ticks: { display: false, min: 0, max: 100 } } }, plugins: { legend: { display: false } } }
             });
-
             document.getElementById('statsModal').classList.remove('hidden'); document.getElementById('statsModal').classList.add('flex'); document.body.style.overflow = 'hidden';
         }
         function closeStatsModal() { document.getElementById('statsModal').classList.add('hidden'); document.getElementById('statsModal').classList.remove('flex'); document.body.style.overflow = ''; }
 
-        // --- МОДАЛЬНОЕ ОКНО: СБОРКА И ТАЛАНТЫ ---
-        function openHeroBuildModal(heroName, heroImgUrl, pos) {
+        // --- МОДАЛЬНОЕ ОКНО: СБОРКА И ТАЛАНТЫ ГЕРОЯ (Через OpenDota API) ---
+        async function openHeroBuildModal(heroId, heroName, heroImgUrl) {
             document.getElementById('hbHeroName').innerText = heroName;
             document.getElementById('hbHeroImg').src = heroImgUrl;
+            document.getElementById('hbItems').innerHTML = '<div class="text-xs text-gray-500 animate-pulse">Загрузка данных OpenDota...</div>';
+            
+            document.getElementById('heroBuildModal').classList.remove('hidden');
+            document.getElementById('heroBuildModal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
 
-            // Генерация таймингов по позициям
-            const posBuilds = {
-                1: [ { id: 'wraith_band', time: '02:15' }, { id: 'power_treads', time: '06:30' }, { id: 'bfury', time: '14:20' }, { id: 'manta', time: '19:45' }, { id: 'black_king_bar', time: '24:10' }, { id: 'skadi', time: '31:00' } ],
-                2: [ { id: 'bottle', time: '01:30' }, { id: 'power_treads', time: '05:40' }, { id: 'witch_blade', time: '12:15' }, { id: 'black_king_bar', time: '18:50' }, { id: 'ultimate_scepter', time: '23:20' }, { id: 'sheepstick', time: '29:45' } ],
-                3: [ { id: 'bracer', time: '02:00' }, { id: 'phase_boots', time: '05:10' }, { id: 'vanguard', time: '09:30' }, { id: 'blink', time: '14:45' }, { id: 'black_king_bar', time: '21:00' }, { id: 'shivas_guard', time: '28:15' } ],
-                4: [ { id: 'magic_wand', time: '03:15' }, { id: 'tranquil_boots', time: '08:20' }, { id: 'urn_of_shadows', time: '11:40' }, { id: 'force_staff', time: '17:15' }, { id: 'solar_crest', time: '24:30' }, { id: 'lotus_orb', time: '32:00' } ],
-                5: [ { id: 'magic_wand', time: '04:00' }, { id: 'arcane_boots', time: '09:30' }, { id: 'glimmer_cape', time: '18:15' }, { id: 'force_staff', time: '25:40' }, { id: 'ghost', time: '33:10' }, { id: 'holy_locket', time: '41:00' } ]
-            };
-
-            const build = posBuilds[pos] || posBuilds[1];
-            let itemsHtml = '';
-            build.forEach(item => {
-                const imgSrc = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${item.id}.png`;
-                itemsHtml += `
-                    <div class="flex items-center justify-between bg-black/60 border border-white/5 rounded p-2 hover:border-lm-gold/50 transition">
-                        <div class="flex items-center gap-3">
-                            <img src="${imgSrc}" class="w-10 h-7 rounded object-cover shadow-md bg-black">
-                            <span class="text-white text-xs font-bold uppercase tracking-wider">${item.id.replace(/_/g, ' ')}</span>
-                        </div>
-                        <span class="text-lm-gold text-xs font-mono font-bold bg-lm-gold/10 px-2 py-0.5 rounded border border-lm-gold/20">${item.time}</span>
-                    </div>
-                `;
-            });
-            document.getElementById('hbItems').innerHTML = itemsHtml;
-
-            // Генерация UI Талантов
+            // Генерируем красивое дерево талантов
             let talentHtml = '';
-            const levels = [25, 20, 15, 10];
-            levels.forEach(lvl => {
+            [25, 20, 15, 10].forEach(lvl => {
                 const isLeft = Math.random() > 0.5;
                 const leftClass = isLeft ? 'bg-lm-gold shadow-[0_0_10px_rgba(255,184,0,0.8)]' : 'bg-gray-700';
                 const rightClass = !isLeft ? 'bg-lm-gold shadow-[0_0_10px_rgba(255,184,0,0.8)]' : 'bg-gray-700';
-                
                 talentHtml += `
                     <div class="flex items-center justify-between w-full max-w-[200px]">
-                        <div class="w-4 h-4 rounded-full ${leftClass}"></div>
-                        <div class="h-0.5 bg-gray-700 flex-1 mx-2"></div>
+                        <div class="w-4 h-4 rounded-full ${leftClass}"></div><div class="h-0.5 bg-gray-700 flex-1 mx-2"></div>
                         <div class="text-white font-bold text-xs w-6 text-center">${lvl}</div>
-                        <div class="h-0.5 bg-gray-700 flex-1 mx-2"></div>
-                        <div class="w-4 h-4 rounded-full ${rightClass}"></div>
+                        <div class="h-0.5 bg-gray-700 flex-1 mx-2"></div><div class="w-4 h-4 rounded-full ${rightClass}"></div>
                     </div>
                 `;
             });
             document.getElementById('hbTalents').innerHTML = talentHtml;
 
-            document.getElementById('heroBuildModal').classList.remove('hidden');
-            document.getElementById('heroBuildModal').classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            // Подгружаем реальные сборки из API
+            try {
+                if(!window.dotaItemsMap) {
+                    const res = await fetch('https://api.opendota.com/api/constants/items');
+                    window.dotaItemsMap = await res.json();
+                }
+
+                const popRes = await fetch(`https://api.opendota.com/api/heroes/${heroId}/itemPopularity`);
+                if (!popRes.ok) throw new Error('API Error');
+                const popularity = await popRes.json();
+
+                const stages = [
+                    { key: 'early_game_items', name: 'Early (10-15 мин)', count: 2 },
+                    { key: 'mid_game_items', name: 'Mid Game (20-25 мин)', count: 3 },
+                    { key: 'late_game_items', name: 'Late Game (35+ мин)', count: 2 }
+                ];
+
+                let itemsHtml = '';
+                stages.forEach(stage => {
+                    const itemsObj = popularity[stage.key] || {};
+                    const topItems = Object.entries(itemsObj)
+                        .sort((a, b) => b[1] - a[1]) // Сортируем по популярности
+                        .filter(([id, _]) => {
+                            const itm = window.dotaItemsMap[id];
+                            // Убираем дешевые расходники, чтобы видеть нормальную сборку
+                            return itm && itm.cost >= 500 && !['ward_observer', 'ward_sentry', 'tpscroll', 'tome_of_knowledge', 'moon_shard'].includes(id);
+                        })
+                        .slice(0, stage.count);
+
+                    topItems.forEach(([id, _]) => {
+                        const itemData = window.dotaItemsMap[id];
+                        const itemName = itemData.dname || id.replace(/_/g, ' ');
+                        const imgSrc = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${id}.png`;
+                        itemsHtml += `
+                            <div class="flex items-center justify-between bg-black/60 border border-white/5 rounded p-2 hover:border-lm-gold/50 transition">
+                                <div class="flex items-center gap-3">
+                                    <img src="${imgSrc}" class="w-10 h-7 rounded object-cover shadow-md bg-black" onerror="this.src='https://placehold.co/40x28/1a1a1a/ffb800?text=Item'">
+                                    <span class="text-white text-xs font-bold uppercase tracking-wider truncate max-w-[120px]" title="${itemName}">${itemName}</span>
+                                </div>
+                                <span class="text-lm-gold text-[10px] font-mono font-bold bg-lm-gold/10 px-2 py-0.5 rounded border border-lm-gold/20 whitespace-nowrap">${stage.name}</span>
+                            </div>
+                        `;
+                    });
+                });
+
+                document.getElementById('hbItems').innerHTML = itemsHtml || '<div class="text-xs text-red-500">Нет данных для этого героя</div>';
+            } catch(e) {
+                console.error(e);
+                document.getElementById('hbItems').innerHTML = '<div class="text-xs text-red-500">Ошибка загрузки API OpenDota</div>';
+            }
         }
         function closeHeroBuildModal() { document.getElementById('heroBuildModal').classList.add('hidden'); document.getElementById('heroBuildModal').classList.remove('flex'); document.body.style.overflow = ''; }
 
@@ -705,7 +719,6 @@
                 const players = document.querySelectorAll('#players-container > div');
                 const fetchPromises = Array.from(players).map(async (playerCard) => {
                     const accountId = playerCard.getAttribute('data-account-id');
-                    const posId = playerCard.getAttribute('data-pos') || 1;
                     if (!accountId) return;
 
                     const uiAvatar = playerCard.querySelector('.player-avatar');
@@ -726,7 +739,6 @@
                         ]);
 
                         if (!resProfile.ok || !resMatches.ok || !resHeroes.ok) throw new Error('API Error');
-
                         const dataProfile = await resProfile.json();
                         const dataMatches = await resMatches.json();
                         const dataHeroes = await resHeroes.json();
@@ -755,7 +767,7 @@
 
                             playerStats[accountId] = { winrate: winrate, kda: `${avgK} / ${avgD} / ${avgA}`, gpm: avgGpm, xpm: avgXpm, heroDmg: Math.round(hd/count).toLocaleString(), towerDmg: Math.round(td/count).toLocaleString(), lh: Math.round(lh/count), wins: wins, losses: count - wins, totalMatches: count, radar: [Math.min(100, (lh/count)/3.5), Math.min(100, (hd/count)/400), Math.min(100, (td/count)/60), Math.min(100, ((assists/count)*4 + (hh/count)/80)), Math.min(100, (heroesSet.size / 15) * 100)] };
                         } else { uiStatus.innerHTML = 'НЕТ ИГР'; uiMatches.innerHTML = '-'; uiWr.textContent = 'N/A'; uiKda.textContent = 'N/A'; uiGpm.textContent = 'N/A'; }
-                        
+
                         // Сигнатурные герои игрока с КЛИКОМ НА СБОРКУ
                         uiHeroes.innerHTML = '';
                         if (dataHeroes && dataHeroes.length > 0) {
@@ -769,7 +781,7 @@
                                 const imgSrc = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${imgName}.png`;
 
                                 uiHeroes.innerHTML += `
-                                    <div onclick="openHeroBuildModal('${heroInfo.localized_name}', '${imgSrc}', ${posId})" class="flex flex-col items-center bg-black/60 backdrop-blur-md rounded p-2 flex-1 border border-white/10 hover:border-lm-gold transition cursor-pointer shadow-lg group">
+                                    <div onclick="openHeroBuildModal('${heroInfo.id}', '${heroInfo.localized_name}', '${imgSrc}')" class="flex flex-col items-center bg-black/60 backdrop-blur-md rounded p-2 flex-1 border border-white/10 hover:border-lm-gold transition cursor-pointer shadow-lg group">
                                         <img src="${imgSrc}" class="w-10 h-10 rounded shadow-md object-cover border border-white/10 mb-1.5 bg-black group-hover:scale-105 transition" alt="${heroInfo.localized_name}">
                                         <p class="text-[9px] font-bold text-white text-center w-full truncate leading-tight">${heroInfo.localized_name}</p>
                                         <p class="text-[10px] ${wrColor} font-bold leading-tight drop-shadow-md">${winrate}%</p>
@@ -777,6 +789,7 @@
                                 `;
                             });
                         }
+
                     } catch (error) { uiStatus.innerHTML = `<span class="text-red-500">ОШИБКА АПИ</span>`; }
                 });
                 await Promise.allSettled(fetchPromises);
@@ -824,9 +837,9 @@
                         posHeroes.forEach((h, index) => {
                             const imgUrl = `https://cdn.cloudflare.steamstatic.com${h.icon}`;
                             const wrColor = h.wr >= 50 ? 'text-green-400' : 'text-red-400';
-                            // ДОБАВЛЕН КЛИК ПО ГЕРОЮ В МЕТЕ ДЛЯ ОТКРЫТИЯ СБОРКИ
+                            // ДОБАВЛЕН КЛИК ПО ГЕРОЮ В МЕТЕ ДЛЯ ОТКРЫТИЯ СБОРКИ ЧЕРЕЗ API
                             html += `
-                                <div onclick="openHeroBuildModal('${h.localized_name}', '${imgUrl}', ${pos})" class="flex items-center justify-between bg-black/40 rounded p-2 border border-white/5 hover:border-lm-gold transition group cursor-pointer">
+                                <div onclick="openHeroBuildModal('${h.id}', '${h.localized_name}', '${imgUrl}')" class="flex items-center justify-between bg-black/40 rounded p-2 border border-white/5 hover:border-lm-gold transition group cursor-pointer">
                                     <div class="flex items-center gap-3">
                                         <span class="text-gray-600 font-esports text-sm font-bold w-2 group-hover:text-white transition">${index+1}</span>
                                         <img src="${imgUrl}" class="w-8 h-8 rounded shadow object-cover grayscale-[30%] group-hover:grayscale-0 transition" alt="${h.localized_name}">
