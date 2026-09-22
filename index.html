@@ -49,6 +49,7 @@
         .match-w { @apply bg-green-500/15 text-green-400 border border-green-500/40; }
         .match-l { @apply bg-red-500/15 text-red-400 border border-red-500/40; }
         
+        /* Стили для скроллбара в сборках */
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,184,0,0.5); border-radius: 4px; }
@@ -77,13 +78,13 @@
             <a href="#roster" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Команда</a>
             <a href="#meta" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-green-400 transition">Мета</a>
             <a href="#trophies" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-white transition">Достижения</a>
-            <a href="#store" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-purple transition">Рынок & Мерч</a>
+            <a href="#store" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-purple transition">Мерч</a>
         </div>
         <img src="image_3.png" alt="LM" class="w-10 h-10 object-contain cursor-pointer drop-shadow-[0_0_10px_rgba(255,184,0,0.3)] hover:scale-110 transition duration-300" onclick="window.scrollTo(0,0)" onerror="this.src='https://placehold.co/40/1a1a1a/ffb800?text=LM'">
     </aside>
 
     <div class="fixed top-6 right-6 z-50 flex gap-4">
-        <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">РЫНОК & МЕРЧ ↗</a>
+        <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">МЕРЧ ↗</a>
     </div>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
@@ -445,7 +446,6 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6" id="meta-container">
-                        <!-- Скелетоны до загрузки API -->
                         <div class="pro-card rounded-xl p-5 h-56 animate-pulse flex flex-col gap-4"><div class="h-6 bg-white/10 rounded w-1/2"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div></div>
                         <div class="pro-card rounded-xl p-5 h-56 animate-pulse flex flex-col gap-4 hidden md:flex"><div class="h-6 bg-white/10 rounded w-1/2"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div></div>
                         <div class="pro-card rounded-xl p-5 h-56 animate-pulse flex flex-col gap-4 hidden md:flex"><div class="h-6 bg-white/10 rounded w-1/2"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div></div>
@@ -480,6 +480,53 @@
                             <h3 class="font-esports text-2xl font-bold text-white mb-2 uppercase tracking-wider">Турнир "Пермский Завод"</h3>
                             <div class="text-lm-purple font-bold text-lg mb-4 bg-lm-purple/10 border border-lm-purple/30 px-5 py-1 rounded shadow-inner">3 Победы</div>
                             <p class="text-sm text-gray-400">Лучшая команда цеха. Вынесли работяг вперед ногами без шансов.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- СЕКЦИЯ: МАГАЗИН МЕРЧА -->
+            <section id="store" class="py-24 px-6 bg-surface border-t border-white/5">
+                <div class="max-w-5xl mx-auto">
+                    <div class="mb-16 border-b border-white/10 pb-6 reveal">
+                        <span class="text-lm-purple text-xs font-extrabold tracking-widest uppercase block mb-2">Официальный Магазин</span>
+                        <h2 class="font-esports text-5xl font-bold text-white uppercase tracking-wide">Мерч <span class="text-lm-gold">Команды</span></h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="merch-container">
+                        <div class="pro-card rounded-xl overflow-hidden group border border-white/10 hover:border-lm-gold reveal delay-100">
+                            <div class="card-content h-full flex flex-col">
+                                <div class="h-80 bg-black relative flex items-center justify-center p-0 overflow-hidden">
+                                    <img src="thermo.jpg" alt="Термокружка" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" onerror="this.src='https://placehold.co/600x600/1a1a1a/ffb800?text=Загрузите+thermo.jpg'">
+                                </div>
+                                <div class="p-8 border-t border-white/5 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="font-esports text-3xl font-bold text-white mb-2 uppercase tracking-wide">Термокружка "First Blood"</h3>
+                                        <p class="text-sm text-gray-400 mb-6 leading-relaxed">Матовый черный корпус с золотой гравировкой логотипа Lebrone Mentally и неоновыми акцентами. Сохраняет напиток горячим во время самых долгих каток.</p>
+                                    </div>
+                                    <div class="flex justify-between items-center mt-auto border-t border-white/10 pt-6">
+                                        <span class="font-esports text-3xl font-bold text-lm-gold drop-shadow-md">1 490 ₽</span>
+                                        <button onclick="openOrderModal('Термокружка First Blood', '1 490 ₽')" class="bg-lm-gold text-black hover:bg-yellow-400 px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest transition shadow-[0_0_15px_rgba(255,184,0,0.3)]">Купить</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pro-card rounded-xl overflow-hidden group border border-white/10 hover:border-lm-purple reveal delay-200">
+                            <div class="card-content h-full flex flex-col">
+                                <div class="h-80 bg-black relative flex items-center justify-center p-0 overflow-hidden">
+                                    <img src="deskmat.jpg" alt="Коврик Джинн" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" onerror="this.src='https://placehold.co/600x600/1a1a1a/8b00ff?text=Загрузите+deskmat.jpg'">
+                                </div>
+                                <div class="p-8 border-t border-white/5 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <h3 class="font-esports text-3xl font-bold text-white mb-2 uppercase tracking-wide">Игровой Коврик XXL "Джинн"</h3>
+                                        <p class="text-sm text-gray-400 mb-6 leading-relaxed">Эксклюзивный дизайн с пустынным Джинном. Speed-поверхность размером 900x400мм обеспечивает идеальное скольжение для любых глайдов. Прошитые края.</p>
+                                    </div>
+                                    <div class="flex justify-between items-center mt-auto border-t border-white/10 pt-6">
+                                        <span class="font-esports text-3xl font-bold text-lm-purple drop-shadow-md">1 990 ₽</span>
+                                        <button onclick="openOrderModal('Игровой Коврик XXL Джинн', '1 990 ₽')" class="bg-lm-purple text-white hover:bg-purple-500 px-8 py-3 rounded-sm text-xs font-bold uppercase tracking-widest transition shadow-[0_0_15px_rgba(139,0,255,0.4)]">Купить</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -537,19 +584,15 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Сборка из OpenDota API -->
                 <div>
                     <h4 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-4">Самые популярные предметы</h4>
                     <div id="hbItems" class="flex flex-col gap-3">
                         <div class="text-xs text-gray-500 animate-pulse">Загрузка данных OpenDota...</div>
                     </div>
                 </div>
-
-                <!-- Таланты (Визуализация) -->
                 <div>
                     <h4 class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-4">Дерево Талантов</h4>
                     <div class="bg-black/40 border border-white/5 rounded-lg p-6 flex flex-col gap-5 justify-center items-center h-auto min-h-[220px]" id="hbTalents">
-                        <!-- Динамически заполняется -->
                     </div>
                 </div>
             </div>
@@ -564,9 +607,26 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНОЕ ОКНО: МАГАЗИН 🛒 -->
+    <div id="orderModal" class="fixed inset-0 z-[110] bg-black/80 hidden items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-[#121215] border border-white/10 rounded-xl max-w-md w-full p-8 animate-modal relative shadow-2xl">
+            <button onclick="closeOrderModal()" class="absolute top-4 right-5 text-gray-500 hover:text-white text-3xl font-light transition">&times;</button>
+            <h3 class="font-esports text-3xl text-white uppercase tracking-wide mb-2">Оформление <span class="text-lm-gold">заказа</span></h3>
+            <div class="bg-black/50 p-4 rounded mb-6 border border-white/5">
+                <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Выбранный товар:</p>
+                <p id="orderItemName" class="text-white font-bold text-lg drop-shadow-md">...</p>
+                <p id="orderItemPrice" class="text-lm-gold font-esports text-xl mt-1">...</p>
+            </div>
+            <form onsubmit="submitOrder(event)" class="flex flex-col gap-4">
+                <div><input type="text" id="buyerName" required class="w-full bg-black border border-white/10 rounded px-4 py-3 text-white placeholder-gray-700" placeholder="Имя"></div>
+                <div><input type="text" id="buyerCity" required class="w-full bg-black border border-white/10 rounded px-4 py-3 text-white placeholder-gray-700" placeholder="Город доставки"></div>
+                <button type="submit" class="mt-4 w-full bg-lm-gold text-black font-bold uppercase tracking-widest text-xs py-4 rounded hover:bg-yellow-400 transition shadow-[0_0_15px_rgba(255,184,0,0.3)]">Перейти в Telegram ↗</button>
+            </form>
+        </div>
+    </div>
+
     <!-- JS СКРИПТЫ -->
     <script>
-        // --- Базовые скрипты и анимации ---
         const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); }); }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         VanillaTilt.init(document.querySelectorAll(".pro-card"), { max: 5, speed: 400, glare: true, "max-glare": 0.15, scale: 1.02 });
@@ -575,7 +635,6 @@
             interactivity: { detect_on: "canvas", events: { onhover: { enable: true, mode: "bubble" }, onclick: { enable: true, mode: "repulse" } }, modes: { bubble: { distance: 200, size: 6, duration: 2 }, repulse: { distance: 200, duration: 0.4 } } }
         });
 
-        // --- Прелоадер и Пасхалки ---
         function hidePreloader() { const p = document.getElementById('preloader'); if (p) { p.style.opacity = '0'; setTimeout(() => { p.style.display = 'none'; }, 700); } }
         window.addEventListener('load', () => { setTimeout(hidePreloader, 2500); });
 
@@ -603,8 +662,11 @@
 
         function openPhotoModal(src) { document.getElementById('modalImg').src = src; document.getElementById('photoModal').classList.remove('hidden'); document.getElementById('photoModal').classList.add('flex'); document.body.style.overflow = 'hidden'; }
         function closePhotoModal() { document.getElementById('photoModal').classList.add('hidden'); document.getElementById('photoModal').classList.remove('flex'); document.body.style.overflow = ''; }
+        let sItem = ''; let sPrice = '';
+        function openOrderModal(name, price) { sItem = name; sPrice = price; document.getElementById('orderItemName').innerText = name; document.getElementById('orderItemPrice').innerText = price; document.getElementById('orderModal').classList.remove('hidden'); document.getElementById('orderModal').classList.add('flex'); document.body.style.overflow = 'hidden'; }
+        function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); document.getElementById('orderModal').classList.remove('flex'); document.body.style.overflow = ''; }
+        function submitOrder(e) { e.preventDefault(); const n = document.getElementById('buyerName').value; const c = document.getElementById('buyerCity').value; window.open(`https://t.me/SHKV4?text=${encodeURIComponent(`🔥 Заказ!\nТовар: ${sItem}\nЦена: ${sPrice}\nИмя: ${n}\nГород: ${c}`)}`, '_blank'); closeOrderModal(); }
 
-        // --- МОДАЛЬНОЕ ОКНО: ДОСЬЕ ИГРОКА ---
         const playerStats = {};
         let radarChartInstance = null;
 
@@ -644,7 +706,6 @@
             document.getElementById('heroBuildModal').classList.add('flex');
             document.body.style.overflow = 'hidden';
 
-            // Генерируем красивое дерево талантов
             let talentHtml = '';
             [25, 20, 15, 10].forEach(lvl => {
                 const isLeft = Math.random() > 0.5;
@@ -660,11 +721,14 @@
             });
             document.getElementById('hbTalents').innerHTML = talentHtml;
 
-            // Подгружаем реальные сборки из API
             try {
-                if(!window.dotaItemsMap) {
-                    const res = await fetch('https://api.opendota.com/api/constants/items');
-                    window.dotaItemsMap = await res.json();
+                if(!window.dotaItemsMap || !window.dotaItemIds) {
+                    const [resItems, resIds] = await Promise.all([
+                        fetch('https://api.opendota.com/api/constants/items'),
+                        fetch('https://api.opendota.com/api/constants/item_ids')
+                    ]);
+                    window.dotaItemsMap = await resItems.json();
+                    window.dotaItemIds = await resIds.json();
                 }
 
                 const popRes = await fetch(`https://api.opendota.com/api/heroes/${heroId}/itemPopularity`);
@@ -673,31 +737,32 @@
 
                 const stages = [
                     { key: 'early_game_items', name: 'Early (10-15 мин)', count: 2 },
-                    { key: 'mid_game_items', name: 'Mid Game (20-25 мин)', count: 3 },
-                    { key: 'late_game_items', name: 'Late Game (35+ мин)', count: 2 }
+                    { key: 'mid_game_items', name: 'Mid (20-25 мин)', count: 3 },
+                    { key: 'late_game_items', name: 'Late (35+ мин)', count: 2 }
                 ];
 
                 let itemsHtml = '';
                 stages.forEach(stage => {
                     const itemsObj = popularity[stage.key] || {};
                     const topItems = Object.entries(itemsObj)
-                        .sort((a, b) => b[1] - a[1]) // Сортируем по популярности
-                        .filter(([id, _]) => {
-                            const itm = window.dotaItemsMap[id];
-                            // Убираем дешевые расходники, чтобы видеть нормальную сборку
-                            return itm && itm.cost >= 500 && !['ward_observer', 'ward_sentry', 'tpscroll', 'tome_of_knowledge', 'moon_shard'].includes(id);
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([numId, count]) => [window.dotaItemIds[numId], count])
+                        .filter(([itemName, _]) => {
+                            if(!itemName) return false;
+                            const itm = window.dotaItemsMap[itemName];
+                            return itm && itm.cost >= 500 && !['ward_observer', 'ward_sentry', 'tpscroll', 'tome_of_knowledge', 'moon_shard'].includes(itemName);
                         })
                         .slice(0, stage.count);
 
-                    topItems.forEach(([id, _]) => {
-                        const itemData = window.dotaItemsMap[id];
-                        const itemName = itemData.dname || id.replace(/_/g, ' ');
-                        const imgSrc = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${id}.png`;
+                    topItems.forEach(([itemName, _]) => {
+                        const itemData = window.dotaItemsMap[itemName];
+                        const nameToDisplay = itemData.dname || itemName.replace(/_/g, ' ');
+                        const imgSrc = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/items/${itemName}.png`;
                         itemsHtml += `
                             <div class="flex items-center justify-between bg-black/60 border border-white/5 rounded p-2 hover:border-lm-gold/50 transition">
                                 <div class="flex items-center gap-3">
                                     <img src="${imgSrc}" class="w-10 h-7 rounded object-cover shadow-md bg-black" onerror="this.src='https://placehold.co/40x28/1a1a1a/ffb800?text=Item'">
-                                    <span class="text-white text-xs font-bold uppercase tracking-wider truncate max-w-[120px]" title="${itemName}">${itemName}</span>
+                                    <span class="text-white text-xs font-bold uppercase tracking-wider truncate max-w-[120px]" title="${nameToDisplay}">${nameToDisplay}</span>
                                 </div>
                                 <span class="text-lm-gold text-[10px] font-mono font-bold bg-lm-gold/10 px-2 py-0.5 rounded border border-lm-gold/20 whitespace-nowrap">${stage.name}</span>
                             </div>
@@ -713,7 +778,6 @@
         }
         function closeHeroBuildModal() { document.getElementById('heroBuildModal').classList.add('hidden'); document.getElementById('heroBuildModal').classList.remove('flex'); document.body.style.overflow = ''; }
 
-        // --- FETCH DOTA API (ИГРОКИ) ---
         async function fetchDotaStats() {
             try {
                 const players = document.querySelectorAll('#players-container > div');
@@ -768,7 +832,6 @@
                             playerStats[accountId] = { winrate: winrate, kda: `${avgK} / ${avgD} / ${avgA}`, gpm: avgGpm, xpm: avgXpm, heroDmg: Math.round(hd/count).toLocaleString(), towerDmg: Math.round(td/count).toLocaleString(), lh: Math.round(lh/count), wins: wins, losses: count - wins, totalMatches: count, radar: [Math.min(100, (lh/count)/3.5), Math.min(100, (hd/count)/400), Math.min(100, (td/count)/60), Math.min(100, ((assists/count)*4 + (hh/count)/80)), Math.min(100, (heroesSet.size / 15) * 100)] };
                         } else { uiStatus.innerHTML = 'НЕТ ИГР'; uiMatches.innerHTML = '-'; uiWr.textContent = 'N/A'; uiKda.textContent = 'N/A'; uiGpm.textContent = 'N/A'; }
 
-                        // Сигнатурные герои игрока с КЛИКОМ НА СБОРКУ
                         uiHeroes.innerHTML = '';
                         if (dataHeroes && dataHeroes.length > 0) {
                             const top3 = dataHeroes.filter(h => h.games > 0).sort((a, b) => b.games - a.games).slice(0, 3);
@@ -796,7 +859,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // --- FETCH МЕТА (ГЕРОИ) С КЛИКОМ НА СБОРКУ ---
+        // --- FETCH МЕТА (ГЕРОИ) ---
         async function fetchMetaStats() {
             const container = document.getElementById('meta-container');
             try {
@@ -837,7 +900,6 @@
                         posHeroes.forEach((h, index) => {
                             const imgUrl = `https://cdn.cloudflare.steamstatic.com${h.icon}`;
                             const wrColor = h.wr >= 50 ? 'text-green-400' : 'text-red-400';
-                            // ДОБАВЛЕН КЛИК ПО ГЕРОЮ В МЕТЕ ДЛЯ ОТКРЫТИЯ СБОРКИ ЧЕРЕЗ API
                             html += `
                                 <div onclick="openHeroBuildModal('${h.id}', '${h.localized_name}', '${imgUrl}')" class="flex items-center justify-between bg-black/40 rounded p-2 border border-white/5 hover:border-lm-gold transition group cursor-pointer">
                                     <div class="flex items-center gap-3">
@@ -859,7 +921,7 @@
             } catch (e) { container.innerHTML = '<div class="col-span-full text-center text-red-500 text-xs">Ошибка соединения с OpenDota API. Перезагрузите страницу.</div>'; }
         }
 
-        // Запуск всех скриптов
+        // Запуск
         document.addEventListener('DOMContentLoaded', () => {
             fetchDotaStats();
             fetchMetaStats();
