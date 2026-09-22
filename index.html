@@ -73,13 +73,13 @@
             <a href="#roster" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Команда</a>
             <a href="#meta" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-green-400 transition">Мета</a>
             <a href="#trophies" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-white transition">Достижения</a>
-            <a href="#store" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-purple transition">Рынок & Мерч</a>
+            <a href="#store" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-purple transition">Мерч</a>
         </div>
         <img src="image_3.png" alt="LM" class="w-10 h-10 object-contain cursor-pointer drop-shadow-[0_0_10px_rgba(255,184,0,0.3)] hover:scale-110 transition duration-300" onclick="window.scrollTo(0,0)" onerror="this.src='https://placehold.co/40/1a1a1a/ffb800?text=LM'">
     </aside>
 
     <div class="fixed top-6 right-6 z-50 flex gap-4">
-        <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">РЫНОК & МЕРЧ ↗</a>
+        <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">МЕРЧ ↗</a>
     </div>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
@@ -397,11 +397,11 @@
                     <div class="mb-12 border-b border-white/10 pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 reveal">
                         <div>
                             <span class="text-green-400 text-xs font-extrabold tracking-widest uppercase block mb-2 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span> Pro Tracker Sync
+                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span> Global Meta Sync
                             </span>
-                            <h2 class="font-esports text-4xl md:text-5xl font-bold text-white uppercase tracking-wide">PRO СЦЕНА <span class="text-gray-400">ПАТЧА</span></h2>
+                            <h2 class="font-esports text-4xl md:text-5xl font-bold text-white uppercase tracking-wide">Лучшие герои <span class="text-gray-400">Патча</span></h2>
                         </div>
-                        <p class="text-xs text-gray-500 max-w-sm md:text-right">Live статистика винрейта в официальных киберспортивных матчах (Pro Tracker) по позициям. Данные обновляются через OpenDota API.</p>
+                        <p class="text-xs text-gray-500 max-w-sm md:text-right">Live статистика винрейта самых сильных героев текущего патча по позициям. Данные обновляются через OpenDota API.</p>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6" id="meta-container">
@@ -445,33 +445,14 @@
                 </div>
             </section>
 
-            <!-- СЕКЦИЯ: МАГАЗИН МЕРЧА И ЭКОНОМИКА STEAM -->
+            <!-- СЕКЦИЯ: МАГАЗИН МЕРЧА -->
             <section id="store" class="py-24 px-6 bg-surface border-t border-white/5">
                 <div class="max-w-5xl mx-auto">
-                    <div class="mb-16 border-b border-white/10 pb-6 reveal flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-                        <div>
-                            <span class="text-lm-purple text-xs font-extrabold tracking-widest uppercase block mb-2">Официальный Маркет</span>
-                            <h2 class="font-esports text-5xl font-bold text-white uppercase tracking-wide">Мерч & <span class="text-lm-gold">Steam Economy</span></h2>
-                        </div>
-                        <p class="text-xs text-gray-400">Цены предметов подтягиваются в реальном времени с торговой площадки Steam.</p>
+                    <div class="mb-16 border-b border-white/10 pb-6 reveal">
+                        <span class="text-lm-purple text-xs font-extrabold tracking-widest uppercase block mb-2">Официальный Магазин</span>
+                        <h2 class="font-esports text-5xl font-bold text-white uppercase tracking-wide">Мерч <span class="text-lm-gold">Команды</span></h2>
                     </div>
-
-                    <!-- ВИДЖЕТ ТОРГОВОЙ ПЛОЩАДКИ STEAM ECONOMY -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16" id="steam-market-widget">
-                        <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col items-center text-center animate-pulse">
-                            <span class="text-xs text-gray-500">Загрузка цен Steam...</span>
-                        </div>
-                        <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col items-center text-center animate-pulse">
-                            <span class="text-xs text-gray-500">Загрузка цен Steam...</span>
-                        </div>
-                        <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col items-center text-center animate-pulse">
-                            <span class="text-xs text-gray-500">Загрузка цен Steam...</span>
-                        </div>
-                        <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col items-center text-center animate-pulse">
-                            <span class="text-xs text-gray-500">Загрузка цен Steam...</span>
-                        </div>
-                    </div>
-
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="merch-container">
                         <div class="pro-card rounded-xl overflow-hidden group border border-white/10 hover:border-lm-gold reveal delay-100">
                             <div class="card-content h-full flex flex-col">
@@ -526,44 +507,27 @@
                         <span class="font-bold text-xs tracking-widest text-gray-300 group-hover:text-black transition uppercase">Steam hunderson</span>
                     </a>
                 </div>
-                <p class="text-[10px] text-gray-500 font-mono tracking-widest">© 2026. DATA POWERED BY STEAM & OPENDOTA API.</p>
+                <p class="text-[10px] text-gray-500 font-mono tracking-widest">© 2026. DATA POWERED BY OPENDOTA API.</p>
             </div>
         </footer>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО: АНАЛИТИЧЕСКОЕ ДОСЬЕ С STEAM USER STATS 📊 -->
+    <!-- МОДАЛЬНОЕ ОКНО: АНАЛИТИЧЕСКОЕ ДОСЬЕ 📊 -->
     <div id="statsModal" class="fixed inset-0 z-[120] bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#0a0a0c] border border-white/10 rounded-xl max-w-5xl w-full p-6 animate-modal relative shadow-[0_0_40px_rgba(0,0,0,1)] flex flex-col md:flex-row gap-8 max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#0a0a0c] border border-white/10 rounded-xl max-w-4xl w-full p-6 animate-modal relative shadow-[0_0_40px_rgba(0,0,0,1)] flex flex-col md:flex-row gap-8 max-h-[90vh] overflow-y-auto">
             <button onclick="closeStatsModal()" class="absolute top-4 right-5 text-gray-500 hover:text-white text-3xl font-light transition z-10">&times;</button>
             
-            <div class="w-full md:w-2/5 flex flex-col items-center border-b md:border-b-0 md:border-r border-white/5 pb-6 md:pb-0 pr-0 md:pr-6">
-                <span class="text-gray-500 text-[10px] font-bold tracking-widest uppercase mb-1">Steam User Stats & OpenDota</span>
-                <h3 id="statsPlayerName" class="font-esports text-4xl text-white uppercase tracking-wide mb-4">...</h3>
-                <div class="w-full max-w-[260px] aspect-square relative mb-4">
+            <div class="w-full md:w-1/2 flex flex-col items-center border-b md:border-b-0 md:border-r border-white/5 pb-6 md:pb-0 pr-0 md:pr-6">
+                <span class="text-gray-500 text-[10px] font-bold tracking-widest uppercase mb-1">Аналитика OpenDota API</span>
+                <h3 id="statsPlayerName" class="font-esports text-4xl text-white uppercase tracking-wide mb-6">...</h3>
+                <div class="w-full max-w-[300px] aspect-square relative">
                     <canvas id="radarChart"></canvas>
-                </div>
-                <div class="w-full bg-white/5 border border-white/10 rounded p-3 text-xs flex flex-col gap-2">
-                    <div class="flex justify-between"><span class="text-gray-400">Статус VAC-бана:</span> <span id="steamVac" class="text-green-400 font-bold">Чист ✅</span></div>
-                    <div class="flex justify-between"><span class="text-gray-400">Профиль Steam:</span> <span id="steamPrivacy" class="text-lm-gold">Открытый</span></div>
-                    <div class="flex justify-between"><span class="text-gray-400">Регион:</span> <span class="text-white">RU / EEU</span></div>
                 </div>
             </div>
 
-            <div class="w-full md:w-3/5 flex flex-col justify-center">
-                <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-4 border-b border-white/10 pb-2">Метрики матчей за 20 игр</h4>
-                <div id="statsMetricsContainer" class="grid grid-cols-2 gap-3 mb-6"></div>
-
-                <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-3 border-b border-white/10 pb-2">Steam Achievements & Global Stats</h4>
-                <div class="bg-black/50 border border-white/10 rounded p-4 flex flex-col gap-3">
-                    <div class="flex justify-between items-center text-xs">
-                        <span class="text-gray-400">Прогресс достижений Dota 2:</span>
-                        <span class="text-lm-gold font-bold">142 / 158 (90%)</span>
-                    </div>
-                    <div class="w-full bg-white/10 h-2 rounded overflow-hidden">
-                        <div class="bg-gradient-to-r from-lm-purple to-lm-gold h-full w-[90%]"></div>
-                    </div>
-                    <p class="text-[10px] text-gray-500">Данные синхронизированы через Web API.</p>
-                </div>
+            <div class="w-full md:w-1/2 flex flex-col justify-center">
+                <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-4 border-b border-white/10 pb-2">Статистика за 20 матчей</h4>
+                <div id="statsMetricsContainer" class="grid grid-cols-2 gap-3"></div>
             </div>
         </div>
     </div>
@@ -639,30 +603,6 @@
         function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); document.getElementById('orderModal').classList.remove('flex'); document.body.style.overflow = ''; }
         function submitOrder(e) { e.preventDefault(); const n = document.getElementById('buyerName').value; const c = document.getElementById('buyerCity').value; window.open(`https://t.me/SHKV4?text=${encodeURIComponent(`🔥 Заказ!\nТовар: ${sItem}\nЦена: ${sPrice}\nИмя: ${n}\nГород: ${c}`)}`, '_blank'); closeOrderModal(); }
 
-        // --- FETCH STEAM ECONOMY ---
-        async function fetchSteamEconomy() {
-            const widget = document.getElementById('steam-market-widget');
-            try {
-                const marketItems = [
-                    { name: 'Inscribed Fractal Horns of Inner Abysm', price: '2 450 ₽', icon: 'https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpovbSsLQJf2PLacDBA5ciJl5W0kfLnN7LEhFlW7Y5z2-uW89it31G3rhIvMWj7ddfGJlI_Yl6F-lS5kL3ogMO8ucvBzHMwv3I8pSGKjHqJ2l8' },
-                    { name: 'Dragonclaw Hook', price: '48 900 ₽', icon: 'https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpotLu8JAllx8zJYQJD_9W7m5O0m_7zO6juhGBd_Mhzj7CHpIqj3Qy3qkRtMW2nJ4SSclZkZ1vY_gK8krrt0MG_7p6dnSZkuiJxt3rD30vgqJvIcgk' },
-                    { name: 'Manifold Paradox', price: '2 680 ₽', icon: 'https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpovbSsLQJf2PLacDBA5ciJl5W0kfLnN7LEhFlW7Y5z2-uW89it31G3rhIvMWj7ddfGJlI_Yl6F-lS5kL3ogMO8ucvBzHMwv3I8pSGKjHqJ2l8' },
-                    { name: 'Bladeform Legacy', price: '2 850 ₽', icon: 'https://community.cloudflare.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpovbSsLQJf2PLacDBA5ciJl5W0kfLnN7LEhFlW7Y5z2-uW89it31G3rhIvMWj7ddfGJlI_Yl6F-lS5kL3ogMO8ucvBzHMwv3I8pSGKjHqJ2l8' }
-                ];
-                let html = '';
-                marketItems.forEach(item => {
-                    html += `
-                        <div class="bg-black/60 border border-white/10 rounded-xl p-4 flex flex-col items-center text-center hover:border-lm-gold transition group">
-                            <span class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Steam Market</span>
-                            <p class="text-white font-bold text-xs mb-2 truncate w-full">${item.name}</p>
-                            <span class="font-esports text-lm-gold text-lg font-bold">${item.price}</span>
-                        </div>
-                    `;
-                });
-                widget.innerHTML = html;
-            } catch (e) { widget.innerHTML = `<div class="col-span-4 text-center text-xs text-gray-500">Биржа Steam Economy временно недоступна</div>`; }
-        }
-
         // --- МОДАЛЬНОЕ ОКНО: ДОСЬЕ И РАДАР ---
         const playerStats = {};
         let radarChartInstance = null;
@@ -730,7 +670,7 @@
 
         function closeStatsModal() { document.getElementById('statsModal').classList.add('hidden'); document.getElementById('statsModal').classList.remove('flex'); document.body.style.overflow = ''; }
 
-        // --- FETCH DOTA API ---
+        // --- FETCH DOTA API (ИГРОКИ) ---
         async function fetchDotaStats() {
             try {
                 const players = document.querySelectorAll('#players-container > div');
@@ -784,7 +724,7 @@
             } catch (err) { console.error(err); }
         }
 
-        // --- FETCH PRO МЕТА (ГЕРОИ) ---
+        // --- FETCH МЕТА (ГЕРОИ - СУММА ОТ ГЕРОЯ ДО ТИТАНА) ---
         async function fetchMetaStats() {
             const container = document.getElementById('meta-container');
             try {
@@ -804,9 +744,18 @@
                 let finalHtml = '';
                 for (let pos = 1; pos <= 5; pos++) {
                     let posHeroes = heroes.filter(h => pools[pos].includes(h.localized_name));
+                    
                     posHeroes = posHeroes.map(h => {
-                        const matches = h.pro_pick || 1; const wins = h.pro_win || 0; const wr = (wins / matches) * 100; return { ...h, wr, matches };
-                    }).filter(h => h.matches > 10).sort((a, b) => b.wr - a.wr).slice(0, 3);
+                        let matches = 0; let wins = 0;
+                        // Суммируем стату от ранга Archon (4) до Immortal (8) для идеального баланса меты
+                        for(let i=4; i<=8; i++) {
+                            matches += h[`${i}_pick`] || 0;
+                            wins += h[`${i}_win`] || 0;
+                        }
+                        if (matches === 0) matches = 1;
+                        const wr = (wins / matches) * 100;
+                        return { ...h, wr, matches };
+                    }).filter(h => h.matches > 30).sort((a, b) => b.wr - a.wr).slice(0, 3);
 
                     const pInfo = posNames[pos];
                     let html = `<div class="pro-card rounded-xl p-5 flex flex-col gap-4 reveal active">
@@ -838,10 +787,9 @@
             } catch (e) { container.innerHTML = '<div class="col-span-full text-center text-red-500 text-xs">Ошибка соединения с OpenDota API. Перезагрузите страницу.</div>'; }
         }
 
-        // Запуск
+        // Запуск всех скриптов
         document.addEventListener('DOMContentLoaded', () => {
             fetchDotaStats();
-            fetchSteamEconomy();
             fetchMetaStats();
         });
     </script>
