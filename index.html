@@ -71,6 +71,7 @@
         <div class="flex flex-col gap-8 mt-6">
             <a href="#" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Главная</a>
             <a href="#roster" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-gold transition">Команда</a>
+            <a href="#meta" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-green-400 transition">Мета</a>
             <a href="#trophies" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-white transition">Достижения</a>
             <a href="#store" class="vertical-text text-gray-400 text-[10px] md:text-xs font-bold tracking-widest uppercase hover:text-lm-purple transition">Мерч</a>
         </div>
@@ -78,7 +79,7 @@
     </aside>
 
     <div class="fixed top-6 right-6 z-50 flex gap-4">
-        <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">МЕРЧ ↗</a>
+        <a href="#store" class="bg-lm-purple text-white text-[10px] md:text-xs font-bold px-5 py-2.5 uppercase tracking-widest hover:bg-purple-600 transition shadow-[0_0_15px_rgba(139,0,255,0.4)] flex items-center gap-2 rounded-sm">РЫНОК & МЕРЧ ↗</a>
     </div>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
@@ -108,7 +109,7 @@
                     <div class="mb-16 border-b border-white/10 pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 reveal">
                         <div>
                             <span class="text-lm-gold text-xs font-extrabold tracking-widest uppercase block mb-2 flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span> Live API Sync
+                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span> API Sync
                             </span>
                             <h2 class="font-esports text-5xl font-bold text-white uppercase tracking-wide">Dota 2 <span class="text-lm-purple">Roster</span></h2>
                         </div>
@@ -152,7 +153,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
                                     <button onclick="openPhotoModal('player_artem.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
@@ -198,7 +198,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
                                     <button onclick="openPhotoModal('player_ilshat.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
@@ -244,7 +243,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
                                     <button onclick="openPhotoModal('player_kostya.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
@@ -290,7 +288,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
                                     <button onclick="openPhotoModal('player_kirill.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
@@ -336,7 +333,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
                                     <button onclick="openPhotoModal('player_insaf.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
@@ -382,7 +378,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="flex gap-2 w-full mt-2">
                                     <button onclick="openPhotoModal('player_pilot.png')" class="w-1/3 bg-white/5 hover:bg-white/15 text-white border border-white/10 text-center py-2.5 rounded text-[10px] font-bold uppercase tracking-widest transition backdrop-blur-sm">Фото</button>
@@ -392,6 +387,30 @@
                             </div>
                         </div>
 
+                    </div>
+                </div>
+            </section>
+
+            <!-- СЕКЦИЯ: МЕТА ПАТЧА (LIVE) -->
+            <section id="meta" class="py-24 px-6 bg-surface border-t border-white/5">
+                <div class="max-w-7xl mx-auto">
+                    <div class="mb-12 border-b border-white/10 pb-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 reveal">
+                        <div>
+                            <span class="text-green-400 text-xs font-extrabold tracking-widest uppercase block mb-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span> Immortal Bracket Sync
+                            </span>
+                            <h2 class="font-esports text-4xl md:text-5xl font-bold text-white uppercase tracking-wide">Лучшие герои <span class="text-gray-400">Патча</span></h2>
+                        </div>
+                        <p class="text-xs text-gray-500 max-w-sm md:text-right">Live статистика винрейта на ранге Immortal (Титан) по позициям. Данные обновляются автоматически через OpenDota API.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6" id="meta-container">
+                        <!-- Скелетоны до загрузки API -->
+                        <div class="pro-card rounded-xl p-5 h-56 animate-pulse flex flex-col gap-4"><div class="h-6 bg-white/10 rounded w-1/2"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div></div>
+                        <div class="pro-card rounded-xl p-5 h-56 animate-pulse flex flex-col gap-4 hidden md:flex"><div class="h-6 bg-white/10 rounded w-1/2"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div></div>
+                        <div class="pro-card rounded-xl p-5 h-56 animate-pulse flex flex-col gap-4 hidden md:flex"><div class="h-6 bg-white/10 rounded w-1/2"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div></div>
+                        <div class="pro-card rounded-xl p-5 h-56 animate-pulse flex flex-col gap-4 hidden xl:flex"><div class="h-6 bg-white/10 rounded w-1/2"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div></div>
+                        <div class="pro-card rounded-xl p-5 h-56 animate-pulse flex flex-col gap-4 hidden xl:flex"><div class="h-6 bg-white/10 rounded w-1/2"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div><div class="h-10 bg-white/5 rounded w-full"></div></div>
                     </div>
                 </div>
             </section>
@@ -656,6 +675,7 @@
             document.body.style.overflow = '';
         }
 
+        // --- FETCH DOTA API (ИГРОКИ) ---
         async function fetchDotaStats() {
             try {
                 const players = document.querySelectorAll('#players-container > div');
@@ -753,10 +773,83 @@
                 });
 
                 await Promise.allSettled(fetchPromises);
-                hidePreloader();
-            } catch (err) { console.error(err); hidePreloader(); }
+            } catch (err) { console.error(err); }
         }
-        document.addEventListener('DOMContentLoaded', fetchDotaStats);
+
+        // --- FETCH МЕТА (ГЕРОИ) ---
+        async function fetchMetaStats() {
+            const container = document.getElementById('meta-container');
+            try {
+                const res = await fetch('https://api.opendota.com/api/heroStats');
+                const heroes = await res.json();
+
+                const pools = {
+                    1: ["Anti-Mage", "Faceless Void", "Juggernaut", "Lifestealer", "Luna", "Morphling", "Phantom Assassin", "Phantom Lancer", "Slark", "Spectre", "Sven", "Terrorblade", "Troll Warlord", "Ursa", "Weaver", "Wraith King", "Medusa", "Chaos Knight", "Drow Ranger", "Alchemist", "Monkey King", "Templar Assassin", "Naga Siren"],
+                    2: ["Storm Spirit", "Puck", "Shadow Fiend", "Invoker", "Void Spirit", "Ember Spirit", "Lina", "Tinker", "Zeus", "Outworld Destroyer", "Queen of Pain", "Necrophos", "Sniper", "Pangolier", "Huskar", "Kunkka", "Earth Spirit", "Batrider", "Meepo"],
+                    3: ["Axe", "Bristleback", "Centaur Warrunner", "Dark Seer", "Legion Commander", "Night Stalker", "Slardar", "Tidehunter", "Timbersaw", "Underlord", "Doom", "Mars", "Beastmaster", "Primal Beast", "Magnus", "Brewmaster", "Abaddon", "Sand King"],
+                    4: ["Rubick", "Mirana", "Tiny", "Earthshaker", "Tusk", "Clockwerk", "Spirit Breaker", "Dark Willow", "Bounty Hunter", "Nyx Assassin", "Techies", "Shadow Demon", "Grimstroke", "Skywrath Mage", "Nature's Prophet", "Pugna"],
+                    5: ["Crystal Maiden", "Lich", "Lion", "Witch Doctor", "Dazzle", "Oracle", "Ancient Apparition", "Treant Protector", "Chen", "Enchantress", "Bane", "Disruptor", "Jakiro", "Ogre Magi", "Shadow Shaman", "Warlock", "Winter Wyvern", "Vengeful Spirit", "Silencer"]
+                };
+
+                const posNames = {
+                    1: { name: "Pos 1 • Carry", color: "text-lm-gold", border: "border-lm-gold/30", bg: "bg-lm-gold/10" },
+                    2: { name: "Pos 2 • Mid", color: "text-lm-gold", border: "border-lm-gold/30", bg: "bg-lm-gold/10" },
+                    3: { name: "Pos 3 • Offlane", color: "text-lm-purple", border: "border-lm-purple/30", bg: "bg-lm-purple/10" },
+                    4: { name: "Pos 4 • Support", color: "text-blue-400", border: "border-blue-400/30", bg: "bg-blue-400/10" },
+                    5: { name: "Pos 5 • Support", color: "text-blue-400", border: "border-blue-400/30", bg: "bg-blue-400/10" }
+                };
+
+                let finalHtml = '';
+
+                for (let pos = 1; pos <= 5; pos++) {
+                    let posHeroes = heroes.filter(h => pools[pos].includes(h.localized_name));
+                    posHeroes = posHeroes.map(h => {
+                        const matches = h['8_pick'] || 1; // Immortal bracket picks
+                        const wins = h['8_win'] || 0;
+                        const wr = (wins / matches) * 100;
+                        return { ...h, wr, matches };
+                    }).filter(h => h.matches > 500)
+                      .sort((a, b) => b.wr - a.wr)
+                      .slice(0, 3);
+
+                    const pInfo = posNames[pos];
+                    let html = `<div class="pro-card rounded-xl p-5 flex flex-col gap-4 reveal active">
+                        <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                            <span class="role-badge ${pInfo.color} text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider ${pInfo.border} ${pInfo.bg} backdrop-blur-sm">${pInfo.name}</span>
+                        </div>
+                        <div class="flex flex-col gap-3">`;
+                    
+                    posHeroes.forEach((h, index) => {
+                        const imgUrl = `https://api.opendota.com${h.icon}`;
+                        const wrColor = h.wr >= 50 ? 'text-green-400' : 'text-red-400';
+                        html += `
+                            <div class="flex items-center justify-between bg-black/40 rounded p-2 border border-white/5 hover:border-white/20 transition group">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-gray-600 font-esports text-sm font-bold w-2 group-hover:text-white transition">${index+1}</span>
+                                    <img src="${imgUrl}" class="w-8 h-8 rounded shadow object-cover grayscale-[30%] group-hover:grayscale-0 transition" alt="${h.localized_name}">
+                                    <span class="text-white text-xs font-bold truncate max-w-[70px]">${h.localized_name}</span>
+                                </div>
+                                <div class="flex flex-col items-end">
+                                    <span class="text-[11px] font-bold ${wrColor}">${h.wr.toFixed(1)}%</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div></div>`;
+                    finalHtml += html;
+                }
+                container.innerHTML = finalHtml;
+            } catch (e) {
+                container.innerHTML = '<div class="col-span-full text-center text-red-500 text-xs">Ошибка загрузки меты</div>';
+            }
+        }
+
+        // Запуск всех скриптов
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchDotaStats();
+            fetchMetaStats();
+        });
     </script>
 </body>
 </html>
