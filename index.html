@@ -922,7 +922,7 @@
                     const slug = info.name.replace('npc_dota_hero_','');
                     const img = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${slug}.png`;
                     const wr = ((h.win/h.games)*100).toFixed(1);
-                    return `<button onclick="openHeroBuildModal('${info.id}','${String(info.localized_name).replace(/'/g,"\\'")}','${img}','${position}')" class="text-left bg-black/50 border border-white/10 rounded-xl p-4 hover:border-lm-gold hover:-translate-y-1 transition group">
+                    return `<button type="button" data-hero-build data-hero-id="${info.id}" data-hero-name="${String(info.localized_name).replace(/"/g, "&quot;")}" data-hero-img="${img}" data-hero-position="${position}" class="text-left bg-black/50 border border-white/10 rounded-xl p-4 hover:border-lm-gold hover:-translate-y-1 transition group">
                         <div class="flex items-center gap-3"><img src="${img}" class="w-14 h-14 rounded object-cover border border-white/10"><div><div class="text-white font-bold text-sm">${info.localized_name}</div><div class="text-lm-gold text-[10px] uppercase tracking-widest mt-1">D2PT сборка ↗</div></div></div>
                         <div class="grid grid-cols-2 gap-2 mt-4 text-[10px]"><span class="text-gray-500">Матчи <b class="text-white">${h.games}</b></span><span class="text-gray-500">Winrate <b class="text-green-400">${wr}%</b></span></div>
                     </button>`;
@@ -934,6 +934,28 @@
         function closePlayerD2PTModal() { document.getElementById('playerD2PTModal').classList.add('hidden'); document.getElementById('playerD2PTModal').classList.remove('flex'); document.body.style.overflow = ''; }
 
         function closeHeroBuildModal() { document.getElementById('heroBuildModal').classList.add('hidden'); document.getElementById('heroBuildModal').classList.remove('flex'); document.body.style.overflow = ''; }
+
+        // Единый обработчик клика по всем карточкам героев.
+        // Используем делегирование, потому что карточки меты создаются динамически через innerHTML.
+        document.addEventListener('click', (event) => {
+            const card = event.target.closest('[data-hero-build]');
+            if (!card) return;
+            event.preventDefault();
+            event.stopPropagation();
+
+            const heroId = card.dataset.heroId;
+            const heroName = card.dataset.heroName || 'Hero';
+            const heroImg = card.dataset.heroImg || '';
+            const position = Number(card.dataset.heroPosition || 1);
+
+            if (!heroId) {
+                console.error('[D2PT] Не найден ID героя');
+                return;
+            }
+
+            console.log('[D2PT] Открываем сборку:', { heroId, heroName, position });
+            openHeroBuildModal(heroId, heroName, heroImg, position);
+        });
 
         async function fetchDotaStats() {
             try {
@@ -1005,7 +1027,7 @@
                                         <img src="${imgSrc}" class="w-10 h-10 rounded shadow-md object-cover border border-white/10 mb-1.5 bg-black group-hover:scale-105 transition" alt="${heroInfo.localized_name}">
                                         <p class="text-[9px] font-bold text-white text-center w-full truncate leading-tight">${heroInfo.localized_name}</p>
                                         <p class="text-[10px] ${wrColor} font-bold leading-tight drop-shadow-md">${winrate}%</p>
-                                    </div>
+                                    </button>
                                 `;
                             });
                         }
@@ -1039,7 +1061,7 @@
                 for(let pos=1;pos<=5;pos++){
                     const rows=heroes.map(h=>{const rating=Number(h[`pos ${pos} d2pt rating v2`] ?? h[`pos ${pos} d2pt rating`]); const matches=Number(h[`pos ${pos} matches`]||0); let wr=Number(h[`pos ${pos} winrate`]); if(wr<=1)wr*=100; return {h,rating,matches,wr};}).filter(x=>Number.isFinite(x.rating)&&x.matches>0).sort((a,b)=>b.rating-a.rating).slice(0,6);
                     out+=`<div class="pro-card rounded-xl p-5 flex flex-col gap-4 reveal active"><div class="flex justify-between items-center border-b border-white/10 pb-3"><span class="role-badge ${styles[pos]} text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">${names[pos]}</span><span class="text-[9px] text-gray-500 uppercase tracking-wider">D2PT</span></div><div class="flex flex-col gap-3">`;
-                    rows.forEach((x,i)=>{const info=map.get(Number(x.h.hero_id)); const n=info?.localized_name||x.h.displayName||'Hero'; const slug=info?.name?.replace('npc_dota_hero_',''); const img=slug?`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${slug}.png`:''; const safe=String(n).replace(/'/g,"\\'"); out+=`<div onclick="event.stopPropagation(); openHeroBuildModal('${x.h.hero_id}','${safe}','${img}','${pos}')" class="flex items-center justify-between bg-black/40 rounded-lg p-2.5 border border-white/5 hover:border-lm-gold/60 transition group cursor-pointer"><div class="flex items-center gap-3 min-w-0"><span class="text-gray-600 font-esports text-sm font-bold w-3">${i+1}</span><img src="${img}" class="w-9 h-9 rounded shadow object-cover border border-white/10" alt="${n}"><div class="min-w-0"><p class="text-white text-xs font-bold leading-tight max-w-[150px]" title="${n}">${n}</p><p class="text-[8px] text-gray-500 uppercase mt-0.5">${x.matches.toLocaleString('ru-RU')} матчей</p></div></div><div class="flex flex-col items-end"><span class="text-[11px] font-bold ${x.wr>=50?'text-green-400':'text-red-400'}">${x.wr.toFixed(1)}%</span><span class="text-[9px] text-lm-gold font-mono font-bold">${x.rating.toFixed(1)} D2PT</span></div></div>`});
+                    rows.forEach((x,i)=>{const info=map.get(Number(x.h.hero_id)); const n=info?.localized_name||x.h.displayName||'Hero'; const slug=info?.name?.replace('npc_dota_hero_',''); const img=slug?`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${slug}.png`:''; const safe=String(n).replace(/'/g,"\\'"); out+=`<button type="button" data-hero-build data-hero-id="${x.h.hero_id}" data-hero-name="${String(n).replace(/"/g, "&quot;")}" data-hero-img="${img}" data-hero-position="${pos}" class="w-full text-left flex items-center justify-between bg-black/40 rounded-lg p-2.5 border border-white/5 hover:border-lm-gold/60 transition group cursor-pointer"><div class="flex items-center gap-3 min-w-0"><span class="text-gray-600 font-esports text-sm font-bold w-3">${i+1}</span><img src="${img}" class="w-9 h-9 rounded shadow object-cover border border-white/10" alt="${n}"><div class="min-w-0"><p class="text-white text-xs font-bold leading-tight max-w-[150px]" title="${n}">${n}</p><p class="text-[8px] text-gray-500 uppercase mt-0.5">${x.matches.toLocaleString('ru-RU')} матчей</p></div></div><div class="flex flex-col items-end"><span class="text-[11px] font-bold ${x.wr>=50?'text-green-400':'text-red-400'}">${x.wr.toFixed(1)}%</span><span class="text-[9px] text-lm-gold font-mono font-bold">${x.rating.toFixed(1)} D2PT</span></div></div></button>`});
                     out+='</div></div>';
                 }
                 container.innerHTML=out;
