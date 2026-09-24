@@ -154,9 +154,9 @@ function Layout({ children }) {
   return (
     <div className="site">
       <header>
-        <Link className="brand" to="/">
-          <b>4T<span>1</span>J</b>
-          <small>4 TATARS 1 JEW</small>
+        <Link className="brand" to="/" aria-label="4T1J — главная">
+          <img src="/lebrone-site/4t1j-logo.png" alt="4T1J" />
+          <span className="brand-caption">4 TATARS 1 JEW</span>
         </Link>
         <nav>
           {nav.map(([path, label]) => (
@@ -167,7 +167,7 @@ function Layout({ children }) {
       </header>
       {children}
       <footer id="footer">
-        <b>4T<span>1</span>J</b>
+        <img className="footer-logo" src="/lebrone-site/4t1j-logo.png" alt="4T1J" />
         <span>© 2026 4T1J ESPORTS</span>
         <em>ДРУЖБА НАРОДОВ</em>
       </footer>
@@ -198,8 +198,7 @@ function Home() {
       <div className="hero-copy">
         <div className="eyebrow">DOTA 2 ESPORTS TEAM</div>
         <div className="fire-logo">
-          <div className="logo-crown">♛</div>
-          <img src="/lebrone-site/assets/4t1j-logo.png" alt="4T1J" className="real-logo" />
+          <img src="/lebrone-site/4t1j-logo.png" alt="4T1J" className="real-logo" />
           <div className="logo-sub">4 TATARS 1 JEW</div>
         </div>
         <div className="hero-message"><h2>БОЛЬШЕ ЧЕМ КОМАНДА</h2><p>ДРУЖБА. ИГРА. РАЗВИТИЕ.</p></div>
