@@ -1,0 +1,20 @@
+4T1J LIVE DOTA 2 STATISTICS
+
+Source: OpenDota API
+
+The site fetches, in the player profile page, the following endpoints:
+- /players/{account_id}
+- /players/{account_id}/wl
+- /players/{account_id}/heroes
+- /players/{account_id}/recentMatches
+- /players/{account_id}/totals
+- /heroes
+
+Profiles are cached in the browser for 5 minutes. The player page has a manual refresh button.
+
+Player Account IDs:
+Артем — 127394881
+Ильшат — 1585608718
+Костя — 129692343
+Кирилл — 421012634
+Инсаф — 237813481

@@ -1,8 +1,11 @@
-4T1J static homepage
+4T1J Dota 2 site — GitHub Pages ready.
 
-Files:
-- index.html — готовый главный экран и основные блоки.
-- assets/4t1j-logo.png — прозрачный логотип команды.
-- assets/hero-background.png — чистый фон без UI/прототипа.
+Player Account IDs:
+Артем 127394881
+Ильшат 1585608718
+Костя 129692343
+Кирилл 421012634
+Инсаф 237813481
 
-Запуск: откройте index.html в браузере или загрузите файлы в GitHub Pages.
+Статистика загружается в профилях игроков из OpenDota API.
+Откройте /roster и нажмите на игрока.
