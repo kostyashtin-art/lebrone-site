@@ -11,7 +11,7 @@ const players = [
     role: "CARRY",
     position: "Pos 1 • Carry",
     accountId: 127394881,
-    image: "/lebrone-site/players/player-1.png",
+    image: "/players/player-1.png",
     steam: "https://steamcommunity.com/profiles/76561198087660609",
     accent: "#e3222b"
   },
@@ -22,7 +22,7 @@ const players = [
     role: "MID",
     position: "Pos 2 • Mid",
     accountId: 1585608718,
-    image: "/lebrone-site/players/player-2.png",
+    image: "/players/player-2.png",
     steam: "https://steamcommunity.com/id/Ma1ayFT",
     accent: "#ffb800"
   },
@@ -33,7 +33,7 @@ const players = [
     role: "OFFLANE",
     position: "Pos 3 • Offlane",
     accountId: 129692343,
-    image: "/lebrone-site/players/player-3.png",
+    image: "/players/player-3.png",
     steam: "https://steamcommunity.com/id/hunderson",
     accent: "#8b00ff"
   },
@@ -44,7 +44,7 @@ const players = [
     role: "SUPPORT",
     position: "Pos 4 • Support",
     accountId: 421012634,
-    image: "/lebrone-site/players/player-4.png",
+    image: "/players/player-4.png",
     steam: "https://steamcommunity.com/id/shzkd",
     accent: "#ef4444"
   },
@@ -55,7 +55,7 @@ const players = [
     role: "SUPPORT",
     position: "Pos 5 • Support",
     accountId: 237813481,
-    image: "/lebrone-site/players/player-5.png",
+    image: "/players/player-5.png",
     steam: "https://steamcommunity.com/id/237813481",
     accent: "#60a5fa"
   }
@@ -155,7 +155,7 @@ function Layout({ children }) {
     <div className="site">
       <header>
         <Link className="brand" to="/" aria-label="4T1J — главная">
-          <img src="/lebrone-site/4t1j-logo.png" alt="4T1J" />
+          <img src="/4t1j-logo.png" alt="4T1J" />
           <span className="brand-caption">4 TATARS 1 JEW</span>
         </Link>
         <nav>
@@ -167,7 +167,7 @@ function Layout({ children }) {
       </header>
       {children}
       <footer id="footer">
-        <img className="footer-logo" src="/lebrone-site/4t1j-logo.png" alt="4T1J" />
+        <img className="footer-logo" src="/4t1j-logo.png" alt="4T1J" />
         <span>© 2026 4T1J ESPORTS</span>
         <em>ДРУЖБА НАРОДОВ</em>
       </footer>
@@ -198,7 +198,7 @@ function Home() {
       <div className="hero-copy">
         <div className="eyebrow">DOTA 2 ESPORTS TEAM</div>
         <div className="fire-logo">
-          <img src="/lebrone-site/4t1j-logo.png" alt="4T1J" className="real-logo" />
+          <img src="/4t1j-logo.png" alt="4T1J" className="real-logo" />
           <div className="logo-sub">4 TATARS 1 JEW</div>
         </div>
         <div className="hero-message"><h2>БОЛЬШЕ ЧЕМ КОМАНДА</h2><p>ДРУЖБА. ИГРА. РАЗВИТИЕ.</p></div>
