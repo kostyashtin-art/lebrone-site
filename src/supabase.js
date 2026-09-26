@@ -137,3 +137,11 @@ export async function uploadFile(session, file, folder) {
   }
   return `${SUPABASE_URL}/storage/v1/object/public/highlights/${path}`;
 }
+
+export async function listSynergyStats() {
+  if (!supabaseConfigured) return [];
+  const params = new URLSearchParams();
+  params.set("select", "combination_key,combination_size,account_ids,player_names,matches,wins,losses,winrate,avg_duration,avg_kills,avg_deaths,avg_assists,avg_gpm,avg_xpm,last_match_at,updated_at");
+  params.set("order", "combination_size.asc,winrate.desc,matches.desc");
+  return request(`${SUPABASE_URL}/rest/v1/team_synergy_stats?${params}`, { headers: headers() });
+}
