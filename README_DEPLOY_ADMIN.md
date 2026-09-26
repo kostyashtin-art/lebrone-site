@@ -23,9 +23,9 @@
 
 Это уже не ошибка маршрута. Нужно добавить в GitHub:
 
-Settings → Secrets and variables → Actions → Variables:
+Settings → Secrets and variables → Actions → Secrets:
 
 - `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
 
-Вставляются только публичный URL проекта Supabase и anon key. Service Role Key на сайт не добавляется.
+Вставляются только публичный URL проекта Supabase и publishable key. Service Role Key на сайт не добавляется.

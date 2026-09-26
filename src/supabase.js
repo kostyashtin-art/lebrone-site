@@ -1,12 +1,12 @@
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "";
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || "";
 
-export const supabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+export const supabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
 
 function headers(token) {
   return {
-    apikey: SUPABASE_ANON_KEY,
-    Authorization: `Bearer ${token || SUPABASE_ANON_KEY}`,
+    apikey: SUPABASE_PUBLISHABLE_KEY,
+    Authorization: `Bearer ${token || SUPABASE_PUBLISHABLE_KEY}`,
     "Content-Type": "application/json"
   };
 }
@@ -33,10 +33,10 @@ export function clearSession() {
 }
 
 export async function signIn(email, password) {
-  if (!supabaseConfigured) throw new Error("Supabase не настроен: добавь VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY.");
+  if (!supabaseConfigured) throw new Error("Supabase не настроен: добавь VITE_SUPABASE_URL и VITE_SUPABASE_PUBLISHABLE_KEY.");
   const data = await request(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
     method: "POST",
-    headers: { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+    headers: { apikey: SUPABASE_PUBLISHABLE_KEY, "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
   });
   saveSession(data);
@@ -44,6 +44,17 @@ export async function signIn(email, password) {
 }
 
 export function signOut() { clearSession(); }
+
+export async function isAdmin(session) {
+  const token = session?.access_token;
+  const userId = session?.user?.id;
+  if (!token || !userId || !supabaseConfigured) return false;
+  const params = new URLSearchParams();
+  params.set("select", "user_id");
+  params.set("user_id", `eq.${encodeURIComponent(userId)}`);
+  const rows = await request(`${SUPABASE_URL}/rest/v1/admin_users?${params}`, { headers: headers(token) });
+  return Array.isArray(rows) && rows.length > 0;
+}
 
 export async function listHighlights(filters = {}) {
   if (!supabaseConfigured) return [];
@@ -117,7 +128,7 @@ export async function uploadFile(session, file, folder) {
   const path = `${folder}/${Date.now()}-${crypto.randomUUID()}-${safeName}`;
   const res = await fetch(`${SUPABASE_URL}/storage/v1/object/highlights/${path}`, {
     method: "POST",
-    headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}`, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" },
+    headers: { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${token}`, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" },
     body: file
   });
   if (!res.ok) {

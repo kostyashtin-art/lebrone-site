@@ -261,7 +261,7 @@ function BattleCup() {
         {results.slice(0, 6).map((r) => <span key={r.id} className={r.result === "win" ? "cup-win" : "cup-loss"} title={`${r.cup_date}${r.opponent ? ` · ${r.opponent}` : ""}`}>{r.result === "win" ? "W" : "L"}</span>)}
         {!results.length ? <p>Первые результаты появятся после подключения Supabase и добавления кубка.</p> : null}
       </div>
-      <Link className="cup-link" to="/admin">УПРАВЛЕНИЕ РЕЗУЛЬТАТАМИ →</Link>
+      
     </div>
   </section>;
 }
@@ -476,6 +476,10 @@ function PlayerProfile() {
   </section>;
 }
 
+function NotFound() {
+  return <PageShell title="404" sub="СТРАНИЦА НЕ НАЙДЕНА"><div className="admin-setup"><h2>Страница не найдена</h2><p>Запрошенный адрес не существует.</p><Link className="cta" to="/">НА ГЛАВНУЮ →</Link></div></PageShell>;
+}
+
 export default function App() {
   return <Layout><Routes>
     <Route path="/" element={<Home />} />
@@ -485,7 +489,8 @@ export default function App() {
     <Route path="/news" element={<News />} />
     <Route path="/media" element={<Media />} />
     <Route path="/highlights" element={<Highlights />} />
-    <Route path="/admin" element={<Admin />} />
+    <Route path="/4t1j-media-control-7f3m9k" element={<Admin />} />
+    <Route path="/admin" element={<NotFound />} />
     <Route path="/about" element={<About />} />
   </Routes></Layout>;
 }
