@@ -128,3 +128,26 @@ footer{padding:35px 4vw;display:flex;justify-content:space-between;align-items:c
 /* COACH */
 .coach-home{margin-top:18px;padding-top:18px;border-top:1px solid #29292d}.coach-label{font-size:9px;font-weight:1000;letter-spacing:2px;color:#e5232b;margin-bottom:10px}.coach-card{border-color:#3a2022}.coach-card:hover{border-color:#e5232b}.coach-card .player-number{letter-spacing:1.5px}.coach-id{display:block;margin-top:7px;color:#666;font-size:8px;letter-spacing:1.2px;font-weight:800}.coach-section{margin-top:54px;border-top:1px solid #29292d;padding-top:28px}.coach-section-head{margin-bottom:18px}.coach-section-head small{color:#e5232b;font-size:9px;font-weight:1000;letter-spacing:2px}.coach-section-head h2{margin:5px 0 2px;font-size:34px;font-style:italic}.coach-section-head p{margin:0;color:#777;font-size:9px;letter-spacing:2px}.coach-section .roster-card{max-width:420px;height:520px}.coach-section .roster-card .player-photo img{object-position:center 18%}.coach-section .roster-card .player-info b{font-size:30px}.coach-section .roster-card .player-info small{font-size:10px}.coach-section .coach-id{font-size:9px;margin-top:8px}
 @media(max-width:700px){.coach-section{margin-top:36px}.coach-section .roster-card{max-width:none;height:460px}.coach-home{margin-top:14px}.coach-card.player{display:block}.coach-card.player .player-photo{height:250px}}
+
+/* ===== FINAL MOBILE HOME FIX ===== */
+@media(max-width:700px){
+  .roster-home{display:block;padding:10px 12px}
+  .roster-home .roster-panel{margin-bottom:10px}
+  .roster-home .players{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .roster-home .players .coach-card{width:100%;margin:0}
+  .roster-home .players .coach-card .player-photo{height:230px}
+  .highlights-home{position:relative;z-index:2;min-height:0;margin:0 12px 10px;padding:20px 16px;overflow:hidden}
+  .highlights-home h2{font-size:22px;line-height:1.05;white-space:normal;max-width:100%;margin:7px 0}
+  .highlights-home p{font-size:8px;line-height:1.5;margin:0}
+  .highlights-home .gold{margin-top:15px;display:flex;justify-content:center;white-space:normal}
+  .lower{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;padding:0 12px 10px!important;position:relative;z-index:1}
+  .lower .news,.lower .merch{width:100%;min-height:220px;margin:0;position:relative;overflow:hidden}
+  .lower .news h2,.lower .merch h2{position:absolute;left:16px;right:16px;bottom:42px;max-width:calc(100% - 32px);font-size:19px;line-height:1.1;white-space:normal;margin:0}
+  .lower .news>span,.lower .merch>span{left:16px;bottom:18px}
+}
+@media(max-width:480px){
+  .roster-home .players{grid-template-columns:1fr 1fr}
+  .roster-home .players .coach-card .player-photo{height:210px}
+  .lower .news,.lower .merch{min-height:200px}
+  .lower .news h2,.lower .merch h2{font-size:17px}
+}

@@ -314,8 +314,7 @@ function Home() {
     <section className="grid roster-home">
       <div className="panel roster-panel">
         <label><span>СОСТАВ КОМАНДЫ</span><Link to="/roster">ВЕСЬ СОСТАВ →</Link></label>
-        <div className="players">{players.map(p => <PlayerCard p={p} key={p.id} />)}</div>
-        <div className="coach-home"><div className="coach-label">ТРЕНЕР</div><CoachCard /></div>
+        <div className="players">{players.map(p => <PlayerCard p={p} key={p.id} />)}<CoachCard /></div>
       </div>
       <BattleCup />
     </section>
