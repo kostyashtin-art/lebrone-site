@@ -386,6 +386,25 @@ function PlayerProfile() {
   const heroes = [...(data?.heroes || [])].sort((a,b) => (b.games || 0) - (a.games || 0));
   const recent = data?.recentMatches || [];
   const topHeroes = heroes.slice(0, 5);
+  const recent10 = recent.slice(0, 10);
+  const recentWins = recent10.filter(m => (Number(m.player_slot) < 128 ? m.radiant_win : !m.radiant_win)).length;
+  const recentLosses = recent10.length - recentWins;
+  const recentWinrate = recent10.length ? (recentWins / recent10.length) * 100 : null;
+  const avgRecentDuration = recent10.length ? recent10.reduce((sum, m) => sum + Number(m.duration || 0), 0) / recent10.length : null;
+  const avgRecentGpm = recent10.length ? recent10.reduce((sum, m) => sum + Number(m.gold_per_min || 0), 0) / recent10.length : null;
+  const avgRecentXpm = recent10.length ? recent10.reduce((sum, m) => sum + Number(m.xp_per_min || 0), 0) / recent10.length : null;
+  const recentK = recent10.length ? recent10.reduce((sum, m) => sum + Number(m.kills || 0), 0) / recent10.length : null;
+  const recentD = recent10.length ? recent10.reduce((sum, m) => sum + Number(m.deaths || 0), 0) / recent10.length : null;
+  const recentA = recent10.length ? recent10.reduce((sum, m) => sum + Number(m.assists || 0), 0) / recent10.length : null;
+  const topHero = topHeroes[0] ? heroMap.find(x => x.id === topHeroes[0].hero_id) : null;
+  const streak = recent10.reduce((acc, m) => {
+    if (acc.done) return acc;
+    const win = Number(m.player_slot) < 128 ? m.radiant_win : !m.radiant_win;
+    if (acc.result === null) { acc.result = win; acc.count = 1; }
+    else if (acc.result === win) acc.count += 1;
+    else acc.done = true;
+    return acc;
+  }, { result: null, count: 0, done: false });
 
   return <section className="profile-page">
     <div className="profile-back"><Link to="/roster">← СОСТАВ</Link><span>LIVE PLAYER PROFILE</span></div>
@@ -419,6 +438,36 @@ function PlayerProfile() {
         <StatCard label="XPM" value={fmt(tm.xpm?.avg ?? tm.experience_per_min?.avg)} />
         <StatCard label="CS / MATCH" value={fmt(tm.last_hits?.avg)} />
       </div>
+
+      <section className="profile-overview">
+        <div className="overview-main">
+          <div className="overview-kicker">ФОРМА · ПОСЛЕДНИЕ {recent10.length || 0}</div>
+          <div className="overview-form">
+            {recent10.map((m, i) => {
+              const win = Number(m.player_slot) < 128 ? m.radiant_win : !m.radiant_win;
+              return <span key={`${m.match_id}-${i}`} className={win ? "form-win" : "form-loss"}>{win ? "W" : "L"}</span>;
+            })}
+            {!recent10.length ? <span className="form-empty">НЕТ ДАННЫХ</span> : null}
+          </div>
+          <div className="overview-meta"><b>{pct(recentWinrate)}</b><span>WINRATE ЗА ПОСЛЕДНИЕ {recent10.length || 0} ИГР</span><em>{streak.count ? `${streak.count} ${streak.result ? "ПОБЕД" : "ПОРАЖЕНИЙ"} ПОДРЯД` : "—"}</em></div>
+        </div>
+        <div className="overview-card">
+          <small>СИГНАТУРНЫЙ ГЕРОЙ</small>
+          <div className="overview-hero">
+            {topHero ? <HeroIcon heroId={topHeroes[0].hero_id} heroMap={heroMap} /> : null}
+            <div><b>{topHero?.localized_name || "—"}</b><span>{topHeroes[0] ? `${fmt(topHeroes[0].games)} матчей · ${pct(topHeroes[0].games ? (topHeroes[0].win / topHeroes[0].games) * 100 : null)}` : "Нет данных"}</span></div>
+          </div>
+        </div>
+        <div className="overview-card">
+          <small>СРЕДНИЕ · ПОСЛЕДНИЕ ИГРЫ</small>
+          <div className="overview-mini-grid">
+            <div><b>{fmt(avgRecentGpm)}</b><span>GPM</span></div>
+            <div><b>{fmt(avgRecentXpm)}</b><span>XPM</span></div>
+            <div><b>{recentK === null ? "—" : `${recentK.toFixed(1)} / ${recentD.toFixed(1)} / ${recentA.toFixed(1)}`}</b><span>K / D / A</span></div>
+            <div><b>{duration(avgRecentDuration)}</b><span>СР. ДЛИТ.</span></div>
+          </div>
+        </div>
+      </section>
 
       <div className="profile-columns">
         <section className="profile-box">
