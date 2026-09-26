@@ -60,9 +60,21 @@ const players = [
     accountId: 237813481,
     image: "/players/player-5.png",
     steam: "https://steamcommunity.com/id/237813481",
-    accent: "#60a5fa"
-  }
+    accent: "#60a5fa",
+    synergy: true
+  },
+
 ];
+
+const coach = {
+  name: "ГРИША",
+  role: "COACH",
+  position: "Тренер команды",
+  accountId: 198826325,
+  image: "/players/coach-grisha.png"
+};
+
+const synergyPlayers = players;
 
 const nav = [
   ["/", "ГЛАВНАЯ"],
@@ -202,6 +214,24 @@ function PlayerCard({ p, large = false }) {
   );
 }
 
+function CoachCard({ large = false }) {
+  return (
+    <Link to={`/roster/player/${coach.accountId}`} className={large ? "roster-card coach-card" : "player coach-card"}>
+      <div className="player-photo">
+        <img src={coach.image} alt={coach.name} />
+        <span className="player-number">COACH</span>
+        <div className="photo-shade" />
+      </div>
+      <div className="player-info">
+        <b>{coach.name}</b>
+        <small>{coach.role} · {coach.position}</small>
+        <span className="coach-id">ID {coach.accountId}</span>
+        <i />
+      </div>
+    </Link>
+  );
+}
+
 function nextBattleCupTarget() {
   const now = new Date();
   // Moscow is UTC+3 year-round. Work in a synthetic Moscow clock to avoid the user's local timezone.
@@ -285,6 +315,7 @@ function Home() {
       <div className="panel roster-panel">
         <label><span>СОСТАВ КОМАНДЫ</span><Link to="/roster">ВЕСЬ СОСТАВ →</Link></label>
         <div className="players">{players.map(p => <PlayerCard p={p} key={p.id} />)}</div>
+        <div className="coach-home"><div className="coach-label">ТРЕНЕР</div><CoachCard /></div>
       </div>
       <BattleCup />
     </section>
@@ -304,8 +335,12 @@ function Page({ title, sub, children }) {
 }
 
 function Roster() {
-  return <Page title="СОСТАВ" sub="ПЯТЬ ИГРОКОВ. ОДНА КОМАНДА. КЛИКНИ ПО КАРТОЧКЕ.">
+  return <Page title="СОСТАВ" sub="ПЯТЬ ИГРОКОВ. ОДИН ТРЕНЕР. ОДНА КОМАНДА.">
     <div className="roster">{players.map(p => <PlayerCard p={p} large key={p.id} />)}</div>
+    <section className="coach-section">
+      <div className="coach-section-head"><small>4T1J / STAFF</small><h2>ТРЕНЕР</h2><p>ТРЕНЕРСКИЙ ШТАБ КОМАНДЫ</p></div>
+      <CoachCard large />
+    </section>
   </Page>;
 }
 
@@ -353,7 +388,11 @@ function kdaAvg(totals) {
 
 function PlayerProfile() {
   const { accountId } = useParams();
-  const player = useMemo(() => players.find(p => String(p.accountId) === String(accountId)), [accountId]);
+  const player = useMemo(() => {
+    const id = String(accountId);
+    return players.find(p => String(p.accountId) === id) || (String(coach.accountId) === id ? coach : null);
+  }, [accountId]);
+  const isCoach = player?.accountId === coach.accountId;
   const [state, setState] = useState({ loading: true, error: "", data: null });
 
   const load = async (force = false) => {
@@ -407,15 +446,15 @@ function PlayerProfile() {
   }, { result: null, count: 0, done: false });
 
   return <section className="profile-page">
-    <div className="profile-back"><Link to="/roster">← СОСТАВ</Link><span>LIVE PLAYER PROFILE</span></div>
+    <div className="profile-back"><Link to="/roster">← СОСТАВ</Link><span>{isCoach ? "LIVE COACH PROFILE" : "LIVE PLAYER PROFILE"}</span></div>
     <div className="profile-head">
       <div className="profile-art"><img src={player.image} alt={player.name} /></div>
       <div className="profile-title">
-        <div className="eyebrow">4T1J / PLAYER DOSSIER</div>
+        <div className="eyebrow">4T1J / {isCoach ? "COACH DOSSIER" : "PLAYER DOSSIER"}</div>
         <h1>{player.name}</h1>
         <p>{player.position}</p>
         <div className="profile-links">
-          <a href={player.steam} target="_blank" rel="noreferrer">STEAM ↗</a>
+          {player.steam ? <a href={player.steam} target="_blank" rel="noreferrer">STEAM ↗</a> : null}
           <a href={`https://www.dotabuff.com/players/${player.accountId}`} target="_blank" rel="noreferrer">DOTABUFF ↗</a>
           <a href={`https://dota2protracker.com/player/${player.accountId}`} target="_blank" rel="noreferrer">D2PT ↗</a>
           <a href={`https://www.opendota.com/players/${player.accountId}`} target="_blank" rel="noreferrer">OPENDOTA ↗</a>
@@ -520,7 +559,7 @@ function PlayerProfile() {
       </section>
     </> : null}
 
-    <div className="data-note">Статистика загружается из OpenDota API по Account ID игрока. Данные обновляются при открытии профиля; браузер кэширует результат на 5 минут.</div>
+    <div className="data-note">Статистика загружается из OpenDota API по Account ID {isCoach ? "тренера" : "игрока"}. Данные обновляются при открытии профиля; браузер кэширует результат на 5 минут.</div>
   </section>;
 }
 
@@ -563,9 +602,9 @@ function Synergy() {
   const quads = stats.filter(x => Number(x.combination_size) === 4);
   const five = stats.filter(x => Number(x.combination_size) === 5);
   const shown = tab === 2 ? pairs : tab === 3 ? triples : tab === 4 ? quads : five;
-  const playerById = new Map(players.map(p => [p.accountId, p]));
+  const playerById = new Map(synergyPlayers.map(p => [p.accountId, p]));
 
-  const matrix = players.map(a => players.map(b => {
+  const matrix = synergyPlayers.map(a => synergyPlayers.map(b => {
     if (a.accountId === b.accountId) return null;
     return pairs.find(x => {
       const ids = (x.account_ids || []).map(Number);
@@ -588,10 +627,10 @@ function Synergy() {
         <div className="synergy-matrix-wrap">
           <div className="synergy-matrix">
             <div className="matrix-corner">4T1J</div>
-            {players.map(p => <div className="matrix-head" key={`h-${p.accountId}`}>{p.name}</div>)}
-            {players.map((a, ri) => <Fragment key={a.accountId}>
+            {synergyPlayers.map(p => <div className="matrix-head" key={`h-${p.accountId}`}>{p.name}</div>)}
+            {synergyPlayers.map((a, ri) => <Fragment key={a.accountId}>
               <div className="matrix-head matrix-side">{a.name}</div>
-              {players.map((b, ci) => {
+              {synergyPlayers.map((b, ci) => {
                 const stat = matrix[ri][ci];
                 return <div className={stat ? `matrix-cell ${Number(stat.winrate) >= 50 ? "is-positive" : "is-negative"}` : "matrix-cell empty"} key={`${a.accountId}-${b.accountId}`}>
                   {a.accountId === b.accountId ? <span>—</span> : stat ? <><b>{pct(stat.winrate)}</b><small>{stat.matches} игр</small></> : <span>—</span>}
