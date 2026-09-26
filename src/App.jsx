@@ -1,6 +1,7 @@
 import { Link, NavLink, Routes, Route, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { Highlights, Admin } from "./Highlights";
+import { listCupResults, createCupResult, deleteCupResult, supabaseConfigured } from "./supabase";
 
 const API = "https://api.opendota.com/api";
 
@@ -201,6 +202,70 @@ function PlayerCard({ p, large = false }) {
   );
 }
 
+function nextBattleCupTarget() {
+  const now = new Date();
+  // Moscow is UTC+3 year-round. Work in a synthetic Moscow clock to avoid the user's local timezone.
+  const moscowNow = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+  const day = moscowNow.getUTCDay(); // Sunday=0 ... Saturday=6
+  let days = (6 - day + 7) % 7;
+  const targetToday = new Date(Date.UTC(moscowNow.getUTCFullYear(), moscowNow.getUTCMonth(), moscowNow.getUTCDate(), 21, 0, 0));
+  if (days === 0 && moscowNow.getTime() >= targetToday.getTime()) days = 7;
+  const targetMoscow = new Date(Date.UTC(moscowNow.getUTCFullYear(), moscowNow.getUTCMonth(), moscowNow.getUTCDate() + days, 21, 0, 0));
+  return new Date(targetMoscow.getTime() - 3 * 60 * 60 * 1000);
+}
+
+function BattleCup() {
+  const [target, setTarget] = useState(nextBattleCupTarget);
+  const [left, setLeft] = useState(target.getTime() - Date.now());
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      let next = nextBattleCupTarget();
+      setTarget(next);
+      setLeft(next.getTime() - Date.now());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!supabaseConfigured) return;
+    listCupResults().then(setResults).catch(() => setResults([]));
+  }, []);
+
+  const total = results.length;
+  const wins = results.filter(x => x.result === "win").length;
+  const losses = results.filter(x => x.result === "loss").length;
+  const days = Math.max(0, Math.floor(left / 86400000));
+  const hours = Math.max(0, Math.floor((left % 86400000) / 3600000));
+  const minutes = Math.max(0, Math.floor((left % 3600000) / 60000));
+  const seconds = Math.max(0, Math.floor((left % 60000) / 1000));
+
+  return <section className="battle-cup">
+    <div className="battle-cup-main">
+      <div className="battle-cup-kicker"><span className="live-dot" /> 4T1J / WEEKLY EVENT</div>
+      <h2>БОЕВОЙ <span>КУБОК</span></h2>
+      <p>Каждую субботу в <b>21:00 МСК</b>. Здесь будет текущий отсчёт до старта и история выступлений команды.</p>
+      <div className="cup-countdown" aria-label="Отсчёт до боевого кубка">
+        <div><b>{String(days).padStart(2, "0")}</b><small>ДНЕЙ</small></div><i>:</i>
+        <div><b>{String(hours).padStart(2, "0")}</b><small>ЧАСОВ</small></div><i>:</i>
+        <div><b>{String(minutes).padStart(2, "0")}</b><small>МИН</small></div><i>:</i>
+        <div><b>{String(seconds).padStart(2, "0")}</b><small>СЕК</small></div>
+      </div>
+      <div className="cup-next">СЛЕДУЮЩИЙ СТАРТ · {target.toLocaleDateString("ru-RU", { day:"2-digit", month:"2-digit", year:"numeric", timeZone:"Europe/Moscow" })} · 21:00 МСК</div>
+    </div>
+    <div className="battle-cup-record">
+      <small>РЕЗУЛЬТАТЫ</small>
+      <div className="cup-score"><b>{wins}</b><span>ПОБЕД</span><em>:</em><b className="loss-num">{losses}</b><span>ПОРАЖЕНИЙ</span></div>
+      <div className="cup-history">
+        {results.slice(0, 6).map((r) => <span key={r.id} className={r.result === "win" ? "cup-win" : "cup-loss"} title={`${r.cup_date}${r.opponent ? ` · ${r.opponent}` : ""}`}>{r.result === "win" ? "W" : "L"}</span>)}
+        {!results.length ? <p>Первые результаты появятся после подключения Supabase и добавления кубка.</p> : null}
+      </div>
+      <Link className="cup-link" to="/admin">УПРАВЛЕНИЕ РЕЗУЛЬТАТАМИ →</Link>
+    </div>
+  </section>;
+}
+
 function Home() {
   return <>
     <section className="hero">
@@ -222,12 +287,7 @@ function Home() {
         <label><span>СОСТАВ КОМАНДЫ</span><Link to="/roster">ВЕСЬ СОСТАВ →</Link></label>
         <div className="players">{players.map(p => <PlayerCard p={p} key={p.id} />)}</div>
       </div>
-      <div className="panel match">
-        <label>СТАТИСТИКА СОСТАВА</label>
-        <div className="team-stat-banner"><strong>OPEN<span>DOTA</span></strong><b>LIVE API</b></div>
-        <p>Нажми на любого игрока, чтобы открыть расширенный профиль с матчами, героями, K/D/A, GPM, XPM и другими показателями.</p>
-        <Link className="gold" to="/roster">ОТКРЫТЬ ПРОФИЛИ →</Link>
-      </div>
+      <BattleCup />
     </section>
 
     <section className="highlights-home"><div><small>MEDIA / 4T1J</small><h2>ПОСЛЕДНИЕ ХАЙЛАЙТЫ</h2><p>KILLS, CLUTCH И ЛУЧШИЕ МОМЕНТЫ НАШЕЙ КОМАНДЫ.</p></div><Link className="gold" to="/highlights">СМОТРЕТЬ ХАЙЛАЙТЫ →</Link></section>

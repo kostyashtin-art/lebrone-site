@@ -86,6 +86,30 @@ export async function deleteHighlight(session, id) {
   return request(`${SUPABASE_URL}/rest/v1/highlights?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: headers(token) });
 }
 
+export async function listCupResults() {
+  if (!supabaseConfigured) return [];
+  const params = new URLSearchParams();
+  params.set("select", "id,cup_date,result,score,opponent,note,created_at");
+  params.set("order", "cup_date.desc,created_at.desc");
+  params.set("limit", "12");
+  return request(`${SUPABASE_URL}/rest/v1/battle_cups?${params}`, { headers: headers() });
+}
+
+export async function createCupResult(session, payload) {
+  const token = session?.access_token;
+  if (!token) throw new Error("Нет авторизации");
+  const data = await request(`${SUPABASE_URL}/rest/v1/battle_cups`, {
+    method: "POST", headers: { ...headers(token), Prefer: "return=representation" }, body: JSON.stringify(payload)
+  });
+  return data?.[0] || data;
+}
+
+export async function deleteCupResult(session, id) {
+  const token = session?.access_token;
+  if (!token) throw new Error("Нет авторизации");
+  return request(`${SUPABASE_URL}/rest/v1/battle_cups?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: headers(token) });
+}
+
 export async function uploadFile(session, file, folder) {
   const token = session?.access_token;
   if (!token) throw new Error("Нет авторизации");

@@ -25,3 +25,20 @@ create policy "public can view highlight files" on storage.objects for select us
 create policy "authenticated can upload highlight files" on storage.objects for insert to authenticated with check (bucket_id = 'highlights');
 create policy "authenticated can update highlight files" on storage.objects for update to authenticated using (bucket_id = 'highlights') with check (bucket_id = 'highlights');
 create policy "authenticated can delete highlight files" on storage.objects for delete to authenticated using (bucket_id = 'highlights');
+
+
+-- Боевые кубки: один результат на один сыгранный кубок
+create table if not exists public.battle_cups (
+  id uuid primary key default gen_random_uuid(),
+  cup_date date not null,
+  result text not null check (result in ('win','loss')),
+  score text default '',
+  opponent text default '',
+  note text default '',
+  created_at timestamptz not null default now()
+);
+
+alter table public.battle_cups enable row level security;
+create policy "public can read battle cup results" on public.battle_cups for select using (true);
+create policy "authenticated can insert battle cup results" on public.battle_cups for insert to authenticated with check (true);
+create policy "authenticated can delete battle cup results" on public.battle_cups for delete to authenticated using (true);
