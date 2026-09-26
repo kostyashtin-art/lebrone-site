@@ -548,7 +548,7 @@ function Synergy() {
                   {a.accountId === b.accountId ? <span>—</span> : stat ? <><b>{pct(stat.winrate)}</b><small>{stat.matches} игр</small></> : <span>—</span>}
                 </div>;
               })}
-            </React.Fragment>)}
+            </Fragment>)}
           </div>
         </div>
         <div className="synergy-note">Ячейка учитывает только матчи, где оба игрока были на одной стороне. Это именно командный winrate, а не просто наличие обоих игроков в одной игре.</div>
