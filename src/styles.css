@@ -115,3 +115,94 @@ footer{padding:35px 4vw;display:flex;justify-content:space-between;align-items:c
 .roster-home>.battle-cup .cup-countdown i{font-size:14px}
 .roster-home>.battle-cup .cup-score{margin-bottom:14px}
 @media(max-width:700px){.roster-home>.battle-cup{margin:0 0 10px}.roster-home>.battle-cup .battle-cup-main{padding:20px 16px}.roster-home>.battle-cup .battle-cup-record{padding:20px 16px}}
+
+/* ===== MOBILE LAYOUT FIX 4T1J ===== */
+@media (max-width:700px){
+  .highlights-home{
+    position:relative;
+    z-index:2;
+    min-height:205px;
+    overflow:hidden;
+    margin:0 12px 12px;
+    padding:20px 16px;
+  }
+  .highlights-home > div{
+    position:relative;
+    z-index:2;
+  }
+  .highlights-home h2{
+    margin:8px 0 7px;
+    line-height:1.02;
+    font-size:22px;
+  }
+  .highlights-home p{
+    margin:0;
+    line-height:1.45;
+  }
+  .highlights-home .gold{
+    position:relative;
+    z-index:3;
+    display:flex;
+    width:100%;
+    min-height:42px;
+    margin:16px 0 0;
+    align-items:center;
+    justify-content:center;
+    box-sizing:border-box;
+  }
+
+  /* Нижние карточки больше не используют absolute-заголовки на телефоне. */
+  .lower{
+    position:relative;
+    z-index:1;
+    display:block;
+    margin:0;
+    padding:0 12px;
+    clear:both;
+  }
+  .lower .news,
+  .lower .merch{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    min-height:220px;
+    height:220px;
+    margin:0 0 10px;
+    padding:16px;
+    overflow:hidden;
+  }
+  .lower .news h2,
+  .lower .merch h2{
+    position:relative;
+    left:auto;
+    right:auto;
+    bottom:auto;
+    z-index:2;
+    margin:0 0 9px;
+    max-width:82%;
+    font-size:19px;
+    line-height:1.08;
+  }
+  .lower .news>span,
+  .lower .merch>span{
+    position:relative;
+    left:auto;
+    bottom:auto;
+    z-index:2;
+    margin:0;
+    font-size:9px;
+  }
+  .lower .news>b{
+    position:absolute;
+    right:16px;
+    bottom:16px;
+    z-index:2;
+  }
+  .lower .shirt{
+    z-index:1;
+    right:14px;
+    top:38px;
+    font-size:58px;
+  }
+}
