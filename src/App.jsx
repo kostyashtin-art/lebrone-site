@@ -1,5 +1,6 @@
 import { Link, NavLink, Routes, Route, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
+import { Highlights, Admin } from "./Highlights";
 
 const API = "https://api.opendota.com/api";
 
@@ -67,6 +68,7 @@ const nav = [
   ["/matches", "МАТЧИ"],
   ["/news", "НОВОСТИ"],
   ["/media", "МЕДИА"],
+  ["/highlights", "ХАЙЛАЙТЫ"],
   ["/about", "О КОМАНДЕ"]
 ];
 
@@ -151,17 +153,24 @@ async function loadPlayerStats(accountId) {
 }
 
 function Layout({ children }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <div className="site">
-      <header>
-        <Link className="brand" to="/" aria-label="4T1J — главная">
+      <header className={menuOpen ? "mobile-open" : ""}>
+        <Link className="brand" to="/" aria-label="4T1J — главная" onClick={closeMenu}>
           <img src="/4t1j-logo.png" alt="4T1J" />
           <span className="brand-caption">4 TATARS 1 JEW</span>
         </Link>
+        <button className="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded={menuOpen} onClick={() => setMenuOpen(v => !v)}>
+          <span></span><span></span><span></span>
+        </button>
         <nav>
           {nav.map(([path, label]) => (
-            <NavLink key={path} to={path} end={path === "/"}>{label}</NavLink>
+            <NavLink key={path} to={path} end={path === "/"} onClick={closeMenu}>{label}</NavLink>
           ))}
+          <a className="mobile-support" href="#footer" onClick={closeMenu}>ПОДДЕРЖАТЬ</a>
         </nav>
         <a className="support-btn" href="#footer">ПОДДЕРЖАТЬ</a>
       </header>
@@ -221,6 +230,8 @@ function Home() {
       </div>
     </section>
 
+    <section className="highlights-home"><div><small>MEDIA / 4T1J</small><h2>ПОСЛЕДНИЕ ХАЙЛАЙТЫ</h2><p>KILLS, CLUTCH И ЛУЧШИЕ МОМЕНТЫ НАШЕЙ КОМАНДЫ.</p></div><Link className="gold" to="/highlights">СМОТРЕТЬ ХАЙЛАЙТЫ →</Link></section>
+
     <section className="grid lower">
       <Link className="news" to="/news"><small>ПОСЛЕДНИЕ НОВОСТИ</small><h2>4T1J НА LAN-ТУРНИРЕ:<br/>ПЕРВЫЙ ШАГ К БОЛЬШИМ ПОБЕДАМ</h2><span>21 СЕН 2026</span><b>→</b></Link>
       <Link className="merch" to="/media"><small>НАШ МЕРЧ</small><div className="shirt">4T1J</div><h2>СТИЛЬ,<br/>КОТОРЫЙ ОБЪЕДИНЯЕТ</h2><span>СМОТРЕТЬ →</span></Link>
@@ -250,7 +261,7 @@ function News() {
 }
 
 function Media() {
-  return <Page title="МЕДИА" sub="ФОТО, ВИДЕО И МЕРЧ 4T1J"><div className="media"><div>TEAM<br/>SPIRIT</div><div>4T1J<br/>MEDIA</div><div>MATCH<br/>DAY</div><div>MERCH<br/>DROP</div></div></Page>;
+  return <Page title="МЕДИА" sub="ФОТО, ВИДЕО И МЕРЧ 4T1J"><div className="media"><Link to="/highlights"><div>HIGHLIGHTS<br/><span>СМОТРЕТЬ →</span></div></Link><div>4T1J<br/>MEDIA</div><div>MATCH<br/>DAY</div><div>MERCH<br/>DROP</div></div></Page>;
 }
 
 function About() {
@@ -413,6 +424,8 @@ export default function App() {
     <Route path="/matches" element={<Matches />} />
     <Route path="/news" element={<News />} />
     <Route path="/media" element={<Media />} />
+    <Route path="/highlights" element={<Highlights />} />
+    <Route path="/admin" element={<Admin />} />
     <Route path="/about" element={<About />} />
   </Routes></Layout>;
 }

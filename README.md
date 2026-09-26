@@ -21,4 +21,4 @@ npm run dev
 ```
 
 ## GitHub Pages
-The Vite base path is `/lebrone-site/`.
+The Vite base path is `/` for the custom domain `4t1j.ru`.
