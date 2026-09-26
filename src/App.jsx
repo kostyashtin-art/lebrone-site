@@ -162,7 +162,6 @@ function Layout({ children }) {
       <header className={menuOpen ? "mobile-open" : ""}>
         <Link className="brand" to="/" aria-label="4T1J — главная" onClick={closeMenu}>
           <img src="/4t1j-logo.png" alt="4T1J" />
-          <span className="brand-caption">4 TATARS 1 JEW</span>
         </Link>
         <button className="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded={menuOpen} onClick={() => setMenuOpen(v => !v)}>
           <span></span><span></span><span></span>
@@ -179,7 +178,6 @@ function Layout({ children }) {
       <footer id="footer">
         <img className="footer-logo" src="/4t1j-logo.png" alt="4T1J" />
         <span>© 2026 4T1J ESPORTS</span>
-        <em>ДРУЖБА НАРОДОВ</em>
       </footer>
     </div>
   );
@@ -273,12 +271,11 @@ function Home() {
         <div className="eyebrow">DOTA 2 ESPORTS TEAM</div>
         <div className="fire-logo">
           <img src="/4t1j-logo.png" alt="4T1J" className="real-logo" />
-          <div className="logo-sub">4 TATARS 1 JEW</div>
         </div>
         <div className="hero-message"><h2>БОЛЬШЕ ЧЕМ КОМАНДА</h2><p>ДРУЖБА. ИГРА. РАЗВИТИЕ.</p></div>
         <Link className="cta" to="/roster">СМОТРЕТЬ СОСТАВ <b>→</b></Link>
       </div>
-      <div className="hero-side-text"><span>GOOD PEOPLE</span><span>GOOD DOTA</span><span>4 TATARS</span><span>1 JEW</span><b>♛</b></div>
+      <div className="hero-side-text"><span>GOOD PEOPLE</span><span>GOOD DOTA</span><b>♛</b></div>
       <div className="scroll">SCROLL<i>↓</i></div>
     </section>
 
@@ -325,7 +322,7 @@ function Media() {
 }
 
 function About() {
-  return <Page title="О КОМАНДЕ" sub="GOOD PEOPLE. GOOD DOTA."><div className="about"><b>4T1J</b><p>4 TATARS 1 JEW — команда, построенная вокруг игры, дружбы и развития. На сайте собраны состав, статистика игроков, матчи, новости и медиа.</p></div></Page>;
+  return <Page title="О КОМАНДЕ" sub="GOOD PEOPLE. GOOD DOTA."><div className="about"><b>4T1J</b><p>Команда 4T1J, построенная вокруг игры, дружбы и развития. На сайте собраны состав, статистика игроков, матчи, новости и медиа.</p></div></Page>;
 }
 
 function StatCard({ label, value, sub }) {
