@@ -20,7 +20,7 @@
 
 ```env
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-VITE_SUPABASE_ANON_KEY=YOUR_PUBLIC_ANON_KEY
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_KEY
 ```
 
 Используй только публичный anon/publishable key. Service-role key в сайт не добавляй.
@@ -30,7 +30,7 @@ VITE_SUPABASE_ANON_KEY=YOUR_PUBLIC_ANON_KEY
 Для GitHub Actions добавь в Repository → Settings → Secrets and variables → Actions → Variables:
 
 - `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
 
 Workflow должен передавать эти значения в build через env.
 
