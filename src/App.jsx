@@ -79,8 +79,6 @@ const synergyPlayers = players;
 const nav = [
   ["/", "ГЛАВНАЯ"],
   ["/roster", "СОСТАВ"],
-  ["/matches", "МАТЧИ"],
-  ["/news", "НОВОСТИ"],
   ["/media", "МЕДИА"],
   ["/highlights", "ХАЙЛАЙТЫ"],
   ["/synergy", "СИНЕРГИЯ"],
@@ -329,7 +327,6 @@ function Home() {
     <section className="highlights-home"><div><small>MEDIA / 4T1J</small><h2>ПОСЛЕДНИЕ ХАЙЛАЙТЫ</h2><p>KILLS, CLUTCH И ЛУЧШИЕ МОМЕНТЫ НАШЕЙ КОМАНДЫ.</p></div><Link className="gold" to="/highlights">СМОТРЕТЬ ХАЙЛАЙТЫ →</Link></section>
 
     <section className="grid lower">
-      <Link className="news" to="/news"><small>ПОСЛЕДНИЕ НОВОСТИ</small><h2>4T1J НА LAN-ТУРНИРЕ:<br/>ПЕРВЫЙ ШАГ К БОЛЬШИМ ПОБЕДАМ</h2><span>21 СЕН 2026</span><b>→</b></Link>
       <Link className="merch" to="/media"><small>НАШ МЕРЧ</small><div className="shirt">4T1J</div><h2>СТИЛЬ,<br/>КОТОРЫЙ ОБЪЕДИНЯЕТ</h2><span>СМОТРЕТЬ →</span></Link>
     </section>
     <div className="partners">DOTA 2　 STEAM　 LOGITECH G　 HYPERX　 ZOWIE　 MONSTER ENERGY</div>
@@ -350,22 +347,12 @@ function Roster() {
   </Page>;
 }
 
-function Matches() {
-  return <Page title="МАТЧИ" sub="РАСПИСАНИЕ И РЕЗУЛЬТАТЫ 4T1J">
-    <div className="rows"><div>LAN EVENT　 <b>4T1J</b>　 VS　 RIVAL TEAM　 <em>СЛЕДУЮЩИЙ</em></div><div>ONLINE　 <b>4T1J</b>　 VS　 TEAM NORTH　 <em>28 СЕН</em></div><div>ONLINE　 <b>4T1J</b>　 2 : 1　 RED FOX　 <em>ПОБЕДА</em></div></div>
-  </Page>;
-}
-
-function News() {
-  return <Page title="НОВОСТИ" sub="ПОСЛЕДНИЕ СОБЫТИЯ КОМАНДЫ"><div className="rows"><div>21.09.2026　 <b>4T1J НА LAN-ТУРНИРЕ: ПЕРВЫЙ ШАГ К БОЛЬШИМ ПОБЕДАМ</b>　→</div><div>18.09.2026　 <b>НОВЫЙ СОСТАВ 4T1J ГОТОВ К СЕЗОНУ</b>　→</div><div>12.09.2026　 <b>ЗА КУЛИСАМИ: ТРЕНИРОВКИ И ПОДГОТОВКА</b>　→</div></div></Page>;
-}
-
 function Media() {
   return <Page title="МЕДИА" sub="ФОТО, ВИДЕО И МЕРЧ 4T1J"><div className="media"><Link to="/highlights"><div>HIGHLIGHTS<br/><span>СМОТРЕТЬ →</span></div></Link><div>4T1J<br/>MEDIA</div><div>MATCH<br/>DAY</div><div>MERCH<br/>DROP</div></div></Page>;
 }
 
 function About() {
-  return <Page title="О КОМАНДЕ" sub="GOOD PEOPLE. GOOD DOTA."><div className="about"><b>4T1J</b><p>Команда 4T1J, построенная вокруг игры, дружбы и развития. На сайте собраны состав, статистика игроков, матчи, новости и медиа.</p></div></Page>;
+  return <section className="page about-page"><div className="about-hero"><div className="about-copy"><small>4T1J ESPORTS</small><h1>О КОМАНДЕ</h1><p className="about-sub">GOOD PEOPLE. GOOD DOTA.</p><div className="about-text"><p><strong>4T1J</strong> — команда друзей, которая играет для души.</p><p>Собираемся ради игры, хорошего настроения и красивой Dota. Иногда не проигрываем, а чаще всего — выигрываем.</p><p>Без лишнего пафоса. Просто играем вместе, развиваемся и получаем удовольствие от каждого матча.</p></div></div></div></section>;
 }
 
 function StatCard({ label, value, sub }) {
@@ -679,8 +666,6 @@ export default function App() {
     <Route path="/" element={<Home />} />
     <Route path="/roster" element={<Roster />} />
     <Route path="/roster/player/:accountId" element={<PlayerProfile />} />
-    <Route path="/matches" element={<Matches />} />
-    <Route path="/news" element={<News />} />
     <Route path="/media" element={<Media />} />
     <Route path="/highlights" element={<Highlights />} />
     <Route path="/synergy" element={<Synergy />} />
