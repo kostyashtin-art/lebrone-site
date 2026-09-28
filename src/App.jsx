@@ -251,7 +251,7 @@ function BattleCup() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      let next = nextBattleCupTarget();
+      const next = nextBattleCupTarget();
       setTarget(next);
       setLeft(next.getTime() - Date.now());
     }, 1000);
@@ -263,35 +263,42 @@ function BattleCup() {
     listCupResults().then(setResults).catch(() => setResults([]));
   }, []);
 
-  const total = results.length;
   const wins = results.filter(x => x.result === "win").length;
   const losses = results.filter(x => x.result === "loss").length;
   const days = Math.max(0, Math.floor(left / 86400000));
   const hours = Math.max(0, Math.floor((left % 86400000) / 3600000));
   const minutes = Math.max(0, Math.floor((left % 3600000) / 60000));
   const seconds = Math.max(0, Math.floor((left % 60000) / 1000));
+  const form = results.slice(0, 6);
 
-  return <section className="battle-cup">
-    <div className="battle-cup-main">
-      <div className="battle-cup-kicker"><span className="live-dot" /> 4T1J / WEEKLY EVENT</div>
-      <h2>БОЕВОЙ <span>КУБОК</span></h2>
-      <p>Каждую субботу в <b>21:00 МСК</b>. Здесь будет текущий отсчёт до старта и история выступлений команды.</p>
-      <div className="cup-countdown" aria-label="Отсчёт до боевого кубка">
-        <div><b>{String(days).padStart(2, "0")}</b><small>ДНЕЙ</small></div><i>:</i>
-        <div><b>{String(hours).padStart(2, "0")}</b><small>ЧАСОВ</small></div><i>:</i>
-        <div><b>{String(minutes).padStart(2, "0")}</b><small>МИН</small></div><i>:</i>
-        <div><b>{String(seconds).padStart(2, "0")}</b><small>СЕК</small></div>
+  return <section className="battle-cup compact-cup">
+    <div className="compact-cup-head">
+      <div>
+        <div className="battle-cup-kicker"><span className="live-dot" /> 4T1J / WEEKLY EVENT</div>
+        <h2>БОЕВОЙ <span>КУБОК</span></h2>
       </div>
-      <div className="cup-next">СЛЕДУЮЩИЙ СТАРТ · {target.toLocaleDateString("ru-RU", { day:"2-digit", month:"2-digit", year:"numeric", timeZone:"Europe/Moscow" })} · 21:00 МСК</div>
+      <div className="compact-cup-next"><small>СЛЕДУЮЩИЙ СТАРТ</small><b>{target.toLocaleDateString("ru-RU", { day:"2-digit", month:"2-digit", year:"numeric", timeZone:"Europe/Moscow" })} · 21:00 МСК</b></div>
     </div>
-    <div className="battle-cup-record">
-      <small>РЕЗУЛЬТАТЫ</small>
-      <div className="cup-score"><b>{wins}</b><span>ПОБЕД</span><em>:</em><b className="loss-num">{losses}</b><span>ПОРАЖЕНИЙ</span></div>
-      <div className="cup-history">
-        {results.slice(0, 6).map((r) => <span key={r.id} className={r.result === "win" ? "cup-win" : "cup-loss"} title={`${r.cup_date}${r.opponent ? ` · ${r.opponent}` : ""}`}>{r.result === "win" ? "W" : "L"}</span>)}
-        {!results.length ? <p>Первые результаты появятся после подключения Supabase и добавления кубка.</p> : null}
+    <div className="compact-cup-body">
+      <div className="compact-countdown" aria-label="Отсчёт до боевого кубка">
+        <span><b>{String(days).padStart(2, "0")}</b><small>ДН</small></span>
+        <i>:</i><span><b>{String(hours).padStart(2, "0")}</b><small>Ч</small></span>
+        <i>:</i><span><b>{String(minutes).padStart(2, "0")}</b><small>МИН</small></span>
+        <i>:</i><span><b>{String(seconds).padStart(2, "0")}</b><small>СЕК</small></span>
       </div>
-      
+      <div className="compact-cup-stats">
+        <div><b className="win">{wins}</b><span>ПОБЕД</span></div>
+        <em>:</em>
+        <div><b className="loss">{losses}</b><span>ПОРАЖ.</span></div>
+      </div>
+      <div className="compact-cup-form">
+        <small>ФОРМА</small>
+        <div>{form.length ? form.map(r => <span key={r.id} className={r.result === "win" ? "cup-win" : "cup-loss"} title={`${r.cup_date}${r.opponent ? ` · ${r.opponent}` : ""}`}>{r.result === "win" ? "W" : "L"}</span>) : <span className="form-empty">—</span>}</div>
+      </div>
+    </div>
+    <div className="compact-cup-foot">
+      <span>РЕЗУЛЬТАТЫ ОБНОВЛЯЮТСЯ АВТОМАТИЧЕСКИ</span>
+      <Link to="/roster" className="cup-link">СОСТАВ →</Link>
     </div>
   </section>;
 }
