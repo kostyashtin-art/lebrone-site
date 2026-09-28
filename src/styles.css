@@ -18,7 +18,126 @@ nav{display:flex;gap:28px;flex:1;height:100%;align-items:center}nav a{font-size:
 .players{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.player{min-width:0;padding:0;overflow:hidden;position:relative;background:#101012;border:1px solid #29292d;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}.player:hover{transform:translateY(-5px);border-color:#ed252c;box-shadow:0 12px 35px rgba(237,25,35,.18)}.player-photo{height:245px;position:relative;overflow:hidden;background:#09090b}.player-photo img{width:100%;height:100%;display:block;object-fit:cover;object-position:center 22%;filter:grayscale(.92) contrast(1.08) brightness(.72);transform:scale(1.015);transition:filter .35s ease,transform .45s ease}.player:hover .player-photo img{filter:grayscale(.1) contrast(1.05) brightness(.92) saturate(1.12);transform:scale(1.055)}.photo-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 30%,rgba(0,0,0,.18) 55%,rgba(0,0,0,.94) 100%);pointer-events:none}.player-number{position:absolute;right:10px;top:9px;z-index:2;color:#fff;font-size:10px;font-weight:1000;letter-spacing:1px;opacity:.65}.player-info{position:relative;padding:12px 12px 13px;background:#121214}.player-info b{display:block;font-size:14px;letter-spacing:.5px}.player-info small{display:block;margin-top:4px;color:#777;font-size:8px;letter-spacing:1.5px;font-weight:900}.player-info i{display:block;width:28px;height:2px;margin-top:10px;background:#e5232b;transition:width .25s ease}.player:hover .player-info i{width:70px}
 .team-stat-banner{display:flex;align-items:end;justify-content:space-between;border:1px solid #2b2b30;background:linear-gradient(135deg,#16161a,#0b0b0d);padding:24px;margin-top:18px}.team-stat-banner strong{font-style:italic;font-size:30px}.team-stat-banner strong span{color:#e5232b}.team-stat-banner b{font-size:10px;color:#53db79;letter-spacing:2px}.match p{color:#87878d;font-size:13px;line-height:1.6;min-height:110px}.gold{display:block;text-align:center;margin-top:12px;border:1px solid #786746;color:#d5bd91;padding:10px;font-size:9px;font-weight:900}.inline-gold{width:max-content;padding:13px 18px}
 .lower{padding-top:0;grid-template-columns:1fr}.merch{min-height:250px;position:relative;overflow:hidden}.merch>small{color:#888;letter-spacing:2px}.merch h2{position:absolute;left:25px;bottom:42px;margin:0;font-size:23px;line-height:1.1}.merch>span{position:absolute;left:25px;bottom:20px;color:#777;font-size:9px}.merch{background:linear-gradient(135deg,#17141c,#0d0d0f)}.shirt{position:absolute;right:25px;top:38px;font-weight:1000;font-style:italic;font-size:80px;color:#2a2a30;transform:rotate(-8deg)}.partners{text-align:center;padding:25px;color:#555;font-size:11px;letter-spacing:2px;border-top:1px solid #171719}
-.page{padding:75px 6vw 110px;min-height:calc(100vh - 84px)}.page>small{color:#999;letter-spacing:2px;font-weight:900}.page h1{font-size:clamp(62px,10vw,125px);margin:12px 0 5px;line-height:.85;font-style:italic;letter-spacing:-5px}.page>p{color:#888;letter-spacing:3px;font-size:12px}.rows{margin-top:50px;border-top:1px solid #2a2a2d}.rows div{padding:25px 12px;border-bottom:1px solid #2a2a2d;font-size:12px;color:#999}.rows b{color:#fff}.rows em{float:right;color:#b89f79;font-style:normal}.media{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-top:50px}.media div{height:230px;border:1px solid #29292d;display:grid;place-items:center;background:radial-gradient(circle,#383840,#101014);font-size:35px;font-weight:1000;font-style:italic;text-align:center}.media div:first-child{height:474px;grid-row:span 2}.media div:nth-child(2){background:linear-gradient(135deg,#74141a,#12090b)}.about{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:50px}.about>b{font-size:clamp(100px,18vw,240px);color:#1b1b1f;font-style:italic}.about p{font-size:22px;line-height:1.6;color:#bbb}
+.page{padding:75px 6vw 110px;min-height:calc(100vh - 84px)}
+/* ===== 4T1J SECTION BACKGROUNDS ===== */
+.media-page,.highlights-page,.synergy-page{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background-color:#050506;
+  background-image:
+    linear-gradient(90deg,rgba(4,4,6,.985) 0%,rgba(4,4,6,.90) 27%,rgba(4,4,6,.56) 57%,rgba(4,4,6,.22) 100%),
+    linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.10) 42%,rgba(0,0,0,.82) 100%),
+    url("/roster-bg.png");
+  background-size:cover,cover,cover;
+  background-repeat:no-repeat;
+}
+.media-page{background-position:center,center,68% 24%;}
+.highlights-page{background-position:center,center,54% 38%;}
+.synergy-page{background-position:center,center,82% 52%;}
+.media-page::before,.highlights-page::before,.synergy-page::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 72% 18%,rgba(237,28,38,.20),transparent 21%),
+    radial-gradient(circle at 84% 66%,rgba(237,28,38,.12),transparent 26%),
+    linear-gradient(90deg,transparent 0 61%,rgba(237,28,38,.035) 61.2%,transparent 61.5%,transparent 76%,rgba(237,28,38,.025) 76.2%,transparent 76.5%),
+    radial-gradient(circle at 12% 30%,rgba(255,80,80,.09) 0 1px,transparent 1.6px),
+    radial-gradient(circle at 44% 62%,rgba(255,80,80,.08) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 91% 38%,rgba(255,80,80,.08) 0 1px,transparent 1.5px);
+  background-size:auto,auto,auto,210px 210px,240px 240px,190px 190px;
+  opacity:.78;
+}
+.media-page::after,.highlights-page::after,.synergy-page::after{
+  position:absolute;
+  z-index:-1;
+  left:2vw;
+  bottom:4%;
+  font-size:clamp(150px,23vw,390px);
+  line-height:.7;
+  font-weight:1000;
+  font-style:italic;
+  letter-spacing:-.09em;
+  color:rgba(255,255,255,.035);
+  text-shadow:0 0 55px rgba(220,25,35,.06);
+  pointer-events:none;
+  user-select:none;
+}
+.media-page::after{content:"MEDIA";}
+.highlights-page::after{content:"4T1J";}
+.synergy-page::after{content:"SYNERGY";}
+.media-page>small,.media-page>h1,.media-page>p,.media-page>.media,
+.highlights-page>small,.highlights-page>h1,.highlights-page>p,.highlights-page>*:not(:where(.video-modal)),
+.synergy-page>small,.synergy-page>h1,.synergy-page>p,.synergy-page>*{position:relative;z-index:1}
+.media-page .media{margin-top:50px}
+.highlights-page .highlights-grid,.highlights-page .highlight-filters,.highlights-page .setup-banner{position:relative;z-index:1}
+@media(max-width:700px){
+  .media-page,.highlights-page,.synergy-page{background-size:auto 100%,auto 100%,auto 100%;}
+  .media-page{background-position:center,center,70% top;}
+  .highlights-page{background-position:center,center,54% top;}
+  .synergy-page{background-position:center,center,80% top;}
+  .media-page::before,.highlights-page::before,.synergy-page::before{opacity:.58;}
+  .media-page::after,.highlights-page::after,.synergy-page::after{font-size:38vw;left:-2vw;bottom:7%;}
+}
+
+/* ===== 4T1J ROSTER BACKGROUND ===== */
+.roster-page{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg,rgba(4,4,6,.97) 0%,rgba(4,4,6,.88) 28%,rgba(4,4,6,.48) 58%,rgba(4,4,6,.20) 100%),
+    linear-gradient(180deg,rgba(0,0,0,.24) 0%,rgba(0,0,0,.10) 46%,rgba(0,0,0,.78) 100%),
+    url("/roster-bg.png") center top/cover no-repeat;
+}
+.roster-page::before{
+  content:"4T1J";
+  position:absolute;
+  z-index:-1;
+  left:2vw;
+  top:30%;
+  font-size:clamp(180px,25vw,420px);
+  line-height:.7;
+  font-weight:1000;
+  font-style:italic;
+  letter-spacing:-.09em;
+  color:rgba(255,255,255,.035);
+  text-shadow:0 0 50px rgba(220,25,35,.05);
+  pointer-events:none;
+  user-select:none;
+}
+.roster-page::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.55;
+  background:
+    radial-gradient(circle at 70% 18%,rgba(229,35,43,.18) 0,transparent 18%),
+    radial-gradient(circle at 78% 58%,rgba(229,35,43,.12) 0,transparent 25%),
+    repeating-linear-gradient(90deg,transparent 0,transparent 15.5%,rgba(229,35,43,.035) 15.6%,transparent 15.8%),
+    radial-gradient(circle at 12% 42%,rgba(255,60,60,.10) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 38% 18%,rgba(255,80,80,.08) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 58% 36%,rgba(255,80,80,.09) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 84% 30%,rgba(255,80,80,.08) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 92% 70%,rgba(255,80,80,.07) 0 1px,transparent 1.5px);
+  background-size:auto,auto,auto,180px 180px,240px 240px,210px 210px,260px 260px,190px 190px;
+}
+.roster-page>small,.roster-page>h1,.roster-page>p,.roster-page>.roster,.roster-page>.coach-section{position:relative;z-index:1}
+.roster-page .roster-card{
+  box-shadow:0 20px 60px rgba(0,0,0,.48);
+}
+.roster-page .roster-card .player-photo img{
+  filter:grayscale(.92) contrast(1.1) brightness(.52);
+}
+.roster-page .roster-card:hover .player-photo img{
+  filter:grayscale(.08) contrast(1.06) brightness(.78) saturate(1.08);
+}
+.page>small{color:#999;letter-spacing:2px;font-weight:900}.page h1{font-size:clamp(62px,10vw,125px);margin:12px 0 5px;line-height:.85;font-style:italic;letter-spacing:-5px}.page>p{color:#888;letter-spacing:3px;font-size:12px}.rows{margin-top:50px;border-top:1px solid #2a2a2d}.rows div{padding:25px 12px;border-bottom:1px solid #2a2a2d;font-size:12px;color:#999}.rows b{color:#fff}.rows em{float:right;color:#b89f79;font-style:normal}.media{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-top:50px}.media div{height:230px;border:1px solid #29292d;display:grid;place-items:center;background:radial-gradient(circle,#383840,#101014);font-size:35px;font-weight:1000;font-style:italic;text-align:center}.media div:first-child{height:474px;grid-row:span 2}.media div:nth-child(2){background:linear-gradient(135deg,#74141a,#12090b)}.about{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:50px}.about>b{font-size:clamp(100px,18vw,240px);color:#1b1b1f;font-style:italic}.about p{font-size:22px;line-height:1.6;color:#bbb}
 footer{padding:35px 4vw;display:flex;justify-content:space-between;align-items:center;color:#666;font-size:10px}footer .footer-logo{width:68px;height:42px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(255,20,20,.22))}footer em{color:#b89f79;font-size:15px;font-weight:900}
 .roster{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:50px}.roster-card{height:500px;min-width:0;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid #2b2b30;background:#0d0d0f;transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease}.roster-card:hover{transform:translateY(-7px);border-color:#ed252c;box-shadow:0 18px 50px rgba(220,20,30,.2)}.roster-card .player-photo{position:absolute;inset:0;height:100%}.roster-card .player-photo img{filter:grayscale(.9) contrast(1.08) brightness(.62);object-position:center 18%}.roster-card:hover .player-photo img{filter:grayscale(.05) contrast(1.05) brightness(.85) saturate(1.1)}.roster-card .photo-shade{background:linear-gradient(180deg,rgba(0,0,0,.05) 20%,rgba(0,0,0,.1) 45%,rgba(0,0,0,.92) 82%,#070708 100%)}.roster-card .player-number{font-size:34px;top:18px;right:18px;opacity:.35}.roster-card .player-info{z-index:2;padding:22px;background:linear-gradient(180deg,transparent,rgba(5,5,6,.75))}.roster-card .player-info b{font-size:28px;font-style:italic;letter-spacing:1px}.roster-card .player-info small{font-size:10px;margin-top:6px;color:#aaa}.roster-card .player-info i{width:45px;height:3px;margin-top:13px}
 
@@ -31,6 +150,27 @@ footer{padding:35px 4vw;display:flex;justify-content:space-between;align-items:c
 
 @media(max-width:1100px){nav{gap:16px}.players,.roster{grid-template-columns:repeat(3,1fr)}.stats-grid{grid-template-columns:repeat(4,1fr)}.profile-head{grid-template-columns:240px 1fr}.profile-id{grid-column:1/-1;border-left:0;border-top:1px solid #2b2b30;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}.profile-id b{margin:0}.profile-columns{grid-template-columns:1fr}}
 @media(max-width:900px){nav{overflow:auto}.hero{min-height:700px;background-position:58% center}.hero-copy{width:70%}.hero-side-text{right:4%;top:18%;font-size:15px}.grid{grid-template-columns:1fr}.roster{grid-template-columns:repeat(2,1fr)}.profile-head{grid-template-columns:200px 1fr}.profile-id{grid-column:1/-1}.profile-title{padding:30px 20px}}
+@media(max-width:700px){
+  .roster-page{
+    background-position:58% top;
+    background-size:auto 100%;
+    background-attachment:scroll;
+  }
+  .roster-page::before{
+    left:-5vw;
+    top:31%;
+    font-size:44vw;
+  }
+  .roster-page::after{
+    opacity:.42;
+    background:
+      radial-gradient(circle at 78% 15%,rgba(229,35,43,.16) 0,transparent 24%),
+      radial-gradient(circle at 18% 48%,rgba(255,60,60,.08) 0 1px,transparent 1.5px),
+      radial-gradient(circle at 70% 42%,rgba(255,80,80,.07) 0 1px,transparent 1.5px),
+      repeating-linear-gradient(90deg,transparent 0,transparent 30%,rgba(229,35,43,.035) 30.2%,transparent 30.6%);
+    background-size:auto,150px 150px,190px 190px,auto;
+  }
+}
 @media(max-width:700px){header{height:auto;flex-wrap:wrap;padding:15px 5vw}nav{order:3;width:100%;height:38px}.support-btn{display:none}.hero{min-height:680px;align-items:flex-start;padding-top:100px;background-position:62% center}.hero::before{width:100%;background:linear-gradient(180deg,rgba(0,0,0,.95),rgba(0,0,0,.55) 60%,rgba(0,0,0,.9))}.hero-copy{width:100%}.real-logo{width:270px}.hero-side-text,.hero .scroll{display:none}.players,.roster{grid-template-columns:1fr 1fr}.page{padding:55px 5vw 80px}.page h1{font-size:54px}.about{grid-template-columns:1fr}.media{grid-template-columns:1fr}.media div:first-child{height:230px;grid-row:auto}.profile-page{padding:30px 4vw 70px}.profile-head{grid-template-columns:1fr}.profile-art{height:350px}.profile-id{grid-column:auto;display:flex;align-items:stretch;border-left:0;border-top:1px solid #2b2b30}.profile-title{padding:28px 20px}.stats-grid{grid-template-columns:repeat(2,1fr)}.profile-columns{grid-template-columns:1fr}.api-error{flex-wrap:wrap}.api-error span{flex-basis:100%}.profile-links a{flex:1 0 45%;text-align:center}}
 @media(max-width:480px){nav{gap:12px}.brand{min-width:140px}.brand img{width:64px;height:44px}.brand-caption{font-size:7px}.players,.roster{grid-template-columns:1fr}.player-photo{height:360px}.roster-card{height:500px}.real-logo{width:240px}.hero-message h2{font-size:25px}.logo-sub{font-size:11px;letter-spacing:2px}.stats-grid{grid-template-columns:1fr 1fr}.profile-art{height:320px}.profile-title h1{font-size:54px}}
 

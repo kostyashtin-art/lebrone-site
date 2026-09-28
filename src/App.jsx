@@ -333,12 +333,12 @@ function Home() {
   </>;
 }
 
-function Page({ title, sub, children }) {
-  return <section className="page"><small>4T1J ESPORTS</small><h1>{title}</h1><p>{sub}</p>{children}</section>;
+function Page({ title, sub, children, className = "" }) {
+  return <section className={`page ${className}`.trim()}><small>4T1J ESPORTS</small><h1>{title}</h1><p>{sub}</p>{children}</section>;
 }
 
 function Roster() {
-  return <Page title="СОСТАВ" sub="ПЯТЬ ИГРОКОВ. ОДИН ТРЕНЕР. ОДНА КОМАНДА.">
+  return <Page className="roster-page" title="СОСТАВ" sub="ПЯТЬ ИГРОКОВ. ОДИН ТРЕНЕР. ОДНА КОМАНДА.">
     <div className="roster">{players.map(p => <PlayerCard p={p} large key={p.id} />)}</div>
     <section className="coach-section">
       <div className="coach-section-head"><small>4T1J / STAFF</small><h2>ТРЕНЕР</h2><p>ТРЕНЕРСКИЙ ШТАБ КОМАНДЫ</p></div>
@@ -348,7 +348,7 @@ function Roster() {
 }
 
 function Media() {
-  return <Page title="МЕДИА" sub="ФОТО, ВИДЕО И МЕРЧ 4T1J"><div className="media"><Link to="/highlights"><div>HIGHLIGHTS<br/><span>СМОТРЕТЬ →</span></div></Link><div>4T1J<br/>MEDIA</div><div>MATCH<br/>DAY</div><div>MERCH<br/>DROP</div></div></Page>;
+  return <Page className="media-page" title="МЕДИА" sub="ФОТО, ВИДЕО И МЕРЧ 4T1J"><div className="media"><Link to="/highlights"><div>HIGHLIGHTS<br/><span>СМОТРЕТЬ →</span></div></Link><div>4T1J<br/>MEDIA</div><div>MATCH<br/>DAY</div><div>MERCH<br/>DROP</div></div></Page>;
 }
 
 function About() {
@@ -605,7 +605,7 @@ function Synergy() {
     }) || null;
   }));
 
-  return <Page title="СИНЕРГИЯ СОСТАВА" sub="ВИНРЕЙТ КОМБИНАЦИЙ 4T1J ПО РЕАЛЬНЫМ МАТЧАМ">
+  return <Page className="synergy-page" title="СИНЕРГИЯ СОСТАВА" sub="ВИНРЕЙТ КОМБИНАЦИЙ 4T1J ПО РЕАЛЬНЫМ МАТЧАМ">
     <div className="synergy-hero">
       <div><small>OPENDOTA → SUPABASE → ANALYTICS</small><h2>КАК ИГРАЕТ СОСТАВ ВМЕСТЕ</h2><p>Матчи собираются отдельно, сохраняются в Supabase и не пересчитываются в браузере при каждом открытии страницы.</p></div>
       <div className="synergy-status"><span className="live-dot" /> {state.loading ? "ЗАГРУЗКА" : state.error ? "ОШИБКА" : `${stats.length} КОМБИНАЦИЙ`}</div>
