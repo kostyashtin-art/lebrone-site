@@ -2,7 +2,7 @@ import { Link, NavLink, Routes, Route, useParams } from "react-router-dom";
 import { Fragment } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Highlights, Admin } from "./Highlights";
-import { listCupResults, createCupResult, deleteCupResult, listSynergyStats, supabaseConfigured } from "./supabase";
+import { listCupResults, createCupResult, deleteCupResult, listSynergyStats, listHighlights, supabaseConfigured } from "./supabase";
 
 const API = "https://api.opendota.com/api";
 
@@ -182,9 +182,7 @@ function Layout({ children }) {
           {nav.map(([path, label]) => (
             <NavLink key={path} to={path} end={path === "/"} onClick={closeMenu}>{label}</NavLink>
           ))}
-          <a className="mobile-support" href="#footer" onClick={closeMenu}>ПОДДЕРЖАТЬ</a>
         </nav>
-        <a className="support-btn" href="#footer">ПОДДЕРЖАТЬ</a>
       </header>
       {children}
       <footer id="footer">
@@ -329,7 +327,13 @@ function Home() {
     <section className="grid lower">
       <Link className="merch" to="/media"><small>НАШ МЕРЧ</small><div className="shirt">4T1J</div><h2>СТИЛЬ,<br/>КОТОРЫЙ ОБЪЕДИНЯЕТ</h2><span>СМОТРЕТЬ →</span></Link>
     </section>
-    <div className="partners">DOTA 2　 STEAM　 LOGITECH G　 HYPERX　 ZOWIE　 MONSTER ENERGY</div>
+    <section className="team-values" aria-label="Ценности 4T1J">
+      <div><b>01</b><span>ИГРАЕМ ДЛЯ ДУШИ</span></div>
+      <div><b>02</b><span>РАЗВИВАЕМСЯ ВМЕСТЕ</span></div>
+      <div><b>03</b><span>СТРЕМИМСЯ К ПОБЕДАМ</span></div>
+      <div><b>04</b><span>ПОДДЕРЖИВАЕМ ДРУГ ДРУГА</span></div>
+      <div><b>05</b><span>СОЗДАЁМ КОНТЕНТ</span></div>
+    </section>
   </>;
 }
 
@@ -348,7 +352,84 @@ function Roster() {
 }
 
 function Media() {
-  return <Page className="media-page" title="МЕДИА" sub="ФОТО, ВИДЕО И МЕРЧ 4T1J"><div className="media"><Link to="/highlights"><div>HIGHLIGHTS<br/><span>СМОТРЕТЬ →</span></div></Link><div>4T1J<br/>MEDIA</div><div>MATCH<br/>DAY</div><div>MERCH<br/>DROP</div></div></Page>;
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const data = supabaseConfigured ? await listHighlights() : [];
+        if (alive) setItems(Array.isArray(data) ? data : []);
+      } catch {
+        if (alive) setItems([]);
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => { alive = false; };
+  }, []);
+
+  const featured = items.find(item => item.is_featured) || items[0];
+  const secondary = items.filter(item => item.id !== featured?.id).slice(0, 5);
+
+  return <Page className="media-page" title="МЕДИА" sub="ФОТО, ВИДЕО И КОНТЕНТ 4T1J">
+    <div className="media-toolbar">
+      <div className="media-tabs">
+        <span className="active">ВСЕ</span>
+        <span>ФОТО</span>
+        <span>ВИДЕО</span>
+        <Link to="/highlights">ХАЙЛАЙТЫ</Link>
+        <span>ЗА КАДРОМ</span>
+        <span>КОМАНДНАЯ ЖИЗНЬ</span>
+      </div>
+      <div className="media-actions">
+        <span className="media-search">⌕ <span>ПОИСК КОНТЕНТА</span></span>
+        <span className="media-sort">СНАЧАЛА НОВЫЕ⌄</span>
+      </div>
+    </div>
+
+    <div className="media-showcase">
+      <Link to="/highlights" className="media-featured">
+        <div className="media-featured-thumb">
+          {featured?.thumbnail_url ? <img src={featured.thumbnail_url} alt="" /> : <div className="media-placeholder"><b>4T1J</b><span>TEAM CONTENT</span></div>}
+          <em>★ ГЛАВНЫЙ</em><strong>▶</strong>
+        </div>
+        <div className="media-featured-copy">
+          <small>{featured?.player ? `${featured.player} · ${featured.hero || "DOTA 2"}` : "4T1J · TEAM CONTENT"}</small>
+          <h2>{featured?.title || "4T1J — TEAM MOMENTS"}</h2>
+          <p>{featured?.description || "Лучшие командные моменты, тренировки и контент 4T1J."}</p>
+          <span>СМОТРЕТЬ ХАЙЛАЙТЫ →</span>
+        </div>
+      </Link>
+
+      <div className="media-grid">
+        {secondary.map((item, index) => (
+          <Link to="/highlights" className="media-card" key={item.id}>
+            <div className="media-card-thumb">
+              {item.thumbnail_url ? <img src={item.thumbnail_url} alt="" loading="lazy" /> : <div className="media-placeholder"><b>4T1J</b><span>{item.hero || "DOTA 2"}</span></div>}
+              <em>{index % 2 === 0 ? "ХАЙЛАЙТ" : "ВИДЕО"}</em>
+            </div>
+            <div className="media-card-copy"><small>{item.player || "4T1J"}</small><h3>{item.title}</h3><p>{item.description || "Лучшие моменты команды."}</p></div>
+          </Link>
+        ))}
+        {!loading && !secondary.length ? (
+          <Link to="/highlights" className="media-card media-card-static"><div className="media-card-thumb"><div className="media-placeholder"><b>4T1J</b><span>HIGHLIGHTS</span></div><em>ХАЙЛАЙТЫ</em></div><div className="media-card-copy"><small>4T1J MEDIA</small><h3>ЛУЧШИЕ МОМЕНТЫ НАШИХ ИГР</h3><p>Открыть раздел с хайлайтами команды.</p></div></Link>
+        ) : null}
+        <div className="media-card media-card-static"><div className="media-card-thumb media-card-art"><span>♛</span></div><div className="media-card-copy"><small>4T1J</small><h3>КОМАНДНАЯ ЖИЗНЬ</h3><p>Тренировки, будни и атмосфера команды.</p></div></div>
+      </div>
+    </div>
+
+    <section className="media-bottom">
+      <div><small>4T1J ESPORTS</small><h2>GOOD PEOPLE.<br/><b>GOOD DOTA.</b></h2></div>
+      <div className="media-values">
+        <span>◈ <b>ИГРАЕМ<br/>ДЛЯ ДУШИ</b></span>
+        <span>◎ <b>РАЗВИВАЕМСЯ<br/>ВМЕСТЕ</b></span>
+        <span>♜ <b>СТРЕМИМСЯ<br/>К ПОБЕДАМ</b></span>
+        <span>↗ <b>СОЗДАЁМ<br/>КОНТЕНТ</b></span>
+      </div>
+    </section>
+  </Page>;
 }
 
 function About() {
