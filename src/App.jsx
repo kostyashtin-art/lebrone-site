@@ -534,32 +534,10 @@ function HomeMedia() {
   );
 }
 
-function HomeJourney() {
-  const steps = [
-    ["01", "СОБИРАЕМСЯ", "Команда"],
-    ["02", "ТРЕНИРУЕМСЯ", "Подготовка"],
-    ["03", "ИГРАЕМ", "Матчи"],
-    ["04", "BATTLE CUP", "Опыт"],
-    ["05", "ДВИГАЕМСЯ ДАЛЬШЕ", "Сегодня"]
-  ];
-  const goals = ["Участие в новых турнирах", "Рост командной синергии", "Больше собственного контента", "Развитие сообщества"];
-  return (
-    <section className="home-journey">
-      <div className="journey-main home-surface">
-        <div className="home-section-head"><small>OUR STORY / 4T1J</small><span>ПУТЬ КОМАНДЫ</span></div>
-        <h2>ПУТЬ 4T1J</h2>
-        <div className="journey-line">
-          {steps.map(([id, title, sub], i) => <div className={i === steps.length - 1 ? "journey-step is-current" : "journey-step"} key={id}><b>{id}</b><i></i><strong>{title}</strong><small>{sub}</small></div>)}
-        </div>
-      </div>
-      <aside className="journey-goals home-surface"><small>WHAT'S NEXT</small><h3>СЛЕДУЮЩИЕ ЦЕЛИ</h3>{goals.map((goal, i) => <div key={goal}><i>{String(i + 1).padStart(2, "0")}</i><span>{goal}</span></div>)}</aside>
-    </section>
-  );
-}
-
 function Home() {
   return <>
     <section className="hero home-hero">
+      <img className="home-hero-logo" src="/4t1j-logo.png" alt="4T1J" />
       <div className="hero-copy home-hero-copy">
         <div className="eyebrow">4T1J ESPORTS</div>
         <div className="home-hero-title"><span>GOOD PEOPLE.</span><b>GOOD DOTA.</b></div>
@@ -582,18 +560,6 @@ function Home() {
     <HomeInsights />
     <BattleCup />
     <HomeMedia />
-    <HomeJourney />
-
-    <section className="home-values-final">
-      <div className="home-values-brand"><small>4T1J ESPORTS</small><h2>GOOD PEOPLE.<br/><b>GOOD DOTA.</b></h2></div>
-      <div className="home-values-list">
-        <span><i>◈</i><b>Играем<br/>для души</b></span>
-        <span><i>◎</i><b>Развиваемся<br/>вместе</b></span>
-        <span><i>♜</i><b>Стремимся<br/>к победам</b></span>
-        <span><i>♡</i><b>Поддерживаем<br/>друг друга</b></span>
-        <span><i>↗</i><b>Создаём<br/>контент</b></span>
-      </div>
-    </section>
   </>;
 }
 
