@@ -1,7 +1,7 @@
 import { Link, NavLink, Routes, Route, useParams, useLocation, Navigate } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Admin } from "./Highlights";
-import { listCupResults, createCupResult, deleteCupResult, listHighlights, supabaseConfigured } from "./supabase";
+import { listCupResults, createCupResult, deleteCupResult, listHighlights, listMediaItems, supabaseConfigured } from "./supabase";
 
 const API = "https://api.opendota.com/api";
 
@@ -576,7 +576,7 @@ function Media() {
     let alive = true;
     (async () => {
       try {
-        const data = supabaseConfigured ? await listHighlights() : [];
+        const data = supabaseConfigured ? await listMediaItems() : [];
         if (alive) setItems(Array.isArray(data) ? data : []);
       } catch {
         if (alive) setItems([]);
@@ -587,106 +587,72 @@ function Media() {
     return () => { alive = false; };
   }, []);
 
-  const featured = items.find(item => item.is_featured) || items[0];
-  const photoItems = players.map(p => ({ id: `photo-${p.id}`, image: p.image, name: p.name, role: p.role }));
-
-  const setTab = (next) => setFilter(next);
-
-  const renderVideoCards = () => {
-    const source = filter === "highlights"
-      ? (items.filter(item => item.is_featured || items.length < 4).length ? items.filter(item => item.is_featured || items.length < 4) : items)
-      : items;
-    const list = source.filter(item => item.id !== featured?.id).slice(0, 8);
-
-    return list.map((item, index) => (
-      <button type="button" className="media-card media-card-button" key={item.id} onClick={() => setSelectedVideo(item)}>
-        <div className="media-card-thumb">
-          {item.thumbnail_url ? <img src={item.thumbnail_url} alt="" loading="lazy" /> : <div className="media-placeholder"><b>4T1J</b><span>{item.hero || "DOTA 2"}</span></div>}
-          <em>{filter === "highlights" ? "ХАЙЛАЙТ" : "ВИДЕО"}</em>
-          <strong>▶</strong>
-        </div>
-        <div className="media-card-copy">
-          <small>{item.player || "4T1J"}</small>
-          <h3>{item.title}</h3>
-          <p>{item.description || "Лучшие моменты команды."}</p>
-        </div>
-      </button>
-    ));
-  };
+  const visible = filter === "all" ? items : items.filter(item => item.media_type === filter);
+  const featured = visible.find(item => item.is_featured) || visible[0];
+  const cards = visible.filter(item => item.id !== featured?.id).slice(0, 10);
+  const openItem = (item) => item.media_type === "photo" ? setSelectedPhoto(item) : setSelectedVideo(item);
 
   return <Page className="media-page" title="МЕДИА" sub="ФОТО, ВИДЕО И ХАЙЛАЙТЫ 4T1J">
     <div className="media-toolbar media-toolbar-simple">
       <div className="media-tabs" role="tablist" aria-label="Фильтр медиа">
-        {[["all", "ВСЕ"], ["photo", "ФОТО"], ["video", "ВИДЕО"], ["highlights", "ХАЙЛАЙТЫ"]].map(([value, label]) => (
-          <button key={value} type="button" className={filter === value ? "active" : ""} onClick={() => setTab(value)}>{label}</button>
+        {[['all','ВСЕ'],['photo','ФОТО'],['video','ВИДЕО'],['highlight','ХАЙЛАЙТЫ']].map(([value,label]) => (
+          <button key={value} type="button" className={filter === value ? "active" : ""} onClick={() => setFilter(value)}>{label}</button>
         ))}
       </div>
     </div>
 
-    {filter === "photo" ? (
-      <div className="media-photo-grid">
-        {photoItems.map(photo => (
-          <button className="media-photo-card" type="button" key={photo.id} onClick={() => setSelectedPhoto(photo)}>
-            <img src={photo.image} alt={photo.name} loading="lazy" />
-            <span><b>{photo.name}</b><small>{photo.role}</small></span>
+    {loading ? <div className="media-loading">ЗАГРУЗКА КОНТЕНТА…</div> : null}
+
+    {!loading && !visible.length ? (
+      <div className="media-empty-state"><b>4T1J</b><span>ПОКА НЕТ КОНТЕНТА В ЭТОЙ КАТЕГОРИИ</span><small>Добавь материал через закрытую админ-панель.</small></div>
+    ) : null}
+
+    {!loading && visible.length ? <div className="media-showcase media-showcase-unified">
+      {featured ? (
+        <button type="button" className="media-featured media-featured-button" onClick={() => openItem(featured)}>
+          <div className="media-featured-thumb">
+            {featured.thumbnail_url ? <img src={featured.thumbnail_url} alt="" /> : <div className="media-placeholder"><b>4T1J</b><span>{featured.media_type === "photo" ? "PHOTO" : featured.hero || "DOTA 2"}</span></div>}
+            <em>{featured.media_type === "photo" ? "★ ФОТО" : featured.media_type === "highlight" ? "★ ХАЙЛАЙТ" : "★ ВИДЕО"}</em>
+            {featured.media_type !== "photo" ? <strong>▶</strong> : <strong>↗</strong>}
+          </div>
+          <div className="media-featured-copy">
+            <small>{featured.player ? `${featured.player}${featured.hero ? ` · ${featured.hero}` : ""}` : "4T1J MEDIA"}</small>
+            <h2>{featured.title || "4T1J — TEAM MEDIA"}</h2>
+            <p>{featured.description || "Контент команды 4T1J."}</p>
+            <span>{featured.media_type === "photo" ? "ОТКРЫТЬ ФОТО →" : "СМОТРЕТЬ →"}</span>
+          </div>
+        </button>
+      ) : null}
+
+      <div className="media-grid media-grid-unified">
+        {cards.map(item => (
+          <button type="button" className="media-card media-card-button" key={item.id} onClick={() => openItem(item)}>
+            <div className="media-card-thumb">
+              {item.thumbnail_url ? <img src={item.thumbnail_url} alt="" loading="lazy" /> : <div className="media-placeholder"><b>4T1J</b><span>{item.media_type === "photo" ? "PHOTO" : item.hero || "DOTA 2"}</span></div>}
+              <em>{item.media_type === "photo" ? "ФОТО" : item.media_type === "highlight" ? "ХАЙЛАЙТ" : "ВИДЕО"}</em>
+              {item.media_type !== "photo" ? <strong>▶</strong> : null}
+            </div>
+            <div className="media-card-copy"><small>{item.player || "4T1J"}</small><h3>{item.title}</h3><p>{item.description || (item.media_type === "photo" ? "Фотография команды." : "Контент команды.")}</p></div>
           </button>
         ))}
       </div>
-    ) : (
-      <div className="media-showcase">
-        {featured && filter !== "highlights" ? (
-          <button type="button" className="media-featured media-featured-button" onClick={() => setSelectedVideo(featured)}>
-            <div className="media-featured-thumb">
-              {featured.thumbnail_url ? <img src={featured.thumbnail_url} alt="" /> : <div className="media-placeholder"><b>4T1J</b><span>TEAM CONTENT</span></div>}
-              <em>★ ГЛАВНЫЙ</em><strong>▶</strong>
-            </div>
-            <div className="media-featured-copy">
-              <small>{featured.player ? `${featured.player} · ${featured.hero || "DOTA 2"}` : "4T1J · TEAM CONTENT"}</small>
-              <h2>{featured.title || "4T1J — TEAM MOMENTS"}</h2>
-              <p>{featured.description || "Лучшие командные моменты 4T1J."}</p>
-              <span>ОТКРЫТЬ КОНТЕНТ →</span>
-            </div>
-          </button>
-        ) : null}
+    </div> : null}
 
-        <div className={featured && filter !== "highlights" ? "media-grid" : "media-grid media-grid-wide"}>
-          {loading ? <div className="media-loading">ЗАГРУЗКА КОНТЕНТА…</div> : null}
-          {!loading && !items.length ? (
-            <div className="media-card media-card-static">
-              <div className="media-card-thumb"><div className="media-placeholder"><b>4T1J</b><span>MEDIA</span></div></div>
-              <div className="media-card-copy"><small>4T1J</small><h3>КОНТЕНТ ПОКА НЕ ОПУБЛИКОВАН</h3><p>Первые видео появятся здесь после публикации из админки.</p></div>
-            </div>
-          ) : renderVideoCards()}
-        </div>
+    {selectedVideo ? <div className="video-modal" onClick={() => setSelectedVideo(null)}>
+      <div className="video-dialog" onClick={e => e.stopPropagation()}>
+        <button type="button" onClick={() => setSelectedVideo(null)} aria-label="Закрыть">×</button>
+        <div className="video-player">{selectedVideo.video_url ? <video controls autoPlay playsInline poster={selectedVideo.thumbnail_url || undefined} src={selectedVideo.video_url} /> : <div className="video-demo">4T1J<br/><span>Здесь будет видео</span></div>}</div>
+        <h2>{selectedVideo.title}</h2><p>{selectedVideo.player || "4T1J"} · {selectedVideo.hero || "DOTA 2"}</p>
       </div>
-    )}
+    </div> : null}
 
-    {selectedVideo ? (
-      <div className="video-modal" onClick={() => setSelectedVideo(null)}>
-        <div className="video-dialog" onClick={e => e.stopPropagation()}>
-          <button type="button" onClick={() => setSelectedVideo(null)} aria-label="Закрыть">×</button>
-          <div className="video-player">
-            {selectedVideo.video_url ? (
-              <video controls autoPlay playsInline poster={selectedVideo.thumbnail_url || undefined} src={selectedVideo.video_url} />
-            ) : (
-              <div className="video-demo">4T1J<br/><span>Здесь будет видео</span></div>
-            )}
-          </div>
-          <h2>{selectedVideo.title}</h2>
-          <p>{selectedVideo.player || "4T1J"} · {selectedVideo.hero || "DOTA 2"}</p>
-        </div>
+    {selectedPhoto ? <div className="media-photo-modal" onClick={() => setSelectedPhoto(null)}>
+      <div className="media-photo-dialog" onClick={e => e.stopPropagation()}>
+        <button type="button" onClick={() => setSelectedPhoto(null)} aria-label="Закрыть">×</button>
+        <img src={selectedPhoto.thumbnail_url} alt={selectedPhoto.title || "4T1J"} />
+        <div><b>{selectedPhoto.title}</b><span>{selectedPhoto.player || "4T1J"}</span></div>
       </div>
-    ) : null}
-
-    {selectedPhoto ? (
-      <div className="media-photo-modal" onClick={() => setSelectedPhoto(null)}>
-        <div className="media-photo-dialog" onClick={e => e.stopPropagation()}>
-          <button type="button" onClick={() => setSelectedPhoto(null)} aria-label="Закрыть">×</button>
-          <img src={selectedPhoto.image} alt={selectedPhoto.name} />
-          <div><b>{selectedPhoto.name}</b><span>{selectedPhoto.role}</span></div>
-        </div>
-      </div>
-    ) : null}
+    </div> : null}
   </Page>;
 }
 

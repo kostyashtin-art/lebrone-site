@@ -13,6 +13,22 @@ create table if not exists public.highlights (
   created_at timestamptz not null default now()
 );
 
+-- Единая медиатаблица: фото, видео и хайлайты используют одну запись и один Storage bucket.
+alter table public.highlights alter column video_url drop not null;
+alter table public.highlights add column if not exists media_type text not null default 'highlight';
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'highlights_media_type_check'
+      AND conrelid = 'public.highlights'::regclass
+  ) THEN
+    ALTER TABLE public.highlights
+      ADD CONSTRAINT highlights_media_type_check CHECK (media_type IN ('photo','video','highlight'));
+  END IF;
+END $$;
+
 alter table public.highlights enable row level security;
 drop policy if exists "public can read published highlights" on public.highlights;
 drop policy if exists "authenticated can read all highlights" on public.highlights;

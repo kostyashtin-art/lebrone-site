@@ -56,27 +56,28 @@ export async function isAdmin(session) {
   return Array.isArray(rows) && rows.length > 0;
 }
 
-export async function listHighlights(filters = {}) {
+export async function listMediaItems(filters = {}) {
   if (!supabaseConfigured) return [];
   const params = new URLSearchParams();
-  params.set("select", "id,title,description,player,hero,video_url,thumbnail_url,created_at,is_featured,sort_order");
+  params.set("select", "id,title,description,player,hero,media_type,video_url,thumbnail_url,created_at,is_featured,is_published,sort_order");
   params.set("is_published", "eq.true");
+  if (filters.mediaType && filters.mediaType !== "ALL") params.set("media_type", `eq.${filters.mediaType}`);
   if (filters.player && filters.player !== "ALL") params.set("player", `eq.${filters.player}`);
   if (filters.hero && filters.hero !== "ALL") params.set("hero", `eq.${filters.hero}`);
   params.set("order", "is_featured.desc,sort_order.asc,created_at.desc");
   return request(`${SUPABASE_URL}/rest/v1/highlights?${params}`, { headers: headers() });
 }
 
-export async function listAllHighlights(session) {
+export async function listAllMedia(session) {
   const token = session?.access_token;
   if (!token) throw new Error("Нет авторизации");
   const params = new URLSearchParams();
-  params.set("select", "id,title,description,player,hero,video_url,thumbnail_url,created_at,is_featured,is_published,sort_order");
+  params.set("select", "id,title,description,player,hero,media_type,video_url,thumbnail_url,created_at,is_featured,is_published,sort_order");
   params.set("order", "created_at.desc");
   return request(`${SUPABASE_URL}/rest/v1/highlights?${params}`, { headers: headers(token) });
 }
 
-export async function createHighlight(session, payload) {
+export async function createMediaItem(session, payload) {
   const token = session?.access_token;
   if (!token) throw new Error("Нет авторизации");
   const data = await request(`${SUPABASE_URL}/rest/v1/highlights`, {
@@ -85,16 +86,75 @@ export async function createHighlight(session, payload) {
   return data?.[0] || data;
 }
 
-export async function updateHighlight(session, id, payload) {
+export async function updateMediaItem(session, id, payload) {
   const token = session?.access_token;
+  if (!token) throw new Error("Нет авторизации");
   return request(`${SUPABASE_URL}/rest/v1/highlights?id=eq.${encodeURIComponent(id)}`, {
     method: "PATCH", headers: { ...headers(token), Prefer: "return=representation" }, body: JSON.stringify(payload)
   });
 }
 
-export async function deleteHighlight(session, id) {
+function storagePathFromPublicUrl(url) {
+  const marker = "/storage/v1/object/public/highlights/";
+  const value = String(url || "");
+  const index = value.indexOf(marker);
+  return index >= 0 ? value.slice(index + marker.length) : "";
+}
+
+export async function deleteStorageFile(session, publicUrl) {
   const token = session?.access_token;
-  return request(`${SUPABASE_URL}/rest/v1/highlights?id=eq.${encodeURIComponent(id)}`, { method: "DELETE", headers: headers(token) });
+  const path = storagePathFromPublicUrl(publicUrl);
+  if (!token || !path) return;
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/highlights/${path}`, {
+    method: "DELETE",
+    headers: { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${token}` }
+  });
+  if (!res.ok && res.status !== 404) {
+    let msg = `HTTP ${res.status}`;
+    try { const x = await res.json(); msg = x.message || x.error || msg; } catch {}
+    throw new Error(msg);
+  }
+}
+
+export async function deleteMediaItem(session, item) {
+  const token = session?.access_token;
+  if (!token) throw new Error("Нет авторизации");
+  await Promise.all([
+    deleteStorageFile(session, item?.video_url),
+    deleteStorageFile(session, item?.thumbnail_url)
+  ]);
+  return request(`${SUPABASE_URL}/rest/v1/highlights?id=eq.${encodeURIComponent(item?.id)}`, {
+    method: "DELETE", headers: headers(token)
+  });
+}
+
+// Совместимость со старыми компонентами.
+export async function listHighlights(filters = {}) {
+  return listMediaItems({ ...filters, mediaType: "highlight" });
+}
+
+export async function listAllHighlights(session) {
+  const rows = await listAllMedia(session);
+  return rows.filter(item => item.media_type === "highlight");
+}
+
+export async function createHighlight(session, payload) {
+  return createMediaItem(session, { media_type: "highlight", ...payload });
+}
+
+export async function updateHighlight(session, id, payload) {
+  return updateMediaItem(session, id, payload);
+}
+
+export async function deleteHighlight(session, id) {
+  // Старый интерфейс передавал только id. Сначала получаем запись, затем удаляем связанные файлы.
+  const token = session?.access_token;
+  if (!token) throw new Error("Нет авторизации");
+  const params = new URLSearchParams();
+  params.set("select", "id,video_url,thumbnail_url");
+  params.set("id", `eq.${encodeURIComponent(id)}`);
+  const rows = await request(`${SUPABASE_URL}/rest/v1/highlights?${params}`, { headers: headers(token) });
+  return deleteMediaItem(session, rows?.[0] || { id });
 }
 
 export async function listCupResults() {

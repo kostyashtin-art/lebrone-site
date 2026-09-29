@@ -1,39 +1,15 @@
-# 4T1J Highlights + Admin
+# 4T1J — Единая медиа-панель
 
-В проект добавлена система хайлайтов:
+Закрытая админка управляет всем контентом страницы «Медиа» из одного места:
 
-- `/highlights` — публичная страница видео;
-- `/admin` — закрытая админ-панель;
-- загрузка MP4/WebM;
-- загрузка превью;
-- игрок + герой + название + описание;
-- featured / публикация / скрытие / удаление;
-- мобильная версия;
-- Supabase Auth + Database + Storage.
+- ФОТО — JPG/PNG/WEBP;
+- ВИДЕО — MP4/WEBM + превью;
+- ХАЙЛАЙТЫ — MP4/WEBM + превью;
+- публикация / скрытие;
+- FEATURED;
+- редактирование метаданных;
+- удаление записи вместе со связанными файлами Storage.
 
-## Подключение Supabase
+Боевой кубок находится в той же админ-панели на отдельной вкладке и сохраняет ручной ввод + OCR по скриншотам.
 
-1. Создай проект Supabase.
-2. В SQL Editor выполни `supabase-schema.sql`.
-3. Создай пользователя в Authentication → Users.
-4. Скопируй `.env.example` в `.env` и заполни:
-
-```env
-VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_KEY
-```
-
-Используй только публичный anon/publishable key. Service-role key в сайт не добавляй.
-
-## GitHub Pages
-
-Для GitHub Actions добавь в Repository → Settings → Secrets and variables → Actions → Variables:
-
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
-
-Workflow должен передавать эти значения в build через env.
-
-## Важно про большие видео
-
-GitHub Pages не хранит MP4. Видео уходят в Supabase Storage, а в таблице `highlights` сохраняется только публичный URL и метаданные.
+Перед первым деплоем новой версии один раз выполни `supabase-media-migration.sql` в Supabase SQL Editor, чтобы добавить `media_type` и разрешить фото без `video_url`.
