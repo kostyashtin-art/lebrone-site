@@ -537,16 +537,10 @@ function HomeMedia() {
 function Home() {
   return <>
     <section className="hero home-hero">
-      <img className="home-hero-logo" src="/4t1j-logo.png" alt="4T1J" />
-      <div className="hero-copy home-hero-copy">
-        <div className="eyebrow">4T1J ESPORTS</div>
-        <div className="home-hero-title"><span>GOOD PEOPLE.</span><b>GOOD DOTA.</b></div>
-        <p className="home-hero-sub">ИГРАЕМ ДЛЯ ДУШИ.<br/>РАЗВИВАЕМСЯ ВМЕСТЕ.<br/>СТРЕМИМСЯ К ПОБЕДАМ.</p>
-        <div className="home-hero-actions"><Link className="cta" to="/roster">СОСТАВ <b>→</b></Link><Link className="home-ghost-btn" to="/highlights">ХАЙЛАЙТЫ <b>→</b></Link></div>
+      <div className="home-hero-logo-main">
+        <img src="/4t1j-logo.png" alt="4T1J" />
       </div>
       <LiveDota compact />
-      <div className="home-hero-watermark">4T1J</div>
-      <div className="scroll">SCROLL<i>↓</i></div>
     </section>
 
     <section className="home-roster-section">
