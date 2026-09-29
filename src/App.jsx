@@ -296,7 +296,7 @@ function BattleCup() {
   const seconds = Math.max(0, Math.floor((left % 60000) / 1000));
   const form = results.slice(0, 6);
 
-  return <section className="battle-cup compact-cup">
+  return <section id="battle-cup-home" className="battle-cup compact-cup">
     <div className="compact-cup-head">
       <div>
         <div className="battle-cup-kicker"><span className="live-dot" /> 4T1J / WEEKLY EVENT</div>
@@ -328,7 +328,7 @@ function BattleCup() {
   </section>;
 }
 
-function LiveDota() {
+function LiveDota({ compact = false }) {
   const [state, setState] = useState({ loading: true, error: "", players: [], updatedAt: null });
   const byId = useMemo(() => new Map(players.map(p => [Number(p.accountId), p])), []);
 
@@ -361,6 +361,36 @@ function LiveDota() {
 
   const updated = state.updatedAt ? new Date(state.updatedAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) : "—";
 
+  if (compact) {
+    return (
+      <section className="live-dota hero-live-dota" aria-label="Статус игроков 4T1J в Dota 2">
+        <div className="hero-live-head">
+          <div><span className="hero-live-dot" /> <b>LIVE DOTA</b></div>
+          <span>{state.players.length ? `${state.players.length} ИГРОКА В ИГРЕ` : "КОМАНДА НЕ В ИГРЕ"}</span>
+        </div>
+        {state.error ? (
+          <div className="hero-live-empty">OpenDota временно недоступен</div>
+        ) : state.loading ? (
+          <div className="hero-live-skeleton"><i /><i /><i /><i /><i /></div>
+        ) : state.players.length ? (
+          <div className="hero-live-list">
+            {state.players.map(p => (
+              <Link className="hero-live-player" key={p.accountId} to={`/roster/player/${p.accountId}`} title={`${p.name} · ${p.role}`}>
+                <span className="hero-live-avatar"><img src={p.image} alt="" /></span>
+                <span className="hero-live-copy"><b>{p.name}</b><small>{p.role}</small></span>
+                <i />
+              </Link>
+            ))}
+            {Array.from({ length: Math.max(0, 5 - state.players.length) }).map((_, i) => <span className="hero-live-placeholder" key={`empty-${i}`} />)}
+          </div>
+        ) : (
+          <div className="hero-live-empty">Сейчас никто из состава не играет</div>
+        )}
+        <div className="hero-live-foot"><span>ОБНОВЛЕНО {updated}</span><a href="https://steamcommunity.com/app/570" target="_blank" rel="noreferrer">STEAM ↗</a></div>
+      </section>
+    );
+  }
+
   return (
     <section className="live-dota" aria-label="Статус игроков 4T1J в Dota 2">
       <div className="live-dota-head">
@@ -391,42 +421,178 @@ function LiveDota() {
   );
 }
 
+function HomeInsights() {
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    let alive = true;
+    if (!supabaseConfigured) return undefined;
+    listCupResults()
+      .then(data => { if (alive) setResults(Array.isArray(data) ? data : []); })
+      .catch(() => { if (alive) setResults([]); });
+    return () => { alive = false; };
+  }, []);
+
+  const latest = results[0] || null;
+  const wins = results.filter(x => x.result === "win").length;
+  const losses = results.filter(x => x.result === "loss").length;
+  const total = wins + losses;
+  const winrate = total ? (wins / total) * 100 : null;
+  const form = results.slice(0, 10);
+  const latestDate = latest?.cup_date ? new Date(`${latest.cup_date}T12:00:00`) : null;
+  const latestLabel = latestDate ? latestDate.toLocaleDateString("ru-RU", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase() : "ПОКА НЕТ ДАННЫХ";
+
+  return (
+    <section className="home-insights">
+      <article className="home-last-game home-surface">
+        <div className="home-section-head"><small>RECENT / BATTLE CUP</small><span>ПОСЛЕДНИЙ РЕЗУЛЬТАТ</span></div>
+        <h3>ПОСЛЕДНЯЯ ИГРА</h3>
+        {latest ? (
+          <>
+            <div className="home-match-line">
+              <strong>4T1J</strong>
+              <b>{latest.score || "— : —"}</b>
+              <span>{latest.opponent || "СОПЕРНИК"}</span>
+            </div>
+            <div className={`home-result ${latest.result === "win" ? "is-win" : "is-loss"}`}>
+              {latest.result === "win" ? "ПОБЕДА" : "ПОРАЖЕНИЕ"}
+            </div>
+            <div className="home-match-meta"><span>{latestLabel}</span><span>BATTLE CUP</span><span>{latest.note || "РЕЗУЛЬТАТ СОХРАНЁН"}</span></div>
+          </>
+        ) : (
+          <div className="home-empty-card"><b>ПОКА НЕТ РЕЗУЛЬТАТОВ</b><span>Добавь первый результат через админку Battle Cup.</span></div>
+        )}
+        <a className="home-outline-link" href="#battle-cup-home">ВСЕ РЕЗУЛЬТАТЫ →</a>
+      </article>
+
+      <article className="home-team-stats home-surface">
+        <div className="home-section-head"><small>TEAM PERFORMANCE</small><span>ПО BATTLE CUP</span></div>
+        <h3>СТАТИСТИКА КОМАНДЫ</h3>
+        <div className="home-stat-grid">
+          <div><small>МАТЧИ</small><b>{fmt(total)}</b></div>
+          <div><small>ПОБЕДЫ</small><b>{fmt(wins)}</b></div>
+          <div><small>WINRATE</small><b>{pct(winrate)}</b></div>
+        </div>
+        <div className="home-form-block"><small>ТЕКУЩАЯ ФОРМА</small><div>{form.length ? form.map(r => <span key={r.id} className={r.result === "win" ? "is-win" : "is-loss"}>{r.result === "win" ? "W" : "L"}</span>) : <em>—</em>}</div></div>
+      </article>
+
+      <article className="home-achievements home-surface">
+        <div className="home-section-head"><small>4T1J / MILESTONES</small><span>КОМАНДА</span></div>
+        <h3>ДОСТИЖЕНИЯ</h3>
+        <div className="trophy-art" aria-hidden="true">♛</div>
+        <strong className="achievement-title">BATTLE CUP</strong>
+        <span className="achievement-sub">УЧАСТИЕ И ОПЫТ</span>
+        <div className="achievement-meta"><span>РЕЗУЛЬТАТОВ</span><b>{fmt(results.length)}</b></div>
+      </article>
+    </section>
+  );
+}
+
+function HomeMedia() {
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    let alive = true;
+    if (!supabaseConfigured) return undefined;
+    listHighlights().then(data => { if (alive) setItems(Array.isArray(data) ? data : []); }).catch(() => { if (alive) setItems([]); });
+    return () => { alive = false; };
+  }, []);
+  const media = items.slice(0, 4);
+  return (
+    <section className="home-media">
+      <div className="home-block-title">
+        <div><small>MEDIA / 4T1J</small><h2>МЕДИА</h2><p>ФОТО, ВИДЕО И КОНТЕНТ КОМАНДЫ.</p></div>
+        <div className="home-media-tabs"><span className="active">ВСЕ</span><span>ФОТО</span><span>ВИДЕО</span><Link to="/highlights">ХАЙЛАЙТЫ →</Link></div>
+      </div>
+      <div className="home-media-grid">
+        {media.length ? (
+          <>
+            {media.map((item, index) => (
+              <Link to="/highlights" className={index === 0 ? "home-media-card is-featured" : "home-media-card"} key={item.id}>
+                <div className="home-media-thumb">
+                  {item.thumbnail_url ? <img src={item.thumbnail_url} alt="" loading="lazy" /> : <div className="home-media-placeholder"><b>4T1J</b><span>{item.hero || "DOTA 2"}</span></div>}
+                  <em>{index === 0 ? "ГЛАВНЫЙ" : "ХАЙЛАЙТ"}</em><strong>▶</strong>
+                </div>
+                <div><small>{item.player || "4T1J"}</small><h3>{item.title}</h3><p>{item.description || "Лучшие моменты команды."}</p></div>
+              </Link>
+            ))}
+            <div className="home-media-card home-media-static">
+              <div className="home-media-thumb home-media-art"><span>♛</span></div>
+              <div><small>4T1J / TEAM LIFE</small><h3>КОМАНДНАЯ ЖИЗНЬ</h3><p>Тренировки, будни и атмосфера команды.</p></div>
+            </div>
+          </>
+        ) : (
+          <>
+            <Link to="/highlights" className="home-media-empty"><b>4T1J</b><span>ОТКРОЙ ХАЙЛАЙТЫ</span><em>ПОСМОТРЕТЬ КОНТЕНТ →</em></Link>
+            <div className="home-media-card home-media-static">
+              <div className="home-media-thumb home-media-art"><span>♛</span></div>
+              <div><small>4T1J / TEAM LIFE</small><h3>КОМАНДНАЯ ЖИЗНЬ</h3><p>Тренировки, будни и атмосфера команды.</p></div>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function HomeJourney() {
+  const steps = [
+    ["01", "СОБИРАЕМСЯ", "Команда"],
+    ["02", "ТРЕНИРУЕМСЯ", "Подготовка"],
+    ["03", "ИГРАЕМ", "Матчи"],
+    ["04", "BATTLE CUP", "Опыт"],
+    ["05", "ДВИГАЕМСЯ ДАЛЬШЕ", "Сегодня"]
+  ];
+  const goals = ["Участие в новых турнирах", "Рост командной синергии", "Больше собственного контента", "Развитие сообщества"];
+  return (
+    <section className="home-journey">
+      <div className="journey-main home-surface">
+        <div className="home-section-head"><small>OUR STORY / 4T1J</small><span>ПУТЬ КОМАНДЫ</span></div>
+        <h2>ПУТЬ 4T1J</h2>
+        <div className="journey-line">
+          {steps.map(([id, title, sub], i) => <div className={i === steps.length - 1 ? "journey-step is-current" : "journey-step"} key={id}><b>{id}</b><i></i><strong>{title}</strong><small>{sub}</small></div>)}
+        </div>
+      </div>
+      <aside className="journey-goals home-surface"><small>WHAT'S NEXT</small><h3>СЛЕДУЮЩИЕ ЦЕЛИ</h3>{goals.map((goal, i) => <div key={goal}><i>{String(i + 1).padStart(2, "0")}</i><span>{goal}</span></div>)}</aside>
+    </section>
+  );
+}
+
 function Home() {
   return <>
-    <section className="hero">
-      <div className="hero-copy">
-        <div className="eyebrow">DOTA 2 ESPORTS TEAM</div>
-        <div className="fire-logo">
-          <img src="/4t1j-logo.png" alt="4T1J" className="real-logo" />
-        </div>
-        <div className="hero-message"><h2>БОЛЬШЕ ЧЕМ КОМАНДА</h2><p>ДРУЖБА. ИГРА. РАЗВИТИЕ.</p></div>
-        <Link className="cta" to="/roster">СМОТРЕТЬ СОСТАВ <b>→</b></Link>
+    <section className="hero home-hero">
+      <div className="hero-copy home-hero-copy">
+        <div className="eyebrow">4T1J ESPORTS</div>
+        <div className="home-hero-title"><span>GOOD PEOPLE.</span><b>GOOD DOTA.</b></div>
+        <p className="home-hero-sub">ИГРАЕМ ДЛЯ ДУШИ.<br/>РАЗВИВАЕМСЯ ВМЕСТЕ.<br/>СТРЕМИМСЯ К ПОБЕДАМ.</p>
+        <div className="home-hero-actions"><Link className="cta" to="/roster">СОСТАВ <b>→</b></Link><Link className="home-ghost-btn" to="/highlights">ХАЙЛАЙТЫ <b>→</b></Link></div>
       </div>
-      <div className="hero-side-text"><span>GOOD PEOPLE</span><span>GOOD DOTA</span><b>♛</b></div>
+      <LiveDota compact />
+      <div className="home-hero-watermark">4T1J</div>
       <div className="scroll">SCROLL<i>↓</i></div>
     </section>
 
-    <section className="grid roster-home">
-      <div className="panel roster-panel">
-        <label><span>СОСТАВ КОМАНДЫ</span><Link to="/roster">ВЕСЬ СОСТАВ →</Link></label>
-        <div className="players">{players.map(p => <PlayerCard p={p} key={p.id} />)}<CoachCard /></div>
+    <section className="home-roster-section">
+      <div className="home-block-title">
+        <div><small>4T1J ESPORTS</small><h2>НАШ СОСТАВ</h2><p>ПЯТЬ ИГРОКОВ. ОДНА КОМАНДА.</p></div>
+        <Link to="/roster" className="home-outline-link">ВСЕ ИГРОКИ →</Link>
       </div>
-      <BattleCup />
+      <div className="home-roster-grid">{players.map(p => <PlayerCard p={p} key={p.id} />)}</div>
     </section>
 
-    <LiveDota />
+    <HomeInsights />
+    <BattleCup />
+    <HomeMedia />
+    <HomeJourney />
 
-    <section className="highlights-home"><div><small>MEDIA / 4T1J</small><h2>ПОСЛЕДНИЕ ХАЙЛАЙТЫ</h2><p>KILLS, CLUTCH И ЛУЧШИЕ МОМЕНТЫ НАШЕЙ КОМАНДЫ.</p></div><Link className="gold" to="/highlights">СМОТРЕТЬ ХАЙЛАЙТЫ →</Link></section>
-
-    <section className="grid lower">
-      <Link className="merch" to="/media"><small>НАШ МЕРЧ</small><div className="shirt">4T1J</div><h2>СТИЛЬ,<br/>КОТОРЫЙ ОБЪЕДИНЯЕТ</h2><span>СМОТРЕТЬ →</span></Link>
-    </section>
-    <section className="team-values" aria-label="Ценности 4T1J">
-      <div><b>01</b><span>ИГРАЕМ ДЛЯ ДУШИ</span></div>
-      <div><b>02</b><span>РАЗВИВАЕМСЯ ВМЕСТЕ</span></div>
-      <div><b>03</b><span>СТРЕМИМСЯ К ПОБЕДАМ</span></div>
-      <div><b>04</b><span>ПОДДЕРЖИВАЕМ ДРУГ ДРУГА</span></div>
-      <div><b>05</b><span>СОЗДАЁМ КОНТЕНТ</span></div>
+    <section className="home-values-final">
+      <div className="home-values-brand"><small>4T1J ESPORTS</small><h2>GOOD PEOPLE.<br/><b>GOOD DOTA.</b></h2></div>
+      <div className="home-values-list">
+        <span><i>◈</i><b>Играем<br/>для души</b></span>
+        <span><i>◎</i><b>Развиваемся<br/>вместе</b></span>
+        <span><i>♜</i><b>Стремимся<br/>к победам</b></span>
+        <span><i>♡</i><b>Поддерживаем<br/>друг друга</b></span>
+        <span><i>↗</i><b>Создаём<br/>контент</b></span>
+      </div>
     </section>
   </>;
 }
