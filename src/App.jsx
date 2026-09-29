@@ -1,8 +1,7 @@
 import { Link, NavLink, Routes, Route, useParams, useLocation } from "react-router-dom";
-import { Fragment } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Highlights, Admin } from "./Highlights";
-import { listCupResults, createCupResult, deleteCupResult, listSynergyStats, listHighlights, supabaseConfigured } from "./supabase";
+import { listCupResults, createCupResult, deleteCupResult, listHighlights, supabaseConfigured } from "./supabase";
 
 const API = "https://api.opendota.com/api";
 
@@ -60,8 +59,7 @@ const players = [
     accountId: 237813481,
     image: "/players/player-5.png",
     steam: "https://steamcommunity.com/id/237813481",
-    accent: "#60a5fa",
-    synergy: true
+    accent: "#60a5fa"
   },
 
 ];
@@ -74,14 +72,11 @@ const coach = {
   image: "/players/coach-grisha.png"
 };
 
-const synergyPlayers = players;
-
 const nav = [
   ["/", "ГЛАВНАЯ"],
   ["/roster", "СОСТАВ"],
   ["/media", "МЕДИА"],
   ["/highlights", "ХАЙЛАЙТЫ"],
-  ["/synergy", "СИНЕРГИЯ"],
   ["/about", "О КОМАНДЕ"]
 ];
 
@@ -858,155 +853,6 @@ function PlayerProfile() {
 }
 
 
-function SynergyStat({ stat, compact = false }) {
-  const winrate = Number(stat.winrate || 0);
-  const names = stat.player_names || [];
-  return <div className={compact ? "synergy-stat compact" : "synergy-stat"}>
-    <div className="synergy-stat-top">
-      <div className="synergy-players">{names.map((name, i) => <span key={`${name}-${i}`}>{name}</span>)}</div>
-      <strong className={winrate >= 50 ? "positive" : "negative"}>{pct(winrate)}</strong>
-    </div>
-    <div className="synergy-stat-meta">
-      <span>{stat.matches} ИГР</span><span>{stat.wins}W / {stat.losses}L</span>
-      {!compact ? <span>{duration(Number(stat.avg_duration || 0))} ср. длит.</span> : null}
-    </div>
-    {!compact ? <div className="synergy-bar"><i style={{width:`${Math.max(0, Math.min(100, winrate))}%`}} /></div> : null}
-  </div>;
-}
-
-function SynergyNetwork({ pairs, playerById }) {
-  const positions = [
-    { x: 50, y: 13 },
-    { x: 17, y: 38 },
-    { x: 83, y: 38 },
-    { x: 29, y: 82 },
-    { x: 71, y: 82 }
-  ];
-  const pairMap = new Map((pairs || []).map(stat => [String(stat.combination_key), stat]));
-  const keyFor = (a, b) => [a, b].sort((x, y) => x - y).join("-");
-  const edges = [];
-  for (let i = 0; i < synergyPlayers.length; i++) {
-    for (let j = i + 1; j < synergyPlayers.length; j++) {
-      const stat = pairMap.get(keyFor(Number(synergyPlayers[i].accountId), Number(synergyPlayers[j].accountId)));
-      if (stat && Number(stat.matches || 0) > 0) edges.push({ i, j, stat });
-    }
-  }
-
-  return (
-    <section className="synergy-box synergy-network-box">
-      <div className="box-heading"><h2>КАРТА ВЗАИМОДЕЙСТВИЯ</h2><span>LIVE DATA / PAIRS</span></div>
-      <div className="synergy-network-wrap">
-        <svg className="synergy-network-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          {edges.map(({ i, j, stat }) => {
-            const wr = Number(stat.winrate || 0);
-            const positive = wr >= 50;
-            const opacity = Math.max(.14, Math.min(.72, .18 + Number(stat.matches || 0) / 60));
-            const width = Math.max(.55, Math.min(2.2, .55 + Number(stat.matches || 0) / 25));
-            return <line key={`${i}-${j}`} x1={positions[i].x} y1={positions[i].y} x2={positions[j].x} y2={positions[j].y} className={positive ? "network-positive" : "network-negative"} style={{ opacity, strokeWidth: width }} />;
-          })}
-        </svg>
-        <div className="synergy-network-center"><b>4T1J</b><span>TEAM SYNERGY</span></div>
-        {synergyPlayers.map((p, i) => {
-          const pos = positions[i];
-          const pairCount = pairs.filter(stat => (stat.account_ids || []).map(Number).includes(Number(p.accountId))).length;
-          return (
-            <Link key={p.accountId} to={`/roster/player/${p.accountId}`} className="synergy-node" style={{ left: `${pos.x}%`, top: `${pos.y}%` }}>
-              <span className="synergy-node-photo"><img src={p.image} alt="" /></span>
-              <span className="synergy-node-copy"><b>{p.name}</b><small>{playerById.get(p.accountId)?.role || p.role}</small><em>{pairCount} СВЯЗЕЙ</em></span>
-            </Link>
-          );
-        })}
-      </div>
-      <div className="synergy-network-legend"><span><i className="positive-dot" /> 50%+ WR</span><span><i className="negative-dot" /> ниже 50%</span><span>толщина линии = объём матчей</span></div>
-    </section>
-  );
-}
-
-function Synergy() {
-  const [state, setState] = useState({ loading: true, error: "", stats: [] });
-  const [tab, setTab] = useState(2);
-
-  useEffect(() => {
-    let alive = true;
-    if (!supabaseConfigured) {
-      setState({ loading: false, error: "Supabase не настроен", stats: [] });
-      return () => { alive = false; };
-    }
-    listSynergyStats()
-      .then(stats => alive && setState({ loading: false, error: "", stats: Array.isArray(stats) ? stats : [] }))
-      .catch(e => alive && setState({ loading: false, error: e.message || "Не удалось загрузить аналитику", stats: [] }));
-    return () => { alive = false; };
-  }, []);
-
-  const stats = state.stats;
-  const pairs = stats.filter(x => Number(x.combination_size) === 2);
-  const triples = stats.filter(x => Number(x.combination_size) === 3);
-  const quads = stats.filter(x => Number(x.combination_size) === 4);
-  const five = stats.filter(x => Number(x.combination_size) === 5);
-  const shown = tab === 2 ? pairs : tab === 3 ? triples : tab === 4 ? quads : five;
-  const playerById = new Map(synergyPlayers.map(p => [p.accountId, p]));
-
-  const matrix = synergyPlayers.map(a => synergyPlayers.map(b => {
-    if (a.accountId === b.accountId) return null;
-    return pairs.find(x => {
-      const ids = (x.account_ids || []).map(Number);
-      return ids.includes(a.accountId) && ids.includes(b.accountId);
-    }) || null;
-  }));
-
-  return <Page className="synergy-page" title="СИНЕРГИЯ СОСТАВА" sub="ВИНРЕЙТ КОМБИНАЦИЙ 4T1J ПО РЕАЛЬНЫМ МАТЧАМ">
-    <div className="synergy-hero">
-      <div><small>OPENDOTA → SUPABASE → ANALYTICS</small><h2>КАК ИГРАЕТ СОСТАВ ВМЕСТЕ</h2><p>Матчи собираются отдельно, сохраняются в Supabase и не пересчитываются в браузере при каждом открытии страницы.</p></div>
-      <div className="synergy-status"><span className="live-dot" /> {state.loading ? "ЗАГРУЗКА" : state.error ? "ОШИБКА" : `${stats.length} КОМБИНАЦИЙ`}</div>
-    </div>
-
-    {!state.loading && !state.error ? <SynergyNetwork pairs={pairs} playerById={playerById} /> : null}
-    {state.loading ? <div className="synergy-loading"><div/><div/><div/></div> : null}
-    {state.error ? <div className="api-error"><b>SYNERGY ANALYTICS</b><span>{state.error}</span><p>После первого запуска синхронизации данные появятся здесь автоматически.</p></div> : null}
-
-    {!state.loading && !state.error ? <>
-      <section className="synergy-box synergy-matrix-box">
-        <div className="box-heading"><h2>ПАРЫ ИГРОКОВ</h2><span>WINRATE / MATCHES</span></div>
-        <div className="synergy-matrix-wrap">
-          <div className="synergy-matrix">
-            <div className="matrix-corner">4T1J</div>
-            {synergyPlayers.map(p => <div className="matrix-head" key={`h-${p.accountId}`}>{p.name}</div>)}
-            {synergyPlayers.map((a, ri) => <Fragment key={a.accountId}>
-              <div className="matrix-head matrix-side">{a.name}</div>
-              {synergyPlayers.map((b, ci) => {
-                const stat = matrix[ri][ci];
-                return <div className={stat ? `matrix-cell ${Number(stat.winrate) >= 50 ? "is-positive" : "is-negative"}` : "matrix-cell empty"} key={`${a.accountId}-${b.accountId}`}>
-                  {a.accountId === b.accountId ? <span>—</span> : stat ? <><b>{pct(stat.winrate)}</b><small>{stat.matches} игр</small></> : <span>—</span>}
-                </div>;
-              })}
-            </Fragment>)}
-          </div>
-        </div>
-        <div className="synergy-note">Ячейка учитывает только матчи, где оба игрока были на одной стороне. Это именно командный winrate, а не просто наличие обоих игроков в одной игре.</div>
-      </section>
-
-      <section className="synergy-box">
-        <div className="box-heading"><h2>КОМБИНАЦИИ</h2><span>2 → 5 ИГРОКОВ</span></div>
-        <div className="synergy-tabs">
-          {[2,3,4,5].map(size => <button key={size} className={tab === size ? "active" : ""} onClick={() => setTab(size)}>{size === 5 ? "ПЯТЁРКА" : `${size} ИГРОКА`}</button>)}
-        </div>
-        {shown.length ? <div className={`synergy-grid size-${tab}`}>{shown.map(stat => <SynergyStat key={stat.combination_key} stat={stat} />)}</div> : <div className="empty synergy-empty">Пока нет сохранённых матчей для этой комбинации.</div>}
-      </section>
-
-      <section className="synergy-box synergy-explain">
-        <div className="box-heading"><h2>ЧТО СЧИТАЕМ</h2><span>АВТОМАТИЧЕСКИ</span></div>
-        <div className="synergy-explain-grid">
-          <div><b>2 / 3 / 4 / 5</b><span>Размер комбинации</span></div>
-          <div><b>W / L / WR</b><span>Победы, поражения и винрейт</span></div>
-          <div><b>K / D / A</b><span>Средние показатели выбранной группы</span></div>
-          <div><b>GPM / XPM</b><span>Средние показатели фарма</span></div>
-        </div>
-        <p className="synergy-note">Источник матчей — OpenDota. Синхронизатор периодически забирает новые матчи, сохраняет их в Supabase и заново строит агрегаты. Ключи API на сайт не попадают.</p>
-      </section>
-    </> : null}
-  </Page>;
-}
-
 function NotFound() {
   return <PageShell title="404" sub="СТРАНИЦА НЕ НАЙДЕНА"><div className="admin-setup"><h2>Страница не найдена</h2><p>Запрошенный адрес не существует.</p><Link className="cta" to="/">НА ГЛАВНУЮ →</Link></div></PageShell>;
 }
@@ -1018,9 +864,9 @@ export default function App() {
     <Route path="/roster/player/:accountId" element={<PlayerProfile />} />
     <Route path="/media" element={<Media />} />
     <Route path="/highlights" element={<Highlights />} />
-    <Route path="/synergy" element={<Synergy />} />
     <Route path="/4t1j-media-control-7f3m9k" element={<Admin />} />
     <Route path="/admin" element={<NotFound />} />
     <Route path="/about" element={<About />} />
+    <Route path="*" element={<NotFound />} />
   </Routes></Layout>;
 }
