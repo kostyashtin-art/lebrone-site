@@ -1,6 +1,6 @@
-import { Link, NavLink, Routes, Route, useParams } from "react-router-dom";
+import { Link, NavLink, Routes, Route, useParams, useLocation } from "react-router-dom";
 import { Fragment } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Highlights, Admin } from "./Highlights";
 import { listCupResults, createCupResult, deleteCupResult, listSynergyStats, listHighlights, supabaseConfigured } from "./supabase";
 
@@ -165,12 +165,41 @@ async function loadPlayerStats(accountId) {
   return data;
 }
 
+function PageTransitionLoader() {
+  const location = useLocation();
+  const firstRender = useRef(true);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const initial = firstRender.current;
+    firstRender.current = false;
+    setVisible(true);
+    try {
+      sessionStorage.setItem("4t1j:loader-seen", "1");
+    } catch {}
+    const timer = setTimeout(() => setVisible(false), initial ? 780 : 360);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
+  if (!visible) return null;
+  return (
+    <div className="route-loader" role="status" aria-live="polite">
+      <div className="route-loader-mark">
+        <span>4T</span><b>1</b><span>J</span>
+      </div>
+      <div className="route-loader-line"><i /></div>
+      <small>4T1J ESPORTS / LOADING</small>
+    </div>
+  );
+}
+
 function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className="site">
+      <PageTransitionLoader />
       <header className={menuOpen ? "mobile-open" : ""}>
         <Link className="brand" to="/" aria-label="4T1J — главная" onClick={closeMenu}>
           <img src="/4t1j-logo.png" alt="4T1J" />
@@ -299,6 +328,69 @@ function BattleCup() {
   </section>;
 }
 
+function LiveDota() {
+  const [state, setState] = useState({ loading: true, error: "", players: [], updatedAt: null });
+  const byId = useMemo(() => new Map(players.map(p => [Number(p.accountId), p])), []);
+
+  useEffect(() => {
+    let alive = true;
+    async function refresh() {
+      try {
+        const games = await fetchJson("/live");
+        const detected = new Map();
+        for (const game of Array.isArray(games) ? games : []) {
+          for (const item of Array.isArray(game?.players) ? game.players : []) {
+            const p = byId.get(Number(item?.account_id));
+            if (!p) continue;
+            detected.set(p.accountId, {
+              ...p,
+              matchId: game?.match_id || null,
+              heroId: item?.hero_id || null
+            });
+          }
+        }
+        if (alive) setState({ loading: false, error: "", players: [...detected.values()], updatedAt: Date.now() });
+      } catch (e) {
+        if (alive) setState(prev => ({ ...prev, loading: false, error: e.message || "LIVE недоступен", updatedAt: Date.now() }));
+      }
+    }
+    refresh();
+    const timer = setInterval(refresh, 45000);
+    return () => { alive = false; clearInterval(timer); };
+  }, [byId]);
+
+  const updated = state.updatedAt ? new Date(state.updatedAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) : "—";
+
+  return (
+    <section className="live-dota" aria-label="Статус игроков 4T1J в Dota 2">
+      <div className="live-dota-head">
+        <div>
+          <small><i /> LIVE DOTA</small>
+          <h2>СЕЙЧАС В ИГРЕ</h2>
+        </div>
+        <span>ОБНОВЛЕНО {updated}</span>
+      </div>
+      {state.error ? (
+        <div className="live-dota-empty"><b>СТАТУС НЕДОСТУПЕН</b><span>OpenDota временно не ответил. Обновим автоматически.</span></div>
+      ) : state.loading ? (
+        <div className="live-dota-skeleton"><i /><i /><i /></div>
+      ) : state.players.length ? (
+        <div className="live-dota-list">
+          {state.players.map(p => (
+            <Link className="live-player" key={p.accountId} to={`/roster/player/${p.accountId}`}>
+              <span className="live-avatar"><img src={p.image} alt="" /></span>
+              <span className="live-player-main"><b>{p.name}</b><small>{p.role} · В ИГРЕ</small></span>
+              <span className="live-player-status"><i /> LIVE{p.matchId ? ` · ${p.matchId}` : ""}</span>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="live-dota-empty"><b>СЕЙЧАС НИКТО НЕ ИГРАЕТ</b><span>Когда игрок 4T1J появится в live-матче, он отобразится здесь автоматически.</span></div>
+      )}
+    </section>
+  );
+}
+
 function Home() {
   return <>
     <section className="hero">
@@ -321,6 +413,8 @@ function Home() {
       </div>
       <BattleCup />
     </section>
+
+    <LiveDota />
 
     <section className="highlights-home"><div><small>MEDIA / 4T1J</small><h2>ПОСЛЕДНИЕ ХАЙЛАЙТЫ</h2><p>KILLS, CLUTCH И ЛУЧШИЕ МОМЕНТЫ НАШЕЙ КОМАНДЫ.</p></div><Link className="gold" to="/highlights">СМОТРЕТЬ ХАЙЛАЙТЫ →</Link></section>
 
@@ -654,6 +748,54 @@ function SynergyStat({ stat, compact = false }) {
   </div>;
 }
 
+function SynergyNetwork({ pairs, playerById }) {
+  const positions = [
+    { x: 50, y: 13 },
+    { x: 17, y: 38 },
+    { x: 83, y: 38 },
+    { x: 29, y: 82 },
+    { x: 71, y: 82 }
+  ];
+  const pairMap = new Map((pairs || []).map(stat => [String(stat.combination_key), stat]));
+  const keyFor = (a, b) => [a, b].sort((x, y) => x - y).join("-");
+  const edges = [];
+  for (let i = 0; i < synergyPlayers.length; i++) {
+    for (let j = i + 1; j < synergyPlayers.length; j++) {
+      const stat = pairMap.get(keyFor(Number(synergyPlayers[i].accountId), Number(synergyPlayers[j].accountId)));
+      if (stat && Number(stat.matches || 0) > 0) edges.push({ i, j, stat });
+    }
+  }
+
+  return (
+    <section className="synergy-box synergy-network-box">
+      <div className="box-heading"><h2>КАРТА ВЗАИМОДЕЙСТВИЯ</h2><span>LIVE DATA / PAIRS</span></div>
+      <div className="synergy-network-wrap">
+        <svg className="synergy-network-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          {edges.map(({ i, j, stat }) => {
+            const wr = Number(stat.winrate || 0);
+            const positive = wr >= 50;
+            const opacity = Math.max(.14, Math.min(.72, .18 + Number(stat.matches || 0) / 60));
+            const width = Math.max(.55, Math.min(2.2, .55 + Number(stat.matches || 0) / 25));
+            return <line key={`${i}-${j}`} x1={positions[i].x} y1={positions[i].y} x2={positions[j].x} y2={positions[j].y} className={positive ? "network-positive" : "network-negative"} style={{ opacity, strokeWidth: width }} />;
+          })}
+        </svg>
+        <div className="synergy-network-center"><b>4T1J</b><span>TEAM SYNERGY</span></div>
+        {synergyPlayers.map((p, i) => {
+          const pos = positions[i];
+          const pairCount = pairs.filter(stat => (stat.account_ids || []).map(Number).includes(Number(p.accountId))).length;
+          return (
+            <Link key={p.accountId} to={`/roster/player/${p.accountId}`} className="synergy-node" style={{ left: `${pos.x}%`, top: `${pos.y}%` }}>
+              <span className="synergy-node-photo"><img src={p.image} alt="" /></span>
+              <span className="synergy-node-copy"><b>{p.name}</b><small>{playerById.get(p.accountId)?.role || p.role}</small><em>{pairCount} СВЯЗЕЙ</em></span>
+            </Link>
+          );
+        })}
+      </div>
+      <div className="synergy-network-legend"><span><i className="positive-dot" /> 50%+ WR</span><span><i className="negative-dot" /> ниже 50%</span><span>толщина линии = объём матчей</span></div>
+    </section>
+  );
+}
+
 function Synergy() {
   const [state, setState] = useState({ loading: true, error: "", stats: [] });
   const [tab, setTab] = useState(2);
@@ -692,6 +834,7 @@ function Synergy() {
       <div className="synergy-status"><span className="live-dot" /> {state.loading ? "ЗАГРУЗКА" : state.error ? "ОШИБКА" : `${stats.length} КОМБИНАЦИЙ`}</div>
     </div>
 
+    {!state.loading && !state.error ? <SynergyNetwork pairs={pairs} playerById={playerById} /> : null}
     {state.loading ? <div className="synergy-loading"><div/><div/><div/></div> : null}
     {state.error ? <div className="api-error"><b>SYNERGY ANALYTICS</b><span>{state.error}</span><p>После первого запуска синхронизации данные появятся здесь автоматически.</p></div> : null}
 
