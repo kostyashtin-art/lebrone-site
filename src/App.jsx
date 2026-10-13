@@ -1,6 +1,7 @@
 import { Link, NavLink, Routes, Route, useParams, useLocation, Navigate } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Admin } from "./Highlights";
+import DraftSimulator from "./DraftSimulator";
 import { listCupResults, createCupResult, deleteCupResult, listHighlights, listMediaItems, supabaseConfigured } from "./supabase";
 
 const API = "https://api.opendota.com/api";
@@ -76,6 +77,7 @@ const nav = [
   ["/", "ГЛАВНАЯ"],
   ["/roster", "СОСТАВ"],
   ["/media", "МЕДИА"],
+  ["/draft", "ДРАФТ"],
   ["/about", "О КОМАНДЕ"]
 ];
 
@@ -872,6 +874,7 @@ export default function App() {
     <Route path="/roster" element={<Roster />} />
     <Route path="/roster/player/:accountId" element={<PlayerProfile />} />
     <Route path="/media" element={<Media />} />
+    <Route path="/draft" element={<DraftSimulator />} />
     <Route path="/highlights" element={<Navigate to="/media" replace />} />
     <Route path="/4t1j-media-control-7f3m9k" element={<Admin />} />
     <Route path="/admin" element={<NotFound />} />
