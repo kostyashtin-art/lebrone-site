@@ -10,7 +10,6 @@ import time
 import traceback
 import uuid
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor
 
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from werkzeug.utils import secure_filename
@@ -30,7 +29,7 @@ DOWNLOAD_TIMEOUT_SECONDS = int(os.environ.get("DOWNLOAD_TIMEOUT_SECONDS", "180")
 # intentionally in-memory; use a persistent queue/Redis if scaling to multiple workers.
 TASKS: dict[str, dict] = {}
 TASKS_LOCK = threading.Lock()
-EXECUTOR = ThreadPoolExecutor(max_workers=1, thread_name_prefix="replay-job")
+ACTIVE_JOB_LOCK = threading.Lock()
 MAX_TASKS_IN_MEMORY = 40
 
 
@@ -131,6 +130,7 @@ def set_task(task_id, **changes):
 
 def download_replay(match_id, task_id):
     set_task(task_id, status="downloading", message="Запрашиваем повтор матча…", progress=10)
+    print(f"Task {task_id}: starting replay download for match {match_id}", flush=True)
     command = [sys.executable, str(Path(__file__).resolve()), "--download-worker", str(match_id)]
     try:
         completed = subprocess.run(
@@ -146,6 +146,7 @@ def download_replay(match_id, task_id):
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError(f"Скачивание превысило лимит {DOWNLOAD_TIMEOUT_SECONDS} секунд.") from exc
 
+    print(f"Task {task_id}: download worker exited with code {completed.returncode}", flush=True)
     lines = (completed.stdout or "").strip().splitlines()
     payload = None
     for line in reversed(lines):
@@ -179,6 +180,7 @@ def download_replay(match_id, task_id):
 
 def parse_child(path, match_id, task_id):
     """Run gem.parse in a separate process; child failures won't become HTTP timeouts."""
+    print(f"Task {task_id}: starting parser for {Path(path).name}", flush=True)
     command = [sys.executable, str(Path(__file__).resolve()), "--parse-worker", str(path), str(match_id)]
     set_task(task_id, status="parsing", message="Повтор скачан. Разбираем игровые данные…", progress=35)
     try:
@@ -214,7 +216,23 @@ def parse_child(path, match_id, task_id):
 
 
 def run_analysis(task_id, match_id, uploaded_path=None):
+    # Avoid multiple heavy replay jobs exhausting the small Render instance.
+    if not ACTIVE_JOB_LOCK.acquire(blocking=False):
+        set_task(
+            task_id, status="failed", progress=100,
+            message="Сервер уже обрабатывает другой повтор.",
+            error="Сейчас выполняется другой анализ. Подожди его завершения и попробуй снова.",
+            hint="На бесплатном Render одновременно поддерживается один тяжёлый анализ."
+        )
+        if uploaded_path:
+            try:
+                Path(uploaded_path).unlink(missing_ok=True)
+            except OSError:
+                pass
+        return
     try:
+        print(f"Task {task_id}: background job started", flush=True)
+        set_task(task_id, status="starting", message="Подготавливаем задачу…", progress=5)
         replay_path = uploaded_path
         if replay_path is None:
             if not re.fullmatch(r"\d{5,20}", match_id or ""):
@@ -246,6 +264,7 @@ def run_analysis(task_id, match_id, uploaded_path=None):
             hint="Проверь логи Render. На бесплатном тарифе может не хватать памяти для некоторых реплеев.",
         )
     finally:
+        ACTIVE_JOB_LOCK.release()
         # Uploaded files can be removed after the parser has finished.
         if uploaded_path:
             try:
@@ -275,7 +294,16 @@ def create_task(match_id, uploaded_path=None):
             "created_at": now,
             "updated_at": now,
         }
-    EXECUTOR.submit(run_analysis, task_id, match_id, uploaded_path)
+    # A daemon thread starts immediately; unlike a single-thread executor, it
+    # cannot leave newly-created tasks silently queued behind a stuck old future.
+    thread = threading.Thread(
+        target=run_analysis,
+        args=(task_id, match_id, uploaded_path),
+        daemon=True,
+        name=f"replay-job-{task_id[:8]}",
+    )
+    thread.start()
+    print(f"Task {task_id}: thread started", flush=True)
     return task_id
 
 
