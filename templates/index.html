@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dota Replay Analyzer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="glow glow-one"></div><div class="glow glow-two"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand-mark">D<span>2</span></div>
+      <div>
+        <div class="eyebrow">REPLAY INTELLIGENCE</div>
+        <h1>Dota Replay <span>Analyzer</span></h1>
+      </div>
+      <div class="top-tag">BETA · LOCAL</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="pill"><i></i> Анализ игровых повторов</div>
+        <h2>Разбери матч.<br><span>Пойми, что решило игру.</span></h2>
+        <p>Вставь Match ID — сайт попробует скачать повтор автоматически. Или загрузи файл .dem вручную. Разбор выполняется локально на твоём компьютере.</p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><strong>01</strong><span>Получить повтор</span></div>
+        <div class="stat"><strong>02</strong><span>Разобрать данные</span></div>
+        <div class="stat"><strong>03</strong><span>Изучить статистику</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div><div class="eyebrow">NEW ANALYSIS</div><h3>Начать разбор</h3></div>
+        <span class="live-dot">PARSER READY</span>
+      </div>
+      <form id="analyze-form">
+        <label for="match-id">Match ID</label>
+        <div class="input-row">
+          <input id="match-id" name="match_id" type="text" inputmode="numeric" placeholder="Например, 9046506353">
+          <button type="submit" id="analyze-button"><span>Анализировать</span><b>↗</b></button>
+        </div>
+        <div class="or-line"><span>ИЛИ</span></div>
+        <label class="upload-zone" for="replay-file">
+          <span class="upload-icon">⇧</span>
+          <span><strong>Выбери файл повтора .dem</strong><small id="file-name">Нажми, чтобы выбрать файл на компьютере</small></span>
+          <span class="browse">Обзор</span>
+        </label>
+        <input id="replay-file" name="replay" type="file" accept=".dem" hidden>
+        <p class="hint">Автоматическая загрузка зависит от доступности повтора в источнике. Для скачивания и обработки нужен интернет и установленный Python.</p>
+      </form>
+    </section>
+
+    <section id="status" class="status hidden" aria-live="polite">
+      <div class="spinner"></div><div><strong id="status-title">Обрабатываем повтор…</strong><p id="status-text">Загрузка и парсинг могут занять несколько минут.</p></div>
+    </section>
+
+    <section id="error" class="error hidden"></section>
+
+    <section id="results" class="hidden">
+      <div class="result-head">
+        <div><div class="eyebrow">MATCH REPORT</div><h3>Результаты анализа</h3><p id="match-meta"></p></div>
+        <a id="download-json" class="secondary-button" href="#" target="_blank">Скачать JSON ↗</a>
+      </div>
+      <div class="scoreboard">
+        <div class="team radiant"><span>RADIANT</span><strong id="radiant-score">—</strong><small>Силы Света</small></div>
+        <div class="score-center"><span id="match-duration">—</span><small>ДЛИТЕЛЬНОСТЬ</small></div>
+        <div class="team dire"><span>DIRE</span><strong id="dire-score">—</strong><small>Силы Тьмы</small></div>
+      </div>
+      <div id="winner-banner" class="winner-banner"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Команда</th><th>Герой</th><th>Игрок</th><th>K</th><th>D</th><th>A</th><th>LH</th><th>GPM</th><th>Net worth</th><th>Урон героям</th></tr></thead>
+          <tbody id="players-body"></tbody>
+        </table>
+      </div>
+      <div class="notes-grid">
+        <div class="note-card"><span class="note-icon">✓</span><div><strong>Что анализируется</strong><p>Статистика игроков и события, доступные в файле повтора.</p></div></div>
+        <div class="note-card"><span class="note-icon">!</span><div><strong>О выводах</strong><p>Парсер извлекает факты. Автоматические «ошибки» и причины поражения требуют отдельной аналитической модели.</p></div></div>
+      </div>
+    </section>
+
+    <footer><span>DOTA REPLAY ANALYZER</span><span>Powered by <a href="https://github.com/whanyu1212/gem-dota" target="_blank" rel="noreferrer">gem-dota</a> · Open-source parser</span></footer>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
