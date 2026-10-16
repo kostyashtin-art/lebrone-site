@@ -1,11 +1,6 @@
 @echo off
 chcp 65001 >nul
 cd /d "%~dp0"
-if not exist ".venv\Scripts\python.exe" (
-  echo Сначала запусти install.bat
-  pause
-  exit /b 1
-)
-call .venv\Scripts\activate.bat
+if exist .venv\Scripts\activate.bat call .venv\Scripts\activate.bat
 python app.py
 pause
