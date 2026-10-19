@@ -39,6 +39,21 @@
     </div>
 
     <div class="panel wide resultScreen"><div class="resultScreenHead"><div><div class="eyebrow">MATCH REPORT</div><h2>Итоги матча</h2><p id="resultSubtitle">Ключевые игроки и переломные моменты</p></div><div class="btnRow"><button id="shareResult" type="button" class="shareBtn">КОПИРОВАТЬ ИТОГ</button><button id="shareCard" type="button" class="shareBtn alt">СКАЧАТЬ КАРТОЧКУ</button></div></div></div>
+    <div class="panel wide clarityPanel">
+      <div class="clarityHead">
+        <div><div class="eyebrow">REPLAY ENGINE</div><h2>Полный разбор реплея · Clarity</h2><p class="panelHint">Получает реплей матча и извлекает события боевого лога. Для работы нужен отдельно запущенный backend.</p></div>
+        <span class="clarityBadge">JAVA · CLARITY</span>
+      </div>
+      <div class="clarityControls">
+        <label for="clarityBackendUrl">Адрес backend API</label>
+        <input id="clarityBackendUrl" type="url" placeholder="https://your-backend.example.com" autocomplete="url">
+        <button id="claritySaveBackend" type="button" class="shareBtn alt">СОХРАНИТЬ АДРЕС</button>
+        <button id="clarityParseMatch" type="button" class="shareBtn">РАЗОБРАТЬ ЭТОТ MATCH ID</button>
+      </div>
+      <div id="clarityStatus" class="clarityStatus" role="status">Backend не настроен. Вставь адрес сервера и сохрани его.</div>
+      <div id="claritySummary" class="claritySummary hidden"></div>
+      <div id="clarityEvents" class="clarityEvents"></div>
+    </div>
     <div class="panel wide timelinePanel"><div class="panel-title">Интерактивный ход матча</div><p class="panelHint">Выбери минуту на шкале или нажми на событие. Доступны только события, которые вернул OpenDota.</p><div id="interactiveTimeline"></div></div>
     <div class="panel wide statsPanel"><div class="panel-title">Матч в цифрах</div><div id="matchOverview"></div><div class="statsDivider"><span>Как менялось преимущество по золоту</span></div><div id="goldGraph" class="goldGraph"></div><div class="graphLegend"><span><i class="radDot"></i> Radiant</span><span><i class="direDot"></i> Dire</span><span><i class="deathDot"></i> Смерти руинера</span><small>График строится по доступным временным данным OpenDota.</small></div></div>
     <div class="panel wide"><div class="panel-title">Сравнение с ожиданиями</div><p class="panelHint">GPM и XPM сопоставляются с контекстным ориентиром модели. Это не абсолютный рейтинг игрока.</p><div id="roleCompare" class="roleCompare"></div></div>
@@ -73,5 +88,6 @@
 <script src="js/builds.js"></script>
 <script src="js/why.js"></script>
 <script src="js/player-timeline.js"></script>
+<script src="js/clarity.js"></script>
 </body>
 </html>
