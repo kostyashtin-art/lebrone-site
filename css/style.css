@@ -515,7 +515,13 @@ header{padding:36px 0 24px;position:relative}
 /* Purple & gold brand refresh */
 .bg:before{background-image:linear-gradient(180deg,rgba(7,3,16,.18),rgba(8,4,17,.72) 48%,rgba(5,3,10,.94)),url('../assets/who-ruined-bg-purple-gold.webp') !important;background-position:center center;background-size:cover;filter:saturate(1.08) contrast(1.06);opacity:.96}
 .bg:after{background:radial-gradient(ellipse at 50% 8%,rgba(132,65,220,.19),transparent 42%),radial-gradient(ellipse at 88% 22%,rgba(235,177,72,.12),transparent 30%),linear-gradient(180deg,rgba(4,2,10,.15),rgba(4,2,10,.52) 58%,rgba(4,2,10,.88)) !important}
-.titleBanner img{width:min(100%,430px)!important;max-height:none!important;height:auto!important;object-fit:contain!important;margin:0 auto!important;border-radius:18px;filter:drop-shadow(0 0 26px rgba(146,80,238,.19))}
+.titleBanner img{width:min(100%,430px)!important;max-height:none!important;height:auto!important;object-fit:contain!important;margin:0 auto!important;border-radius:0;box-shadow:none;background:transparent;filter:drop-shadow(0 0 26px rgba(146,80,238,.19))}
 .titleBanner{margin:0 auto 12px!important}
 .search button{background:linear-gradient(135deg,#f5d58b,#b9822b 55%,#7c4bd1)!important;color:#180f20!important;box-shadow:0 8px 30px rgba(181,128,48,.2),0 0 24px rgba(123,73,198,.13)!important}
 .search input:focus{border-color:#c7a0ff!important;box-shadow:0 0 0 3px rgba(157,123,255,.12)}
+
+/* Frameless logo and rotating community taglines */
+.titleBlock{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+.titleBanner,.titleBanner img{border:0!important;border-radius:0!important;outline:0!important}
+.lead{min-height:3.1em;transition:opacity .25s ease;color:#d5c3ef!important;text-shadow:0 2px 18px rgba(142,82,219,.22)}
+.lead.tagline-changing{opacity:.15}
