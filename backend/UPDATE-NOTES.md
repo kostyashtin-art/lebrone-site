@@ -1,18 +1,22 @@
-# Replay API update — Zstandard + diagnostics
+# Replay parser update
 
-This archive contains the existing website with backend changes for the current replay investigation.
+## Included changes
 
-## Changes
-- `backend/app.py`: detects and decompresses BZip2 and Zstandard replay payloads; logs compressed/decompressed sizes and the decompressed header.
-- `backend/requirements.txt`: adds `zstandard==0.23.0`.
-- `backend/clarity-worker/.../ClarityWorker.java`: prints the replay size and first 16 bytes in HEX/ASCII before Clarity starts.
-- Existing Clarity dependency remains at `4.0.1`.
-
-## Important
-This is a diagnostic/update build, not a guaranteed final parser fix. The latest observed decompressed signature is `PBDEMS2`; if Clarity still rejects it, the remaining issue is parser/format compatibility and will need a compatible Clarity version or another parser.
+- Supports BZip2 and Zstandard replay decompression in `app.py`.
+- Streams Clarity combat-log events directly into `parsed-events.json` using Gson `JsonWriter` instead of building one large in-memory `JsonArray`.
+- Keeps the existing response keys (`parser`, `parser_version`, `event_type`, `events_total`, `events_returned`, `truncated`, `parse_time_ms`, `events`). The JSON property order changed, which is valid JSON and does not affect clients.
+- Returns up to 100,000 events, while continuing to count total events beyond the output limit.
+- Sets Java heap maximum to 512 MiB. Adjust only if the Render instance has a compatible memory limit.
 
 ## Deploy
-1. Extract the archive.
-2. Upload/commit the project files to the `main` branch of the repository.
-3. Render should rebuild the backend from `backend/Dockerfile`.
-4. Retest `POST /api/replay/parse-match/{match_id}` and inspect Render logs.
+
+Render configuration should use:
+- Root Directory: `backend`
+- Dockerfile Path: `./Dockerfile`
+- Docker Build Context Directory: `.`
+
+Commit the archive contents to the repository and wait for Render to become Live before testing `POST /api/replay/parse-match/{match_id}`.
+
+## Limitations
+
+Streaming reduces memory used to serialize JSON; it does not guarantee lower memory use inside Clarity itself. Player/hero names may still be unknown for some combat-log entries because this worker currently adapts only combat-log fields and does not yet build a player/entity lookup table from replay string tables.
