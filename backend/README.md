@@ -47,8 +47,3 @@ Set `REPLAY_PARSER_COMMAND` only if you intentionally want to override the bundl
 - Keep the backend private or rate-limited until authentication, queueing, request limits, and storage lifecycle are configured.
 
 Clarity is an open-source parser: https://github.com/skadistats/clarity
-
-
-## Подключение к фронтенду
-
-На сайте в блоке «Полный разбор реплея · Clarity» укажите публичный HTTPS URL этого API и нажмите «Сохранить адрес». Кнопка проверит `/health`; затем выберите Match ID в основном поле сайта и нажмите «Разобрать этот Match ID». На сервере установите `CORS_ORIGINS` в точный origin сайта (например, `https://kostyashtin-art.github.io`) вместо `*` перед публичным использованием.

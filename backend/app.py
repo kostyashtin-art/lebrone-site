@@ -1,7 +1,6 @@
-
 """Replay-analysis API backed by the Clarity Dota replay parser."""
-
 import bz2
+import zstandard
 import json
 import os
 import re
@@ -12,10 +11,8 @@ from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 import httpx
-import zstandard
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-
 
 app = FastAPI(
     title="Кто из Вас ЗАТРОЛЛИЛ? — Replay API",
@@ -26,11 +23,7 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
-
-# --------------------------------------------------
 # Configuration
-# --------------------------------------------------
-
 origins = [
     item.strip()
     for item in os.getenv(
@@ -39,7 +32,6 @@ origins = [
     ).split(",")
     if item.strip()
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -52,25 +44,15 @@ OPENDOTA = os.getenv(
     "OPENDOTA_BASE_URL",
     "https://api.opendota.com/api",
 ).rstrip("/")
-
 PARSER_CMD = os.getenv(
     "REPLAY_PARSER_COMMAND",
     "java -jar /app/clarity-worker.jar {file} {output}",
 ).strip()
-
-MAX_REPLAY_BYTES = int(
-    os.getenv("MAX_REPLAY_BYTES", str(512 * 1024 * 1024))
-)
-
-PARSER_TIMEOUT_SECONDS = int(
-    os.getenv("PARSER_TIMEOUT_SECONDS", "240")
-)
+MAX_REPLAY_BYTES = int(os.getenv("MAX_REPLAY_BYTES", str(512 * 1024 * 1024)))
+PARSER_TIMEOUT_SECONDS = int(os.getenv("PARSER_TIMEOUT_SECONDS", "240"))
 
 
-# --------------------------------------------------
 # Basic routes
-# --------------------------------------------------
-
 @app.get("/")
 async def root():
     return {
@@ -98,7 +80,7 @@ async def health():
     }
 
 
-# Temporary diagnostic route.
+# Temporary diagnostic route. Remove after confirming deployment is correct.
 @app.get("/debug-routes")
 async def debug_routes():
     return {
@@ -107,22 +89,15 @@ async def debug_routes():
         "routes": [
             {
                 "path": route.path,
-                "methods": sorted(
-                    getattr(route, "methods", set()) or []
-                ),
+                "methods": sorted(getattr(route, "methods", set()) or []),
             }
             for route in app.routes
         ],
     }
 
 
-# --------------------------------------------------
-# Clarity runner
-# --------------------------------------------------
-
 def run_clarity(replay_path: Path, output_dir: Path) -> dict:
-    """Run Clarity and read its JSON output."""
-
+    """Run the configured Clarity worker and read its JSON output."""
     if not PARSER_CMD:
         raise HTTPException(
             status_code=503,
@@ -130,11 +105,9 @@ def run_clarity(replay_path: Path, output_dir: Path) -> dict:
         )
 
     cmd = [
-        part.replace("{file}", str(replay_path))
-        .replace("{output}", str(output_dir))
+        part.replace("{file}", str(replay_path)).replace("{output}", str(output_dir))
         for part in shlex.split(PARSER_CMD)
     ]
-
     try:
         run = subprocess.run(
             cmd,
@@ -144,13 +117,11 @@ def run_clarity(replay_path: Path, output_dir: Path) -> dict:
             timeout=PARSER_TIMEOUT_SECONDS,
             check=False,
         )
-
     except subprocess.TimeoutExpired:
         raise HTTPException(
             status_code=504,
             detail="Clarity не завершил разбор за отведённое время",
         )
-
     except OSError as exc:
         print("Could not start Clarity worker:", str(exc))
         raise HTTPException(
@@ -159,20 +130,13 @@ def run_clarity(replay_path: Path, output_dir: Path) -> dict:
         )
 
     if run.returncode != 0:
-        print(
-            "Clarity worker failed:",
-            (run.stderr or "")[-4000:],
-        )
+        print("Clarity worker failed:", (run.stderr or "")[-4000:])
         raise HTTPException(
             status_code=502,
-            detail=(
-                "Clarity не смог обработать этот реплей. "
-                "Попробуйте другой матч."
-            ),
+            detail="Clarity не смог обработать этот реплей. Попробуйте другой матч.",
         )
 
     result_path = output_dir / "parsed-events.json"
-
     if not result_path.is_file():
         print(
             "Clarity output missing. stdout:",
@@ -186,9 +150,7 @@ def run_clarity(replay_path: Path, output_dir: Path) -> dict:
         )
 
     try:
-        return json.loads(
-            result_path.read_text(encoding="utf-8")
-        )
+        return json.loads(result_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         raise HTTPException(
             status_code=502,
@@ -196,15 +158,7 @@ def run_clarity(replay_path: Path, output_dir: Path) -> dict:
         )
 
 
-# --------------------------------------------------
-# OpenDota metadata
-# --------------------------------------------------
-
-async def get_match_metadata(
-    client: httpx.AsyncClient,
-    match_id: str,
-) -> dict:
-
+async def get_match_metadata(client: httpx.AsyncClient, match_id: str) -> dict:
     if not re.fullmatch(r"\d{5,15}", match_id):
         raise HTTPException(
             status_code=400,
@@ -212,9 +166,7 @@ async def get_match_metadata(
         )
 
     try:
-        response = await client.get(
-            f"{OPENDOTA}/matches/{match_id}"
-        )
+        response = await client.get(f"{OPENDOTA}/matches/{match_id}")
     except httpx.HTTPError:
         raise HTTPException(
             status_code=502,
@@ -222,22 +174,14 @@ async def get_match_metadata(
         )
 
     if response.status_code == 404:
-        raise HTTPException(
-            status_code=404,
-            detail="Матч не найден в OpenDota",
-        )
-
+        raise HTTPException(status_code=404, detail="Матч не найден в OpenDota")
     if response.status_code == 429:
         raise HTTPException(
             status_code=503,
             detail="OpenDota ограничил частоту запросов. Попробуйте позже.",
         )
-
     if response.status_code >= 400:
-        raise HTTPException(
-            status_code=502,
-            detail="OpenDota временно недоступен",
-        )
+        raise HTTPException(status_code=502, detail="OpenDota временно недоступен")
 
     try:
         data = response.json()
@@ -252,19 +196,16 @@ async def get_match_metadata(
             status_code=502,
             detail="OpenDota вернул неожиданный формат данных",
         )
-
     return data
 
 
 @app.get("/api/replay/{match_id}")
 async def replay_info(match_id: str):
-
     async with httpx.AsyncClient(timeout=20) as client:
         data = await get_match_metadata(client, match_id)
 
     replay_url = data.get("replay_url")
     available = bool(replay_url)
-
     return {
         "match_id": data.get("match_id"),
         "duration": data.get("duration"),
@@ -274,11 +215,7 @@ async def replay_info(match_id: str):
         "available": available,
         "parser": "Clarity",
         "parser_configured": bool(PARSER_CMD),
-        "status": (
-            "replay_available"
-            if available
-            else "replay_unavailable"
-        ),
+        "status": "replay_available" if available else "replay_unavailable",
         "message": (
             "Реплей найден; можно запустить Clarity."
             if available
@@ -287,79 +224,13 @@ async def replay_info(match_id: str):
     }
 
 
-# --------------------------------------------------
-# Replay decompression
-# --------------------------------------------------
-
-def decompress_replay(compressed: bytes) -> bytes:
-    """
-    Detect and decompress BZip2 or Zstandard data.
-
-    Unknown signatures are returned unchanged. Clarity will
-    determine whether the resulting data is a valid replay.
-    """
-
-    try:
-        if compressed.startswith(b"BZh"):
-            print("Replay compression: BZip2")
-            raw = bz2.decompress(compressed)
-
-        elif compressed.startswith(b"\x28\xb5\x2f\xfd"):
-            print("Replay compression: Zstandard")
-            raw = zstandard.ZstdDecompressor().decompress(
-                compressed,
-                max_output_size=MAX_REPLAY_BYTES,
-            )
-
-        else:
-            print("Replay compression: none detected")
-            raw = compressed
-
-    except Exception as exc:
-        print(
-            "Replay decompression failed:",
-            type(exc).__name__,
-            str(exc)[:1000],
-        )
-        raise HTTPException(
-            status_code=502,
-            detail=(
-                "Не удалось распаковать реплей. "
-                "Проверьте формат и целостность файла."
-            ),
-        )
-
-    if len(raw) > MAX_REPLAY_BYTES:
-        raise HTTPException(
-            status_code=413,
-            detail="Распакованный реплей превышает установленный лимит размера",
-        )
-
-    print("Compressed replay size:", len(compressed))
-    print("Decompressed replay size:", len(raw))
-    print("Decompressed replay header:", raw[:16].hex())
-
-    return raw
-
-
-# --------------------------------------------------
-# Upload a local replay
-# --------------------------------------------------
-
 @app.post("/api/replay/parse-upload")
 async def parse_upload(file: UploadFile = File(...)):
-
     if not file.filename or not file.filename.lower().endswith(".dem"):
-        raise HTTPException(
-            status_code=400,
-            detail="Загрузите файл реплея .dem",
-        )
+        raise HTTPException(status_code=400, detail="Загрузите файл реплея .dem")
 
     try:
-        with tempfile.TemporaryDirectory(
-            prefix="who-ruined-upload-"
-        ) as temp_dir:
-
+        with tempfile.TemporaryDirectory(prefix="who-ruined-upload-") as temp_dir:
             root = Path(temp_dir)
             replay_path = root / "match.dem"
             size = 0
@@ -367,46 +238,26 @@ async def parse_upload(file: UploadFile = File(...)):
             with replay_path.open("wb") as output:
                 while True:
                     chunk = await file.read(1024 * 1024)
-
                     if not chunk:
                         break
-
                     size += len(chunk)
-
                     if size > MAX_REPLAY_BYTES:
                         raise HTTPException(
                             status_code=413,
                             detail="Реплей превышает установленный лимит размера",
                         )
-
                     output.write(chunk)
 
             result = run_clarity(replay_path, root)
-
-            return {
-                "status": "parsed",
-                "source": "uploaded_replay",
-                "result": result,
-            }
-
+            return {"status": "parsed", "source": "uploaded_replay", "result": result}
     finally:
         await file.close()
 
 
-# --------------------------------------------------
-# Download and parse a replay from OpenDota
-# --------------------------------------------------
-
 @app.post("/api/replay/parse-match/{match_id}")
 async def parse_match(match_id: str):
-
     timeout = httpx.Timeout(90, connect=15)
-
-    async with httpx.AsyncClient(
-        timeout=timeout,
-        follow_redirects=False,
-    ) as client:
-
+    async with httpx.AsyncClient(timeout=timeout, follow_redirects=False) as client:
         data = await get_match_metadata(client, match_id)
         replay_url = data.get("replay_url")
 
@@ -420,8 +271,7 @@ async def parse_match(match_id: str):
             )
 
         def trusted_replay_url(url: str) -> bool:
-            """Allow only HTTP(S) requests to Valve replay hosts."""
-
+            """Allow only default HTTP(S) ports on Valve replay hosts."""
             try:
                 parsed = urlparse(url)
                 hostname = (parsed.hostname or "").lower()
@@ -430,16 +280,13 @@ async def parse_match(match_id: str):
                 return False
 
             trusted_host = (
-                hostname == "valve.net"
-                or hostname.endswith(".valve.net")
+                hostname == "valve.net" or hostname.endswith(".valve.net")
             )
-
-            default_port = (
-                port is None
-                or (parsed.scheme == "http" and port == 80)
-                or (parsed.scheme == "https" and port == 443)
+            default_port = port is None or (
+                parsed.scheme == "http" and port == 80
+            ) or (
+                parsed.scheme == "https" and port == 443
             )
-
             return (
                 parsed.scheme in ("http", "https")
                 and trusted_host
@@ -451,9 +298,9 @@ async def parse_match(match_id: str):
         current_url = replay_url
         download = None
 
-        # Validate every URL before requesting it, including redirects.
+        # Validate every URL before requesting it, including redirect targets.
+        # Some official Valve replay links use HTTP rather than HTTPS.
         for _ in range(6):
-
             if not trusted_replay_url(current_url):
                 raise HTTPException(
                     status_code=502,
@@ -465,8 +312,7 @@ async def parse_match(match_id: str):
 
             try:
                 response = await client.get(current_url)
-            except httpx.HTTPError as exc:
-                print("Replay download failed:", str(exc)[:1000])
+            except httpx.HTTPError:
                 raise HTTPException(
                     status_code=502,
                     detail="Не удалось скачать реплей с сервера Dota 2",
@@ -474,33 +320,23 @@ async def parse_match(match_id: str):
 
             if response.status_code in (301, 302, 303, 307, 308):
                 location = response.headers.get("location")
-
                 if not location:
                     raise HTTPException(
                         status_code=502,
-                        detail=(
-                            "Сервер реплеев вернул перенаправление "
-                            "без адреса"
-                        ),
+                        detail="Сервер реплеев вернул перенаправление без адреса",
                     )
-
                 current_url = urljoin(str(response.url), location)
                 continue
 
             download = response
             break
-
         else:
             raise HTTPException(
                 status_code=502,
                 detail="Слишком много перенаправлений при скачивании реплея",
             )
 
-        if (
-            download is None
-            or download.status_code >= 400
-            or not download.content
-        ):
+        if download is None or download.status_code >= 400 or not download.content:
             raise HTTPException(
                 status_code=502,
                 detail=(
@@ -508,28 +344,55 @@ async def parse_match(match_id: str):
                     "Попробуйте загрузить .dem вручную."
                 ),
             )
-
-        compressed = download.content
-
-        if len(compressed) > MAX_REPLAY_BYTES:
+        if len(download.content) > MAX_REPLAY_BYTES:
             raise HTTPException(
                 status_code=413,
                 detail="Сжатый реплей превышает установленный лимит",
             )
+        compressed = download.content
 
-    # Download is complete. Decompress before passing the file to Clarity.
-    raw = decompress_replay(compressed)
-
-    with tempfile.TemporaryDirectory(
-        prefix="who-ruined-match-"
-    ) as temp_dir:
-
+    with tempfile.TemporaryDirectory(prefix="who-ruined-match-") as temp_dir:
         root = Path(temp_dir)
+        if compressed.startswith(b"BZh"):
+            try:
+                raw = bz2.decompress(compressed)
+                print("Replay compression: BZip2")
+            except (OSError, EOFError) as exc:
+                print("BZip2 replay decompression failed:", str(exc))
+                raise HTTPException(
+                    status_code=502,
+                    detail="Не удалось распаковать BZip2-реплей",
+                )
+        elif compressed.startswith(b"\x28\xb5\x2f\xfd"):
+            try:
+                raw = zstandard.ZstdDecompressor().decompress(
+                    compressed,
+                    max_output_size=MAX_REPLAY_BYTES,
+                )
+                print("Replay compression: Zstandard")
+            except Exception as exc:
+                print("Zstandard replay decompression failed:", type(exc).__name__, str(exc)[:1000])
+                raise HTTPException(
+                    status_code=502,
+                    detail="Не удалось распаковать Zstandard-реплей",
+                )
+        else:
+            raw = compressed
+            print("Replay compression: none detected")
+
+        print("Compressed replay size:", len(compressed))
+        print("Decompressed replay size:", len(raw))
+        print("Decompressed replay header:", raw[:16].hex())
+
+        if len(raw) > MAX_REPLAY_BYTES:
+            raise HTTPException(
+                status_code=413,
+                detail="Распакованный реплей превышает установленный лимит размера",
+            )
+
         replay_path = root / "match.dem"
         replay_path.write_bytes(raw)
-
         result = run_clarity(replay_path, root)
-
         return {
             "status": "parsed",
             "source": "opendota_replay",
