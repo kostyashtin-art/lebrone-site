@@ -18,7 +18,7 @@ import java.util.Locale;
 /** Parses a Dota replay with Clarity and writes a stable JSON adapter response. */
 public final class ClarityWorker {
     private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-    private static final int MAX_EVENTS = 100_000;
+   private static final int MAX_EVENTS = 10_000;
     private final JsonArray events = new JsonArray();
     private long totalEvents = 0;
 
