@@ -61,15 +61,8 @@ public final class ClarityWorker {
         event.addProperty("y", entry.getLocationY());
         event.addProperty("attacker_team", entry.getAttackerTeam());
 
-        try {
-            GSON.toJson(event, writer);
-            eventsReturned++;
-        } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Failed to write replay event",
-                    e
-            );
-        }
+      GSON.toJson(event, writer);
+eventsReturned++;
     }
 
     private static void put(
