@@ -76,10 +76,11 @@ public final class ClarityWorker {
         event.addProperty("y", entry.getLocationY());
         event.addProperty("attacker_team", entry.getAttackerTeam());
 
-        try {
-            GSON.toJson(event, jsonWriter);
-            eventsReturned++;
-        } catch (IOException e) {
+       
+try (MappedFileSource source = new MappedFileSource(replay.toString())) {
+    new SimpleRunner(source).runWith(worker);
+}
+ catch (IOException e) {
             throw new UncheckedIOException(
                     "Failed to write replay event to JSON",
                     e
