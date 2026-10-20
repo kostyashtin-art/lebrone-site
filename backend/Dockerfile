@@ -1,5 +1,5 @@
 
-# Stage 1: Build the Clarity worker
+# Stage 1: Build the Clarity Java worker
 FROM maven:3.9-eclipse-temurin-21 AS clarity-build
 
 WORKDIR /build
@@ -14,6 +14,7 @@ FROM python:3.12-slim-trixie
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV JAVA_TOOL_OPTIONS="-Xms64m -Xmx512m"
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -27,7 +28,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
-COPY --from=clarity-build /build/target/clarity-worker.jar /app/clarity-worker.jar
+
+COPY --from=clarity-build \
+    /build/target/clarity-worker.jar \
+    /app/clarity-worker.jar
 
 ENV REPLAY_PARSER_COMMAND="java -jar /app/clarity-worker.jar {file} {output}"
 
