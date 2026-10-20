@@ -13,7 +13,7 @@ RUN mvn -B -DskipTests package
 RUN echo "=== JAR FILES ===" \
     && find /build/target -maxdepth 1 -type f -name '*.jar' -print \
     && echo "=== MANIFEST ===" \
-    && unzip -p /build/target/clarity-worker.jar META-INF/MANIFEST.MF
+    && python -c "import zipfile; z=zipfile.ZipFile('/build/target/clarity-worker.jar'); print(z.read('META-INF/MANIFEST.MF').decode())"
 
 # Stage 2: Python API + Java runtime
 FROM python:3.12-slim-trixie
