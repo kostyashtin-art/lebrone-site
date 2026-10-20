@@ -7,7 +7,7 @@ import shlex
 import subprocess
 import tempfile
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 import httpx
 from fastapi import FastAPI, File, HTTPException, UploadFile
@@ -256,7 +256,7 @@ async def parse_upload(file: UploadFile = File(...)):
 @app.post("/api/replay/parse-match/{match_id}")
 async def parse_match(match_id: str):
     timeout = httpx.Timeout(90, connect=15)
-    async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
+    async with httpx.AsyncClient(timeout=timeout, follow_redirects=False) as client:
         data = await get_match_metadata(client, match_id)
         replay_url = data.get("replay_url")
 
@@ -269,28 +269,73 @@ async def parse_match(match_id: str):
                 ),
             )
 
-        parsed_url = urlparse(replay_url)
-        hostname = (parsed_url.hostname or "").lower()
-        if parsed_url.scheme != "https" or not (
-            hostname == "valve.net" or hostname.endswith(".valve.net")
-        ):
-            raise HTTPException(
-                status_code=502,
-                detail=(
-                    "OpenDota вернул неизвестный адрес реплея; "
-                    "загрузка заблокирована для безопасности."
-                ),
+        def trusted_replay_url(url: str) -> bool:
+            """Allow only default HTTP(S) ports on Valve replay hosts."""
+            try:
+                parsed = urlparse(url)
+                hostname = (parsed.hostname or "").lower()
+                port = parsed.port
+            except ValueError:
+                return False
+
+            trusted_host = (
+                hostname == "valve.net" or hostname.endswith(".valve.net")
+            )
+            default_port = port is None or (
+                parsed.scheme == "http" and port == 80
+            ) or (
+                parsed.scheme == "https" and port == 443
+            )
+            return (
+                parsed.scheme in ("http", "https")
+                and trusted_host
+                and default_port
+                and not parsed.username
+                and not parsed.password
             )
 
-        try:
-            download = await client.get(replay_url)
-        except httpx.HTTPError:
+        current_url = replay_url
+        download = None
+
+        # Validate every URL before requesting it, including redirect targets.
+        # Some official Valve replay links use HTTP rather than HTTPS.
+        for _ in range(6):
+            if not trusted_replay_url(current_url):
+                raise HTTPException(
+                    status_code=502,
+                    detail=(
+                        "OpenDota вернул неизвестный адрес реплея; "
+                        "загрузка заблокирована для безопасности."
+                    ),
+                )
+
+            try:
+                response = await client.get(current_url)
+            except httpx.HTTPError:
+                raise HTTPException(
+                    status_code=502,
+                    detail="Не удалось скачать реплей с сервера Dota 2",
+                )
+
+            if response.status_code in (301, 302, 303, 307, 308):
+                location = response.headers.get("location")
+                if not location:
+                    raise HTTPException(
+                        status_code=502,
+                        detail="Сервер реплеев вернул перенаправление без адреса",
+                    )
+                current_url = urljoin(str(response.url), location)
+                continue
+
+            download = response
+            break
+        else:
             raise HTTPException(
                 status_code=502,
-                detail="Не удалось скачать реплей с сервера Dota 2",
+                detail="Слишком много перенаправлений при скачивании реплея",
             )
 
-        if download.status_code >= 400 or not download.content:
+        if download is None or download.status_code >= 400 or not download.content:
             raise HTTPException(
                 status_code=502,
                 detail=(
