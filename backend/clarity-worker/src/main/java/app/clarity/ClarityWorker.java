@@ -53,9 +53,25 @@ public final class ClarityWorker {
         Files.createDirectories(outputDir);
         ClarityWorker worker = new ClarityWorker();
         long start = System.nanoTime();
-        try (MappedFileSource source = new MappedFileSource(replay.toString())) {
-            new SimpleRunner(source).runWith(worker);
-        }
+      try (MappedFileSource source = new MappedFileSource(replay.toString())) {
+    System.err.println("Replay file: " + replay);
+    System.err.println("Replay size: " + Files.size(replay));
+
+    byte[] header = new byte[16];
+    try (var input = Files.newInputStream(replay)) {
+        int count = input.read(header);
+        System.err.println(
+            "Replay header: " +
+            java.util.HexFormat.of().formatHex(header, 0, Math.max(0, count))
+        );
+        System.err.println(
+            "Replay signature: " +
+            new String(header, 0, Math.max(0, count), StandardCharsets.US_ASCII)
+        );
+    }
+
+    new SimpleRunner(source).runWith(worker);
+}
         JsonObject result = new JsonObject();
         result.addProperty("parser", "Clarity");
         result.addProperty("parser_version", "4.0.1");
