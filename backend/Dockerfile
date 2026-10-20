@@ -1,19 +1,38 @@
-# Build the Clarity adapter with Java 17 and package its dependencies into one JAR.
-FROM maven:3.9-eclipse-temurin-17 AS clarity-build
+
+# Stage 1: Build the Clarity Java worker
+FROM maven:3.9-eclipse-temurin-21 AS java-builder
+
 WORKDIR /build
+
+# Copy the Clarity project sources
 COPY clarity-worker/pom.xml ./pom.xml
 COPY clarity-worker/src ./src
-RUN mvn -q -DskipTests package
 
-# Python API + Java runtime: FastAPI calls the local, fixed Clarity worker.
-FROM python:3.12-slim
-RUN apt-get update && apt-get install -y --no-install-recommends openjdk-17-jre-headless ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN mvn -B -DskipTests package
+
+# Stage 2: Python API + Java runtime
+FROM python:3.12-slim-trixie
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       openjdk-21-jre-headless \
+       ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the built Java worker
+COPY --from=java-builder /build/target/*.jar /app/clarity-worker.jar
+
+# Copy the Python API
 COPY app.py .
-COPY --from=clarity-build /build/target/clarity-worker.jar /app/clarity-worker.jar
-ENV PORT=8000
+
 ENV REPLAY_PARSER_COMMAND="java -jar /app/clarity-worker.jar {file} {output}"
-EXPOSE 8000
-CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT}"]
+
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-10000}"]
